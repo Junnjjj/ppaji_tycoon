@@ -1,0 +1,688 @@
+{
+  "status": "PASS",
+  "summary": {
+    "PASS": 30,
+    "FAIL": 0,
+    "UNMEASURED_BACKFACING": 18
+  },
+  "errors": [],
+  "samples": [
+    {
+      "asset": "rig_blob",
+      "isolated": "rig_blob__0",
+      "d": 0,
+      "feature": "tower-open-bay",
+      "projected_center": [
+        167,
+        232
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "rig_blob",
+      "isolated": "rig_blob__0",
+      "d": 1,
+      "feature": "tower-open-bay",
+      "projected_center": [
+        171,
+        298
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "rig_blob",
+      "isolated": "rig_blob__0",
+      "d": 2,
+      "feature": "tower-open-bay",
+      "projected_center": [
+        301,
+        299
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "rig_blob",
+      "isolated": "rig_blob__0",
+      "d": 3,
+      "feature": "tower-open-bay",
+      "projected_center": [
+        305,
+        230
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_trampoline_w",
+      "isolated": "module_trampoline_w__0",
+      "d": 0,
+      "feature": "open-ring-center-isolated",
+      "projected_center": [
+        256,
+        286
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_trampoline_w",
+      "isolated": "module_trampoline_w__0",
+      "d": 1,
+      "feature": "open-ring-center-isolated",
+      "projected_center": [
+        256,
+        286
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_trampoline_w",
+      "isolated": "module_trampoline_w__0",
+      "d": 2,
+      "feature": "open-ring-center-isolated",
+      "projected_center": [
+        256,
+        286
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_trampoline_w",
+      "isolated": "module_trampoline_w__0",
+      "d": 3,
+      "feature": "open-ring-center-isolated",
+      "projected_center": [
+        256,
+        286
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_trampoline_w",
+      "isolated": "module_trampoline_w__1",
+      "d": 0,
+      "feature": "recessed-mesh-center",
+      "projected_center": [
+        256,
+        293
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_trampoline_w",
+      "isolated": "module_trampoline_w__1",
+      "d": 1,
+      "feature": "recessed-mesh-center",
+      "projected_center": [
+        256,
+        293
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_trampoline_w",
+      "isolated": "module_trampoline_w__1",
+      "d": 2,
+      "feature": "recessed-mesh-center",
+      "projected_center": [
+        256,
+        293
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_trampoline_w",
+      "isolated": "module_trampoline_w__1",
+      "d": 3,
+      "feature": "recessed-mesh-center",
+      "projected_center": [
+        256,
+        293
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-0-0",
+      "projected_center": [
+        222,
+        264
+      ],
+      "transparent_pixels_5x5": 24,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-0-1",
+      "projected_center": [
+        237,
+        272
+      ],
+      "transparent_pixels_5x5": 22,
+      "opaque_pixels_5x5": 1,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-0-2",
+      "projected_center": [
+        252,
+        279
+      ],
+      "transparent_pixels_5x5": 22,
+      "opaque_pixels_5x5": 1,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-1-0",
+      "projected_center": [
+        207,
+        282
+      ],
+      "transparent_pixels_5x5": 23,
+      "opaque_pixels_5x5": 1,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-1-1",
+      "projected_center": [
+        222,
+        289
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-1-2",
+      "projected_center": [
+        237,
+        297
+      ],
+      "transparent_pixels_5x5": 24,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-2-0",
+      "projected_center": [
+        193,
+        300
+      ],
+      "transparent_pixels_5x5": 22,
+      "opaque_pixels_5x5": 1,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-2-1",
+      "projected_center": [
+        208,
+        307
+      ],
+      "transparent_pixels_5x5": 22,
+      "opaque_pixels_5x5": 1,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 0,
+      "feature": "ramp-bore-2-2",
+      "projected_center": [
+        223,
+        314
+      ],
+      "transparent_pixels_5x5": 22,
+      "opaque_pixels_5x5": 1,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-0-0",
+      "projected_center": [
+        260,
+        279
+      ],
+      "transparent_pixels_5x5": 23,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-0-1",
+      "projected_center": [
+        275,
+        272
+      ],
+      "transparent_pixels_5x5": 24,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-0-2",
+      "projected_center": [
+        290,
+        264
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-1-0",
+      "projected_center": [
+        275,
+        297
+      ],
+      "transparent_pixels_5x5": 25,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-1-1",
+      "projected_center": [
+        290,
+        289
+      ],
+      "transparent_pixels_5x5": 24,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-1-2",
+      "projected_center": [
+        305,
+        282
+      ],
+      "transparent_pixels_5x5": 23,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-2-0",
+      "projected_center": [
+        289,
+        314
+      ],
+      "transparent_pixels_5x5": 24,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-2-1",
+      "projected_center": [
+        304,
+        307
+      ],
+      "transparent_pixels_5x5": 24,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 1,
+      "feature": "ramp-bore-2-2",
+      "projected_center": [
+        319,
+        300
+      ],
+      "transparent_pixels_5x5": 24,
+      "opaque_pixels_5x5": 0,
+      "status": "PASS",
+      "reason": "5x5 packed pixel window around declared world-space aperture center; at least4 alpha<10 pixels, or all25 opaque for mesh."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-0-0",
+      "projected_center": [
+        290,
+        260
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-0-1",
+      "projected_center": [
+        275,
+        253
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-0-2",
+      "projected_center": [
+        260,
+        245
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-1-0",
+      "projected_center": [
+        305,
+        263
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 21,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-1-1",
+      "projected_center": [
+        290,
+        256
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-1-2",
+      "projected_center": [
+        275,
+        248
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-2-0",
+      "projected_center": [
+        319,
+        266
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-2-1",
+      "projected_center": [
+        304,
+        259
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 2,
+      "feature": "ramp-bore-2-2",
+      "projected_center": [
+        289,
+        251
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 21,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-0-0",
+      "projected_center": [
+        252,
+        245
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-0-1",
+      "projected_center": [
+        237,
+        253
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-0-2",
+      "projected_center": [
+        222,
+        260
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-1-0",
+      "projected_center": [
+        237,
+        248
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-1-1",
+      "projected_center": [
+        222,
+        256
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-1-2",
+      "projected_center": [
+        207,
+        263
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 21,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-2-0",
+      "projected_center": [
+        223,
+        251
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 21,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-2-1",
+      "projected_center": [
+        208,
+        259
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    },
+    {
+      "asset": "module_rig_roller",
+      "isolated": "module_rig_roller__0",
+      "d": 3,
+      "feature": "ramp-bore-2-2",
+      "projected_center": [
+        193,
+        266
+      ],
+      "transparent_pixels_5x5": 0,
+      "opaque_pixels_5x5": 25,
+      "status": "UNMEASURED_BACKFACING",
+      "reason": "Ramp is nearly edge-on from rear: bore wall legitimately blocks view, not counted as pass."
+    }
+  ],
+  "limits": [
+    "Isolated bore transparency does not mean unobstructed view through full facility: blue float or mound/other parts can appear behind physical holes.",
+    "Ring central aperture and recessed elastic mesh are sampled separately. A dark opaque disc cannot pass ring-only aperture test.",
+    "Rear ramp bores are unmeasured because physical incline is nearly edge-on; excluded views are not passes."
+  ]
+}

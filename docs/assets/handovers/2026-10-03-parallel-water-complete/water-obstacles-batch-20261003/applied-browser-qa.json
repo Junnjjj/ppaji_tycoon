@@ -1,0 +1,170 @@
+[
+  {
+    "id": "rig_bridge",
+    "d": 0,
+    "file": "fac_rig_bridge_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 1,
+    "file": "fac_rig_bridge_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 2,
+    "file": "fac_rig_bridge_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 3,
+    "file": "fac_rig_bridge_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 0,
+    "file": "fac_rig_stepstone_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 1,
+    "file": "fac_rig_stepstone_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 2,
+    "file": "fac_rig_stepstone_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 3,
+    "file": "fac_rig_stepstone_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 0,
+    "file": "fac_module_rig_beam_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 1,
+    "file": "fac_module_rig_beam_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 2,
+    "file": "fac_module_rig_beam_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 3,
+    "file": "fac_module_rig_beam_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 0,
+    "file": "fac_module_rig_seesaw_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 1,
+    "file": "fac_module_rig_seesaw_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 2,
+    "file": "fac_module_rig_seesaw_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 3,
+    "file": "fac_module_rig_seesaw_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 0,
+    "file": "fac_module_rig_totem_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 1,
+    "file": "fac_module_rig_totem_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 2,
+    "file": "fac_module_rig_totem_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 3,
+    "file": "fac_module_rig_totem_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 0,
+    "file": "fac_module_rig_disc_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 1,
+    "file": "fac_module_rig_disc_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 2,
+    "file": "fac_module_rig_disc_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 3,
+    "file": "fac_module_rig_disc_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 0,
+    "file": "fac_module_rig_kids_park_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 1,
+    "file": "fac_module_rig_kids_park_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 2,
+    "file": "fac_module_rig_kids_park_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 3,
+    "file": "fac_module_rig_kids_park_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

@@ -1,0 +1,306 @@
+[
+  {
+    "id": "module_waterwalk",
+    "d": 0,
+    "original_bbox": [
+      104,
+      161,
+      387,
+      385
+    ],
+    "candidate_bbox": [
+      112,
+      152,
+      400,
+      380
+    ],
+    "width_ratio": 1.017667844522968,
+    "height_ratio": 1.0178571428571428,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 1,
+    "original_bbox": [
+      124,
+      160,
+      409,
+      386
+    ],
+    "candidate_bbox": [
+      112,
+      152,
+      400,
+      380
+    ],
+    "width_ratio": 1.0105263157894737,
+    "height_ratio": 1.008849557522124,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 2,
+    "original_bbox": [
+      119,
+      120,
+      415,
+      374
+    ],
+    "candidate_bbox": [
+      112,
+      102,
+      400,
+      380
+    ],
+    "width_ratio": 0.972972972972973,
+    "height_ratio": 1.094488188976378,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 3,
+    "original_bbox": [
+      99,
+      121,
+      400,
+      373
+    ],
+    "candidate_bbox": [
+      112,
+      102,
+      400,
+      380
+    ],
+    "width_ratio": 0.9568106312292359,
+    "height_ratio": 1.1031746031746033,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 0,
+    "original_bbox": [
+      105,
+      150,
+      406,
+      385
+    ],
+    "candidate_bbox": [
+      112,
+      130,
+      400,
+      380
+    ],
+    "width_ratio": 0.9568106312292359,
+    "height_ratio": 1.0638297872340425,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 1,
+    "original_bbox": [
+      98,
+      133,
+      414,
+      386
+    ],
+    "candidate_bbox": [
+      112,
+      130,
+      400,
+      380
+    ],
+    "width_ratio": 0.9113924050632911,
+    "height_ratio": 0.9881422924901185,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 2,
+    "original_bbox": [
+      100,
+      135,
+      409,
+      386
+    ],
+    "candidate_bbox": [
+      112,
+      162,
+      400,
+      380
+    ],
+    "width_ratio": 0.9320388349514563,
+    "height_ratio": 0.8685258964143426,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 3,
+    "original_bbox": [
+      111,
+      152,
+      410,
+      384
+    ],
+    "candidate_bbox": [
+      112,
+      162,
+      400,
+      380
+    ],
+    "width_ratio": 0.9632107023411371,
+    "height_ratio": 0.9396551724137931,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 0,
+    "original_bbox": [
+      164,
+      238,
+      348,
+      353
+    ],
+    "candidate_bbox": [
+      166,
+      232,
+      346,
+      352
+    ],
+    "width_ratio": 0.9782608695652174,
+    "height_ratio": 1.0434782608695652,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 1,
+    "original_bbox": [
+      160,
+      233,
+      352,
+      359
+    ],
+    "candidate_bbox": [
+      166,
+      232,
+      346,
+      352
+    ],
+    "width_ratio": 0.9375,
+    "height_ratio": 0.9523809523809523,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 2,
+    "original_bbox": [
+      169,
+      196,
+      353,
+      352
+    ],
+    "candidate_bbox": [
+      166,
+      196,
+      346,
+      352
+    ],
+    "width_ratio": 0.9782608695652174,
+    "height_ratio": 1.0,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 3,
+    "original_bbox": [
+      156,
+      197,
+      349,
+      356
+    ],
+    "candidate_bbox": [
+      166,
+      196,
+      346,
+      352
+    ],
+    "width_ratio": 0.9326424870466321,
+    "height_ratio": 0.9811320754716981,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 0,
+    "original_bbox": [
+      201,
+      213,
+      310,
+      338
+    ],
+    "candidate_bbox": [
+      204,
+      210,
+      308,
+      334
+    ],
+    "width_ratio": 0.9541284403669725,
+    "height_ratio": 0.992,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 1,
+    "original_bbox": [
+      201,
+      213,
+      310,
+      338
+    ],
+    "candidate_bbox": [
+      204,
+      210,
+      308,
+      334
+    ],
+    "width_ratio": 0.9541284403669725,
+    "height_ratio": 0.992,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 2,
+    "original_bbox": [
+      202,
+      213,
+      310,
+      338
+    ],
+    "candidate_bbox": [
+      204,
+      210,
+      308,
+      334
+    ],
+    "width_ratio": 0.9629629629629629,
+    "height_ratio": 0.992,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 3,
+    "original_bbox": [
+      202,
+      213,
+      310,
+      338
+    ],
+    "candidate_bbox": [
+      204,
+      210,
+      308,
+      334
+    ],
+    "width_ratio": 0.9629629629629629,
+    "height_ratio": 0.992,
+    "same_canvas_and_registration": true
+  }
+]

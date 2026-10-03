@@ -1,0 +1,465 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "module_waterwalk/yellow-front-gate/continuous-curved-frame",
+      "pass": true,
+      "ring_count": 16,
+      "radius": 2.2,
+      "limitation": "Mesh closure independently checked in verification.json; center aperture independently sampled below."
+    },
+    {
+      "name": "module_waterwalk/d0/yellow-front-gate/saved-aperture",
+      "pass": true,
+      "pixel": [
+        202,
+        252
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d1/yellow-front-gate/saved-aperture",
+      "pass": true,
+      "pixel": [
+        310,
+        252
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d2/yellow-front-gate/saved-aperture",
+      "pass": true,
+      "pixel": [
+        310,
+        197
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d3/yellow-front-gate/saved-aperture",
+      "pass": true,
+      "pixel": [
+        202,
+        197
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/green-side-arch-0/continuous-curved-frame",
+      "pass": true,
+      "ring_count": 16,
+      "radius": 2.15,
+      "limitation": "Mesh closure independently checked in verification.json; center aperture independently sampled below."
+    },
+    {
+      "name": "module_waterwalk/d0/green-side-arch-0/saved-aperture",
+      "pass": true,
+      "pixel": [
+        213,
+        243
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d1/green-side-arch-0/saved-aperture",
+      "pass": true,
+      "pixel": [
+        225,
+        280
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d2/green-side-arch-0/saved-aperture",
+      "pass": true,
+      "pixel": [
+        299,
+        274
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d3/green-side-arch-0/saved-aperture",
+      "pass": true,
+      "pixel": [
+        287,
+        237
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/green-side-arch-1/continuous-curved-frame",
+      "pass": true,
+      "ring_count": 16,
+      "radius": 2.15,
+      "limitation": "Mesh closure independently checked in verification.json; center aperture independently sampled below."
+    },
+    {
+      "name": "module_waterwalk/d0/green-side-arch-1/saved-aperture",
+      "pass": true,
+      "pixel": [
+        287,
+        280
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d1/green-side-arch-1/saved-aperture",
+      "pass": true,
+      "pixel": [
+        299,
+        243
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d2/green-side-arch-1/saved-aperture",
+      "pass": true,
+      "pixel": [
+        225,
+        237
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_waterwalk/d3/green-side-arch-1/saved-aperture",
+      "pass": true,
+      "pixel": [
+        213,
+        274
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "waterwalk-actual-sphere-equation",
+      "pass": true,
+      "max_error": 5.406574399291486e-07,
+      "limits": "Tiny 0.0005 tile pole caps close the mesh; they are not open holes."
+    },
+    {
+      "name": "sphere-d0-saved-background-alpha",
+      "pass": true,
+      "samples": 5328,
+      "alpha_p05": 95.0,
+      "alpha_p95": 161.0
+    },
+    {
+      "name": "sphere-d0-rear-green-member-transmission",
+      "pass": true,
+      "samples": 23,
+      "median_green_minus_blue": 41.0,
+      "median_rgb_delta": 59.51470406546604
+    },
+    {
+      "name": "sphere-d0-front-member-depth-order",
+      "pass": true,
+      "samples": 442,
+      "median_rgb_delta": 0.0,
+      "limitation": "Median interior samples excludes the 2px coverage boundary; this is not exact refraction."
+    },
+    {
+      "name": "sphere-d0-no-interior-alpha-pinholes",
+      "pass": true,
+      "interior_pixels": 12452,
+      "holes": 0
+    },
+    {
+      "name": "sphere-d1-saved-background-alpha",
+      "pass": true,
+      "samples": 5347,
+      "alpha_p05": 95.0,
+      "alpha_p95": 165.0
+    },
+    {
+      "name": "sphere-d1-rear-green-member-transmission",
+      "pass": true,
+      "samples": 29,
+      "median_green_minus_blue": 43.0,
+      "median_rgb_delta": 60.473134530963414
+    },
+    {
+      "name": "sphere-d1-front-member-depth-order",
+      "pass": true,
+      "samples": 468,
+      "median_rgb_delta": 0.0,
+      "limitation": "Median interior samples excludes the 2px coverage boundary; this is not exact refraction."
+    },
+    {
+      "name": "sphere-d1-no-interior-alpha-pinholes",
+      "pass": true,
+      "interior_pixels": 12452,
+      "holes": 0
+    },
+    {
+      "name": "sphere-d2-saved-background-alpha",
+      "pass": true,
+      "samples": 1773,
+      "alpha_p05": 94.0,
+      "alpha_p95": 173.0
+    },
+    {
+      "name": "sphere-d2-rear-green-member-transmission",
+      "pass": true,
+      "samples": 480,
+      "median_green_minus_blue": 47.0,
+      "median_rgb_delta": 64.33506042586733
+    },
+    {
+      "name": "sphere-d2-front-member-depth-order",
+      "pass": true,
+      "samples": 25,
+      "median_rgb_delta": 0.0,
+      "limitation": "Median interior samples excludes the 2px coverage boundary; this is not exact refraction."
+    },
+    {
+      "name": "sphere-d2-no-interior-alpha-pinholes",
+      "pass": true,
+      "interior_pixels": 12460,
+      "holes": 0
+    },
+    {
+      "name": "sphere-d3-saved-background-alpha",
+      "pass": true,
+      "samples": 1767,
+      "alpha_p05": 94.0,
+      "alpha_p95": 121.0
+    },
+    {
+      "name": "sphere-d3-rear-green-member-transmission",
+      "pass": true,
+      "samples": 406,
+      "median_green_minus_blue": 42.0,
+      "median_rgb_delta": 64.05465654504246
+    },
+    {
+      "name": "sphere-d3-front-member-depth-order",
+      "pass": true,
+      "samples": 25,
+      "median_rgb_delta": 0.0,
+      "limitation": "Median interior samples excludes the 2px coverage boundary; this is not exact refraction."
+    },
+    {
+      "name": "sphere-d3-no-interior-alpha-pinholes",
+      "pass": true,
+      "interior_pixels": 12460,
+      "holes": 0
+    },
+    {
+      "name": "module_rig_hammock/green-frame-0/continuous-curved-frame",
+      "pass": true,
+      "ring_count": 16,
+      "radius": 2.55,
+      "limitation": "Mesh closure independently checked in verification.json; center aperture independently sampled below."
+    },
+    {
+      "name": "module_rig_hammock/d0/green-frame-0/saved-aperture",
+      "pass": true,
+      "pixel": [
+        322,
+        204
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_rig_hammock/d1/green-frame-0/saved-aperture",
+      "pass": true,
+      "pixel": [
+        190,
+        204
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_rig_hammock/d2/green-frame-0/saved-aperture",
+      "pass": true,
+      "pixel": [
+        190,
+        270
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_rig_hammock/d3/green-frame-0/saved-aperture",
+      "pass": true,
+      "pixel": [
+        322,
+        270
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_rig_hammock/green-frame-1/continuous-curved-frame",
+      "pass": true,
+      "ring_count": 16,
+      "radius": 2.55,
+      "limitation": "Mesh closure independently checked in verification.json; center aperture independently sampled below."
+    },
+    {
+      "name": "module_rig_hammock/d0/green-frame-1/saved-aperture",
+      "pass": true,
+      "pixel": [
+        190,
+        286
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_rig_hammock/d1/green-frame-1/saved-aperture",
+      "pass": true,
+      "pixel": [
+        322,
+        286
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_rig_hammock/d2/green-frame-1/saved-aperture",
+      "pass": true,
+      "pixel": [
+        322,
+        220
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "module_rig_hammock/d3/green-frame-1/saved-aperture",
+      "pass": true,
+      "pixel": [
+        190,
+        220
+      ],
+      "patch_size": 7
+    },
+    {
+      "name": "cloth-parabola-and-thickness",
+      "pass": true,
+      "max_error": 3.552713678800501e-15,
+      "sag": 5.2,
+      "thickness": 0.7
+    },
+    {
+      "name": "cloth-cord-0-0-actual-endpoints",
+      "pass": true,
+      "cloth_distance": 0.0,
+      "frame_axis_distance": 1.1000000000000014,
+      "frame_radius": 2.55
+    },
+    {
+      "name": "cloth-cord-0-1-actual-endpoints",
+      "pass": true,
+      "cloth_distance": 0.0,
+      "frame_axis_distance": 1.1000000000000014,
+      "frame_radius": 2.55
+    },
+    {
+      "name": "cloth-cord-1-0-actual-endpoints",
+      "pass": true,
+      "cloth_distance": 0.0,
+      "frame_axis_distance": 1.1000000000000014,
+      "frame_radius": 2.55
+    },
+    {
+      "name": "cloth-cord-1-1-actual-endpoints",
+      "pass": true,
+      "cloth_distance": 0.0,
+      "frame_axis_distance": 1.1000000000000014,
+      "frame_radius": 2.55
+    },
+    {
+      "name": "cloth-d0-saved-curved-hem",
+      "pass": true,
+      "samples": 130,
+      "covered": 130,
+      "tolerance_packed": 2,
+      "limitation": "Hem position and coverage, not smooth shading certification."
+    },
+    {
+      "name": "cloth-d1-saved-curved-hem",
+      "pass": true,
+      "samples": 130,
+      "covered": 130,
+      "tolerance_packed": 2,
+      "limitation": "Hem position and coverage, not smooth shading certification."
+    },
+    {
+      "name": "cloth-d2-saved-curved-hem",
+      "pass": true,
+      "samples": 130,
+      "covered": 130,
+      "tolerance_packed": 2,
+      "limitation": "Hem position and coverage, not smooth shading certification."
+    },
+    {
+      "name": "cloth-d3-saved-curved-hem",
+      "pass": true,
+      "samples": 130,
+      "covered": 130,
+      "tolerance_packed": 2,
+      "limitation": "Hem position and coverage, not smooth shading certification."
+    },
+    {
+      "name": "sunbed-actual-hinge-angle-and-rounded-cushion",
+      "pass": true,
+      "angle_degrees": 43,
+      "recovered_thickness": 2.300000000000005,
+      "corner_radius": 0.07
+    },
+    {
+      "name": "sunbed-split-cushions",
+      "pass": true,
+      "seat_vertices": 400,
+      "back_vertices": 400,
+      "limitation": "Two separate closed rounded cushions and fixed hinge; gap is intentional."
+    },
+    {
+      "name": "lamp-globe-curvature",
+      "pass": true,
+      "max_noncap_ellipsoid_error": 1.3322676295501878e-15,
+      "latitudes": 17,
+      "longitude_segments": 32
+    },
+    {
+      "name": "lamp-d0-pale-globe-color",
+      "pass": true,
+      "median_rgb": [
+        230.0,
+        254.0,
+        254.0
+      ]
+    },
+    {
+      "name": "lamp-d1-pale-globe-color",
+      "pass": true,
+      "median_rgb": [
+        226.0,
+        252.0,
+        252.0
+      ]
+    },
+    {
+      "name": "lamp-d2-pale-globe-color",
+      "pass": true,
+      "median_rgb": [
+        228.0,
+        251.0,
+        251.0
+      ]
+    },
+    {
+      "name": "lamp-d3-pale-globe-color",
+      "pass": true,
+      "median_rgb": [
+        230.0,
+        253.0,
+        253.0
+      ]
+    }
+  ],
+  "failures": [],
+  "limits": [
+    "Two-layer convex-shell alpha compositing, without physical refraction or scene shadows.",
+    "Isolated aperture and cloth samples supplement full-assembly connectedness; they do not certify gameplay access.",
+    "AABB checks are only an attachment screen; four suspension endpoint distances are tested exactly.",
+    "No art95 or runtime QA claim."
+  ]
+}

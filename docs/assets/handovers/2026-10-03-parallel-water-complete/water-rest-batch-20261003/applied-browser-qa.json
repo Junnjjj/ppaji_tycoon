@@ -1,0 +1,98 @@
+[
+  {
+    "id": "module_waterwalk",
+    "d": 0,
+    "file": "fac_module_waterwalk_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 1,
+    "file": "fac_module_waterwalk_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 2,
+    "file": "fac_module_waterwalk_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 3,
+    "file": "fac_module_waterwalk_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 0,
+    "file": "fac_module_rig_hammock_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 1,
+    "file": "fac_module_rig_hammock_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 2,
+    "file": "fac_module_rig_hammock_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 3,
+    "file": "fac_module_rig_hammock_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 0,
+    "file": "fac_module_rig_sunbed_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 1,
+    "file": "fac_module_rig_sunbed_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 2,
+    "file": "fac_module_rig_sunbed_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 3,
+    "file": "fac_module_rig_sunbed_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 0,
+    "file": "fac_module_rig_led_buoy_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 1,
+    "file": "fac_module_rig_led_buoy_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 2,
+    "file": "fac_module_rig_led_buoy_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 3,
+    "file": "fac_module_rig_led_buoy_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

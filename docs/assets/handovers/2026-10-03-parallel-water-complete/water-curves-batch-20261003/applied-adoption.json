@@ -1,0 +1,654 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "rig_blob": "water-curves-batch-20261003",
+    "rig_iceberg": "water-curves-batch-20261003",
+    "module_trampoline_w": "water-curves-batch-20261003",
+    "module_rig_roller": "water-curves-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "rig_blob",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/rig_blob/d0.png",
+      "source_sha256": "1f095652d1ae27aee4ebaf3deb4c068965237eaf5ef372f68d95c4a9836c13f5",
+      "old": {
+        "file": "fac_rig_blob_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3e02c6481d678b5c21480c86e678195aef282a6d5bdef94d3b0d3995a2904229",
+        "bytes": 41372
+      },
+      "new": {
+        "file": "fac_rig_blob_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "d9ebced46a55f9686e564e30ba2eef616c3a01b5e74184d3ad1a4708ed7a208d",
+        "bytes": 21996
+      },
+      "old_native": {
+        "file": "rig_blob/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735"
+      },
+      "new_native": {
+        "file": "rig_blob/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "7c2e87602bf3414024b9e6de3cd32475fe3cd7f0293187f6405d647b6245af04"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_blob",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/rig_blob/d1.png",
+      "source_sha256": "42b473f2240e51376c7b199af480c05f4ba2f38a375e890264167f06c0174171",
+      "old": {
+        "file": "fac_rig_blob_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "9685d28e323ca58dca62e819dea1f45afe6ad841866f9141f4e6b53cf044e809",
+        "bytes": 44396
+      },
+      "new": {
+        "file": "fac_rig_blob_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "29baa7c176b5b208cad62ea3d437f5fb239375515e485f1916965c4afda13f7f",
+        "bytes": 24484
+      },
+      "old_native": {
+        "file": "rig_blob/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3"
+      },
+      "new_native": {
+        "file": "rig_blob/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "47cb9413c2af9b4466e18d96e409fdb247e868909dce4d1d25f69b1f02bb0e89"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_blob",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/rig_blob/d2.png",
+      "source_sha256": "0d3f829c5e103b5f36c5d105900d2efbd73da891dc9d0f198f50301f28ecbae4",
+      "old": {
+        "file": "fac_rig_blob_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "e002a3d93542a0db039e3a9ec3edd29165abc3e2e481cbbce06930967ea31534",
+        "bytes": 42856
+      },
+      "new": {
+        "file": "fac_rig_blob_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "b674dabf089a4defc73b379c9c1c18dfef51197a871f5ea35308f54382003489",
+        "bytes": 23584
+      },
+      "old_native": {
+        "file": "rig_blob/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e"
+      },
+      "new_native": {
+        "file": "rig_blob/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "58e275adf3437cc6a728a377e24351d042b586cd21868f288310190a09f059a2"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_blob",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/rig_blob/d3.png",
+      "source_sha256": "e1b5dbe11ac48fe42301caf12a6969a1747c345df08335dc8275a6c8623726ff",
+      "old": {
+        "file": "fac_rig_blob_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "7f038b508f7bf4282a485424fc5470f913eae30479bbfc39d7b3a456bb1832c0",
+        "bytes": 40278
+      },
+      "new": {
+        "file": "fac_rig_blob_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "ba740ee4dbac760d0bb466b6d9aedf6187d610cfff2916b8a5495bed05a21c07",
+        "bytes": 22064
+      },
+      "old_native": {
+        "file": "rig_blob/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef"
+      },
+      "new_native": {
+        "file": "rig_blob/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "90ac57f9f64b99b52008c59221b44fee9c040e7d5806e2914b01f0bdb617b64d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_iceberg",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/rig_iceberg/d0.png",
+      "source_sha256": "8f13ae51de6bcfcd42570291141b4df2c89ea51bc6149ee23f5e79e55bc645f1",
+      "old": {
+        "file": "fac_rig_iceberg_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "ecde86e8821216da4805eb1295da69525e28116f41f0dddafd7b276c7bca1226",
+        "bytes": 41494
+      },
+      "new": {
+        "file": "fac_rig_iceberg_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "97909da32996078c1adf9d3caac5f72d8e5db1f0f130e79e929025c524b5bd43",
+        "bytes": 17132
+      },
+      "old_native": {
+        "file": "rig_iceberg/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d"
+      },
+      "new_native": {
+        "file": "rig_iceberg/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "881f8e872a334f86ee88831769e1e793e091f87306199338aac71237afc6bf58"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_iceberg",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/rig_iceberg/d1.png",
+      "source_sha256": "289a21b6d4b9e41f6ad6cd9becdc70f8f30de3111d89731267f37ad641c5a495",
+      "old": {
+        "file": "fac_rig_iceberg_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "db7b1cbc1172a5ecbd7607ea3d5fe1eff5c2f5e1956971373de8b50e533c9ed6",
+        "bytes": 41170
+      },
+      "new": {
+        "file": "fac_rig_iceberg_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "8746e7c8a73b1ad3ac0ccd3b84498d1ab5342f680438dc2336c819b944b46479",
+        "bytes": 15962
+      },
+      "old_native": {
+        "file": "rig_iceberg/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07"
+      },
+      "new_native": {
+        "file": "rig_iceberg/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "0dde08361debed5911ca648407750b4275a11026fbb32481221b74af2c7e0d63"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_iceberg",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/rig_iceberg/d2.png",
+      "source_sha256": "8390ce1aea9952b1e7829d79c1de202edeb60f3e9e6dc8f3a48d1c036348a51c",
+      "old": {
+        "file": "fac_rig_iceberg_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "bbf6620c218e39f96864cda56ad7c842b5594dd48490ac889e4beb44bce7176d",
+        "bytes": 45224
+      },
+      "new": {
+        "file": "fac_rig_iceberg_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "53f2c4caadcd5c2b6a404b5f66a3f5faa24ab8de0048369d24dbcf0fc669ee57",
+        "bytes": 14842
+      },
+      "old_native": {
+        "file": "rig_iceberg/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d"
+      },
+      "new_native": {
+        "file": "rig_iceberg/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "fa785156e7d8200946b5d6dafa9db403aebd301d256db7dbd1339b1f8e3621e4"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_iceberg",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/rig_iceberg/d3.png",
+      "source_sha256": "de346302ad2f54407d5fc248c1a713341f08d4d20a29c6a0962adda823651a84",
+      "old": {
+        "file": "fac_rig_iceberg_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "317953c3d72d6870eb319f01427fc354f1d10f7affb724fbe4cdd85be083bbe7",
+        "bytes": 46816
+      },
+      "new": {
+        "file": "fac_rig_iceberg_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "1f653d2ea5bf3f12898278bfbfecfcaa01a6d613848bede58c3bb9a61fc95ca9",
+        "bytes": 16768
+      },
+      "old_native": {
+        "file": "rig_iceberg/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f"
+      },
+      "new_native": {
+        "file": "rig_iceberg/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "89c4d2453c88d74a7edc19f2ae46b60ae5b5593fcc7a30b351c2427173d7cbc7"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_trampoline_w",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/module_trampoline_w/d0.png",
+      "source_sha256": "f9ac11636e22e2c0186f57f95557a6e93e4d749ca7e88131de70a786b262d6aa",
+      "old": {
+        "file": "fac_module_trampoline_w_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "682404c077a7fd1777940b59313002a0ae0ebac7953c2625c3fb584ddfbc917d",
+        "bytes": 45712
+      },
+      "new": {
+        "file": "fac_module_trampoline_w_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "6763d3f96af318e8121652cbdff4dbc295c7ffa2412b6580abc4a39f9a76d354",
+        "bytes": 30094
+      },
+      "old_native": {
+        "file": "module_trampoline_w/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "016eaa1389b975111ec087c191a334d91eaf155d37fb07fd3cb37ed51d2aa312"
+      },
+      "new_native": {
+        "file": "module_trampoline_w/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "bbe12d6d078f1db6c4cd002b605ccc649152136f7aa302127adf808189c96189"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_trampoline_w",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/module_trampoline_w/d1.png",
+      "source_sha256": "517f85771195012949d14a5bb1ac970e1abebdcaee44498b52de8349da4b4ff5",
+      "old": {
+        "file": "fac_module_trampoline_w_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "e1cd3135afbb62258db35beb10dc0d4e45ff1605f874beeba76be423dce11ef6",
+        "bytes": 45876
+      },
+      "new": {
+        "file": "fac_module_trampoline_w_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "858f639ff6c929c4203a1a0160322c4af5a9051f76f5a268b8e47bdb8f5a78d3",
+        "bytes": 30346
+      },
+      "old_native": {
+        "file": "module_trampoline_w/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "820e07a9d99752156b3163662927238ba1ac9bda35f2468f9488455efffa8457"
+      },
+      "new_native": {
+        "file": "module_trampoline_w/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "4bfdc8e956a7bd2a36ecd3ba09a2c03bf728fe3b2d15928cf9d0884dcda59f75"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_trampoline_w",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/module_trampoline_w/d2.png",
+      "source_sha256": "876b15480e3ba983672082491a29baec5e53c356fd5b7a41092926d0ce9179ca",
+      "old": {
+        "file": "fac_module_trampoline_w_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "7e39cf97207758cb92a177bef5b252a035d1bcbf80a29217e2624626e2547576",
+        "bytes": 36758
+      },
+      "new": {
+        "file": "fac_module_trampoline_w_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "6c7f00e3883d1886e7b092bd101430a12d888398d85096843d8d9447e852c2c8",
+        "bytes": 28178
+      },
+      "old_native": {
+        "file": "module_trampoline_w/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "95e0afe2426c11d1c12d6607f06f0de53b7f7340c123c0fffa85d086b8ed8844"
+      },
+      "new_native": {
+        "file": "module_trampoline_w/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a2e74a7d8c8b05384ee56ad64d9b4875d1d463844870ecbb134da969595cc6dd"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_trampoline_w",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/module_trampoline_w/d3.png",
+      "source_sha256": "f144953439956cc471bbd132b67547cf11f7c6dad57d21c6295427c62118bf49",
+      "old": {
+        "file": "fac_module_trampoline_w_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "61b20892611d0f8629d988562fef7d2440d5f00c3e8835ec4bedf018fce58ef2",
+        "bytes": 36606
+      },
+      "new": {
+        "file": "fac_module_trampoline_w_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "bf65f4b8985fac54cb55d647cab6484e9ba118a8667bbdb85a22ba4ecbf477ee",
+        "bytes": 28136
+      },
+      "old_native": {
+        "file": "module_trampoline_w/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "16cd5116ebac6eb952a1ba5fa4e8bb205ad4c7026d43685ba36da05daa133697"
+      },
+      "new_native": {
+        "file": "module_trampoline_w/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "9a109fab67370b8fb980fe14a5a907a57939399e68967344f56677a802ef8bdd"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_roller",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/module_rig_roller/d0.png",
+      "source_sha256": "b5031a34f3db6505d87da4d469cb5e7ae5b7b6c6530ca8e8965a389617982012",
+      "old": {
+        "file": "fac_module_rig_roller_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "a123a089473ce89b728e204d7dbc806dc41513c091f404da11744c05cf9c3a18",
+        "bytes": 53746
+      },
+      "new": {
+        "file": "fac_module_rig_roller_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "6ae456d7a7378c2e14c8c592e9278d82e78daac484bf4a776f48f04cfdb11f8e",
+        "bytes": 27360
+      },
+      "old_native": {
+        "file": "module_rig_roller/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "b70f76fc8011459f1c8a92d7cbb0db68cd126a2f8149551fa682078635985342"
+      },
+      "new_native": {
+        "file": "module_rig_roller/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "1220a38717458f7dc84c1f52e76aef187e868e74626aae7eb2a575f9a4aebaa4"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_roller",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/module_rig_roller/d1.png",
+      "source_sha256": "a015fff4b14ca3e4d67b3adb9eb860f534010deddd520653c226b086eac31a0c",
+      "old": {
+        "file": "fac_module_rig_roller_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "38eeaa712637ff57ecfba706138cf5c0a8f355e2b290165f7b896109496a2d0f",
+        "bytes": 53572
+      },
+      "new": {
+        "file": "fac_module_rig_roller_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "e9dedd0b05ff14f561d831f5e4d6b90eee08c96f4e7e2881345178b06ca2ce07",
+        "bytes": 27774
+      },
+      "old_native": {
+        "file": "module_rig_roller/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "233f46b8d6a1911d5718531ae90b958de954915dec70ed2397b8dac281335100"
+      },
+      "new_native": {
+        "file": "module_rig_roller/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "b29729488a9795f77817b57fd1ac73c6b2f2d077f3537ba87a8bd6015d631e4c"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_roller",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/module_rig_roller/d2.png",
+      "source_sha256": "0fdfe717e9a672e4a0e889001285180037e7e712f6b6891d53a3038a65da536e",
+      "old": {
+        "file": "fac_module_rig_roller_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "ae4357d4f4a3da2c20af599c3e9a46adfe9a8d86362cfff86d29eaa0acced425",
+        "bytes": 50276
+      },
+      "new": {
+        "file": "fac_module_rig_roller_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "0402193a471bca40b96f4a2c006aab83370dca34503eb68d8ea801b104fa8372",
+        "bytes": 23150
+      },
+      "old_native": {
+        "file": "module_rig_roller/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "cca88beea76a7f2068f106a8b6e516eaa851f8505a5084e67eb7f7ef5229bf4b"
+      },
+      "new_native": {
+        "file": "module_rig_roller/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "ef3d108343384e1ee313638202c0b5cc59e9c8ddaa3f0b76c6739dcb088ed7b2"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_roller",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-curves-batch-20261003/candidates/module_rig_roller/d3.png",
+      "source_sha256": "35a58476f2b544107c909d3137d71bd56d04cf986e82175d296573d6442388d2",
+      "old": {
+        "file": "fac_module_rig_roller_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "73119eef8cf99f6ca313bf089ae4eae0d688f721c342809d8852592ccda80194",
+        "bytes": 50186
+      },
+      "new": {
+        "file": "fac_module_rig_roller_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "9909b6633d93ae5d0c0e30613f91d5a23d6ba7021daafcc5a3bff3de71b35c7c",
+        "bytes": 23148
+      },
+      "old_native": {
+        "file": "module_rig_roller/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "626648e831a76d96717d8d5122094a3deeeef82b46c8d0be0471583fc5717536"
+      },
+      "new_native": {
+        "file": "module_rig_roller/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "380cf1cfb00cf848297ee73f3497cc0f32edc1994b1708467308f8a2734d445d"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true,
+  "synchronized_native_visual_aliases": {
+    "rig_iceberg_wall": {
+      "source": "rig_iceberg",
+      "old_frames": {
+        "d0": {
+          "file": "rig_iceberg/native-d0.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d"
+        },
+        "d1": {
+          "file": "rig_iceberg/native-d1.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07"
+        },
+        "d2": {
+          "file": "rig_iceberg/native-d2.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d"
+        },
+        "d3": {
+          "file": "rig_iceberg/native-d3.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f"
+        }
+      },
+      "new_frames": {
+        "d0": {
+          "file": "rig_iceberg/accepted-20261003-d0.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "881f8e872a334f86ee88831769e1e793e091f87306199338aac71237afc6bf58"
+        },
+        "d1": {
+          "file": "rig_iceberg/accepted-20261003-d1.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "0dde08361debed5911ca648407750b4275a11026fbb32481221b74af2c7e0d63"
+        },
+        "d2": {
+          "file": "rig_iceberg/accepted-20261003-d2.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "fa785156e7d8200946b5d6dafa9db403aebd301d256db7dbd1339b1f8e3621e4"
+        },
+        "d3": {
+          "file": "rig_iceberg/accepted-20261003-d3.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "89c4d2453c88d74a7edc19f2ae46b60ae5b5593fcc7a30b351c2427173d7cbc7"
+        }
+      }
+    },
+    "rig_blob_big": {
+      "source": "rig_blob",
+      "old_frames": {
+        "d0": {
+          "file": "rig_blob/native-d0.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735"
+        },
+        "d1": {
+          "file": "rig_blob/native-d1.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3"
+        },
+        "d2": {
+          "file": "rig_blob/native-d2.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e"
+        },
+        "d3": {
+          "file": "rig_blob/native-d3.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef"
+        }
+      },
+      "new_frames": {
+        "d0": {
+          "file": "rig_blob/accepted-20261003-d0.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "7c2e87602bf3414024b9e6de3cd32475fe3cd7f0293187f6405d647b6245af04"
+        },
+        "d1": {
+          "file": "rig_blob/accepted-20261003-d1.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "47cb9413c2af9b4466e18d96e409fdb247e868909dce4d1d25f69b1f02bb0e89"
+        },
+        "d2": {
+          "file": "rig_blob/accepted-20261003-d2.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "58e275adf3437cc6a728a377e24351d042b586cd21868f288310190a09f059a2"
+        },
+        "d3": {
+          "file": "rig_blob/accepted-20261003-d3.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "90ac57f9f64b99b52008c59221b44fee9c040e7d5806e2914b01f0bdb617b64d"
+        }
+      }
+    }
+  }
+}

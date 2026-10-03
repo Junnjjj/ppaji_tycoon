@@ -1,0 +1,912 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "waterwalk/yellow-front-gate/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        880,
+        1090
+      ]
+    },
+    {
+      "name": "waterwalk/yellow-front-gate/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        963,
+        1449
+      ]
+    },
+    {
+      "name": "waterwalk/yellow-front-gate/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1680,
+        1407
+      ]
+    },
+    {
+      "name": "waterwalk/yellow-front-gate/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1597,
+        1049
+      ]
+    },
+    {
+      "name": "waterwalk/green-side-arch-0/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        892,
+        1081
+      ]
+    },
+    {
+      "name": "waterwalk/green-side-arch-0/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        877,
+        1477
+      ]
+    },
+    {
+      "name": "waterwalk/green-side-arch-0/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1668,
+        1484
+      ]
+    },
+    {
+      "name": "waterwalk/green-side-arch-0/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1683,
+        1088
+      ]
+    },
+    {
+      "name": "waterwalk/green-side-arch-1/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        966,
+        1118
+      ]
+    },
+    {
+      "name": "waterwalk/green-side-arch-1/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        952,
+        1440
+      ]
+    },
+    {
+      "name": "waterwalk/green-side-arch-1/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1594,
+        1447
+      ]
+    },
+    {
+      "name": "waterwalk/green-side-arch-1/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1608,
+        1125
+      ]
+    },
+    {
+      "name": "sphere-ellipsoid",
+      "pass_": true,
+      "max_error": 5.406574399291486e-07
+    },
+    {
+      "name": "sphere-d0-saved-air-alpha",
+      "pass_": true,
+      "samples": 3458,
+      "alpha_p05": 95.0,
+      "alpha_p95": 125.0
+    },
+    {
+      "name": "sphere-d0-isolated-saved-alpha",
+      "pass_": true,
+      "samples": 11000,
+      "alpha_p05": 95.0,
+      "alpha_p95": 133.0
+    },
+    {
+      "name": "sphere-d0-rear-green-transmission",
+      "pass_": true,
+      "samples": 47,
+      "green_minus_blue": 48.0,
+      "rgb_delta": 59.665735560705194
+    },
+    {
+      "name": "sphere-d0-foreground-depth",
+      "pass_": true,
+      "samples": 488,
+      "median_rgb_delta": 0.0
+    },
+    {
+      "name": "sphere-d0-no-pinholes",
+      "pass_": true,
+      "holes": 0
+    },
+    {
+      "name": "sphere-d1-saved-air-alpha",
+      "pass_": true,
+      "samples": 2680,
+      "alpha_p05": 94.0,
+      "alpha_p95": 116.0
+    },
+    {
+      "name": "sphere-d1-isolated-saved-alpha",
+      "pass_": true,
+      "samples": 11000,
+      "alpha_p05": 95.0,
+      "alpha_p95": 134.0
+    },
+    {
+      "name": "sphere-d1-rear-green-transmission",
+      "pass_": true,
+      "samples": 25,
+      "green_minus_blue": 37.0,
+      "rgb_delta": 59.51470406546604
+    },
+    {
+      "name": "sphere-d1-foreground-depth",
+      "pass_": true,
+      "samples": 510,
+      "median_rgb_delta": 0.0
+    },
+    {
+      "name": "sphere-d1-no-pinholes",
+      "pass_": true,
+      "holes": 0
+    },
+    {
+      "name": "sphere-d2-saved-air-alpha",
+      "pass_": true,
+      "samples": 1153,
+      "alpha_p05": 94.0,
+      "alpha_p95": 120.39999999999986
+    },
+    {
+      "name": "sphere-d2-isolated-saved-alpha",
+      "pass_": true,
+      "samples": 11004,
+      "alpha_p05": 95.0,
+      "alpha_p95": 132.0
+    },
+    {
+      "name": "sphere-d2-rear-green-transmission",
+      "pass_": true,
+      "samples": 569,
+      "green_minus_blue": 46.0,
+      "rgb_delta": 65.12296062065974
+    },
+    {
+      "name": "sphere-d2-foreground-depth",
+      "pass_": true,
+      "samples": 27,
+      "median_rgb_delta": 0.0
+    },
+    {
+      "name": "sphere-d2-no-pinholes",
+      "pass_": true,
+      "holes": 0
+    },
+    {
+      "name": "sphere-d3-isolated-saved-alpha",
+      "pass_": true,
+      "samples": 10992,
+      "alpha_p05": 95.0,
+      "alpha_p95": 132.0
+    },
+    {
+      "name": "sphere-d3-rear-green-transmission",
+      "pass_": true,
+      "samples": 667,
+      "green_minus_blue": 41.0,
+      "rgb_delta": 64.17164482853778
+    },
+    {
+      "name": "sphere-d3-foreground-depth",
+      "pass_": true,
+      "samples": 23,
+      "median_rgb_delta": 0.0
+    },
+    {
+      "name": "sphere-d3-no-pinholes",
+      "pass_": true,
+      "holes": 0
+    },
+    {
+      "name": "hammock/green-frame-0/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        770,
+        1151
+      ]
+    },
+    {
+      "name": "hammock/green-frame-0/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1060,
+        1516
+      ]
+    },
+    {
+      "name": "hammock/green-frame-0/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1790,
+        1370
+      ]
+    },
+    {
+      "name": "hammock/green-frame-0/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1500,
+        1006
+      ]
+    },
+    {
+      "name": "hammock/green-frame-1/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        638,
+        1233
+      ]
+    },
+    {
+      "name": "hammock/green-frame-1/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1192,
+        1598
+      ]
+    },
+    {
+      "name": "hammock/green-frame-1/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1922,
+        1320
+      ]
+    },
+    {
+      "name": "hammock/green-frame-1/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1368,
+        956
+      ]
+    },
+    {
+      "name": "cloth-real-parabola-thickness",
+      "pass_": true,
+      "max_error": 1.1324274851176597e-14
+    },
+    {
+      "name": "cloth-d0-saved-curved-hem",
+      "pass_": true,
+      "samples": 130,
+      "covered": 130,
+      "tolerance_packed": 2
+    },
+    {
+      "name": "cloth-d1-saved-curved-hem",
+      "pass_": true,
+      "samples": 130,
+      "covered": 130,
+      "tolerance_packed": 2
+    },
+    {
+      "name": "cloth-d2-saved-curved-hem",
+      "pass_": true,
+      "samples": 130,
+      "covered": 130,
+      "tolerance_packed": 2
+    },
+    {
+      "name": "cloth-d3-saved-curved-hem",
+      "pass_": true,
+      "samples": 130,
+      "covered": 130,
+      "tolerance_packed": 2
+    },
+    {
+      "name": "disc/yellow-radial-handle-0/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1029,
+        1277
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-0/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1531,
+        1278
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-1/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        950,
+        1266
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-1/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1258,
+        1442
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-1/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1610,
+        1288
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-1/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1302,
+        1112
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-2/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1179,
+        1453
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-2/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1381,
+        1102
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-3/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        987,
+        1198
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-3/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1573,
+        1357
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-4/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1066,
+        1208
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-4/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1142,
+        1384
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-4/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1494,
+        1346
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-4/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1418,
+        1170
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-5/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1221,
+        1374
+      ]
+    },
+    {
+      "name": "disc/yellow-radial-handle-5/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1339,
+        1181
+      ]
+    },
+    {
+      "name": "seesaw/yellow-handle-0/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1743,
+        1320
+      ]
+    },
+    {
+      "name": "seesaw/yellow-handle-0/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1385,
+        1036
+      ]
+    },
+    {
+      "name": "seesaw/yellow-handle-0/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        817,
+        1215
+      ]
+    },
+    {
+      "name": "seesaw/yellow-handle-0/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1175,
+        1499
+      ]
+    },
+    {
+      "name": "seesaw/yellow-handle-1/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1815,
+        1356
+      ]
+    },
+    {
+      "name": "seesaw/yellow-handle-1/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1457,
+        1000
+      ]
+    },
+    {
+      "name": "seesaw/yellow-handle-1/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        745,
+        1179
+      ]
+    },
+    {
+      "name": "seesaw/yellow-handle-1/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1103,
+        1535
+      ]
+    },
+    {
+      "name": "kids/green-gate-0/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1336,
+        1372
+      ]
+    },
+    {
+      "name": "kids/green-gate-0/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1508,
+        1230
+      ]
+    },
+    {
+      "name": "kids/green-gate-0/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1224,
+        1143
+      ]
+    },
+    {
+      "name": "kids/green-gate-0/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1052,
+        1285
+      ]
+    },
+    {
+      "name": "kids/green-gate-1/d0/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1427,
+        1425
+      ]
+    },
+    {
+      "name": "kids/green-gate-1/d1/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1599,
+        1192
+      ]
+    },
+    {
+      "name": "kids/green-gate-1/d2/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        1133,
+        1106
+      ]
+    },
+    {
+      "name": "kids/green-gate-1/d3/saved-opening-3x3",
+      "pass_": true,
+      "alpha_max": 0,
+      "pixel": [
+        961,
+        1339
+      ]
+    },
+    {
+      "name": "roller/ramp-bore-0-0/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 22,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-0-1/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 18,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-0-2/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 18,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-1-0/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 19,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-1-1/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 21,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-1-2/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 19,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-2-0/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 19,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-2-1/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 17,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-2-2/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 18,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-0-0/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 19,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-0-1/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 20,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-0-2/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 23,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-1-0/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 19,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-1-1/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 20,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-1-2/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 19,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-2-0/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 20,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-2-1/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 19,
+      "patch_pixels": 25
+    },
+    {
+      "name": "roller/ramp-bore-2-2/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 22,
+      "patch_pixels": 25
+    },
+    {
+      "name": "trampoline/open-ring-center-isolated/d0/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 25,
+      "patch_pixels": 25
+    },
+    {
+      "name": "trampoline/open-ring-center-isolated/d1/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 25,
+      "patch_pixels": 25
+    },
+    {
+      "name": "trampoline/open-ring-center-isolated/d2/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 25,
+      "patch_pixels": 25
+    },
+    {
+      "name": "trampoline/open-ring-center-isolated/d3/saved-open-pixels",
+      "pass_": true,
+      "clear_pixels": 25,
+      "patch_pixels": 25
+    }
+  ],
+  "failures": [],
+  "limitations": [
+    {
+      "name": "sphere-d3-saved-air-alpha",
+      "status": "BACKGROUND_OCCLUDED_IN_COMPOUND_UNMEASURED",
+      "samples": 1,
+      "required_samples": 301
+    },
+    {
+      "name": "disc/yellow-radial-handle-0",
+      "d": 1,
+      "status": "EDGE_ON_APERTURE_UNMEASURED",
+      "projected_mesh_width": 16.542375840673913
+    },
+    {
+      "name": "disc/yellow-radial-handle-0",
+      "d": 3,
+      "status": "EDGE_ON_APERTURE_UNMEASURED",
+      "projected_mesh_width": 16.542375840673913
+    },
+    {
+      "name": "disc/yellow-radial-handle-2",
+      "d": 0,
+      "status": "EDGE_ON_APERTURE_UNMEASURED",
+      "projected_mesh_width": 16.542375840673685
+    },
+    {
+      "name": "disc/yellow-radial-handle-2",
+      "d": 2,
+      "status": "EDGE_ON_APERTURE_UNMEASURED",
+      "projected_mesh_width": 16.542375840673685
+    },
+    {
+      "name": "disc/yellow-radial-handle-3",
+      "d": 1,
+      "status": "EDGE_ON_APERTURE_UNMEASURED",
+      "projected_mesh_width": 16.542375840673685
+    },
+    {
+      "name": "disc/yellow-radial-handle-3",
+      "d": 3,
+      "status": "EDGE_ON_APERTURE_UNMEASURED",
+      "projected_mesh_width": 16.542375840673685
+    },
+    {
+      "name": "disc/yellow-radial-handle-5",
+      "d": 0,
+      "status": "EDGE_ON_APERTURE_UNMEASURED",
+      "projected_mesh_width": 16.542375840673913
+    },
+    {
+      "name": "disc/yellow-radial-handle-5",
+      "d": 2,
+      "status": "EDGE_ON_APERTURE_UNMEASURED",
+      "projected_mesh_width": 16.542375840673913
+    },
+    {
+      "name": "ramp-bore-0-0",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-0-1",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-0-2",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-1-0",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-1-1",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-1-2",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-2-0",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-2-1",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-2-2",
+      "d": 2,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-0-0",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-0-1",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-0-2",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-1-0",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-1-1",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-1-2",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-2-0",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-2-1",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    },
+    {
+      "name": "ramp-bore-2-2",
+      "d": 3,
+      "status": "BACKFACING_BORE_UNMEASURED"
+    }
+  ],
+  "main_modified": false
+}

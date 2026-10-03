@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "hammock-cord-0-0-exact-endpoints",
+      "pass": true,
+      "cloth_distance": 0.0,
+      "axis_distance": 1.1000000000000014,
+      "radius": 2.55,
+      "scope": "Uniform transform preserves these source-space physical distances up to declared scale; vertex transfer independently verified."
+    },
+    {
+      "name": "hammock-cord-0-1-exact-endpoints",
+      "pass": true,
+      "cloth_distance": 0.0,
+      "axis_distance": 1.1000000000000014,
+      "radius": 2.55,
+      "scope": "Uniform transform preserves these source-space physical distances up to declared scale; vertex transfer independently verified."
+    },
+    {
+      "name": "hammock-cord-1-0-exact-endpoints",
+      "pass": true,
+      "cloth_distance": 0.0,
+      "axis_distance": 1.1000000000000014,
+      "radius": 2.55,
+      "scope": "Uniform transform preserves these source-space physical distances up to declared scale; vertex transfer independently verified."
+    },
+    {
+      "name": "hammock-cord-1-1-exact-endpoints",
+      "pass": true,
+      "cloth_distance": 0.0,
+      "axis_distance": 1.1000000000000014,
+      "radius": 2.55,
+      "scope": "Uniform transform preserves these source-space physical distances up to declared scale; vertex transfer independently verified."
+    },
+    {
+      "name": "d0-full-resolution-RGB",
+      "pass": true,
+      "opaque_blocks": 152559,
+      "varying_rgb_2x2_blocks": 109355,
+      "scope": "RGB retains intra-2packedpixel shading; coverage and outlines alone use coarse line grid."
+    },
+    {
+      "name": "d1-full-resolution-RGB",
+      "pass": true,
+      "opaque_blocks": 153362,
+      "varying_rgb_2x2_blocks": 112076,
+      "scope": "RGB retains intra-2packedpixel shading; coverage and outlines alone use coarse line grid."
+    },
+    {
+      "name": "d2-full-resolution-RGB",
+      "pass": true,
+      "opaque_blocks": 154055,
+      "varying_rgb_2x2_blocks": 110595,
+      "scope": "RGB retains intra-2packedpixel shading; coverage and outlines alone use coarse line grid."
+    },
+    {
+      "name": "d3-full-resolution-RGB",
+      "pass": true,
+      "opaque_blocks": 151828,
+      "varying_rgb_2x2_blocks": 110972,
+      "scope": "RGB retains intra-2packedpixel shading; coverage and outlines alone use coarse line grid."
+    },
+    {
+      "name": "negative-control-opaque-sphere-rejected",
+      "pass": true
+    },
+    {
+      "name": "negative-control-bent-line-rejected",
+      "pass": true,
+      "measured_slope": 0.642491657397108,
+      "unchanged_tolerance": 0.04
+    }
+  ],
+  "limits": [
+    "Imported non-hammock joints retain source AABB screens and exact vertex transfer, not general mesh collision certification."
+  ]
+}

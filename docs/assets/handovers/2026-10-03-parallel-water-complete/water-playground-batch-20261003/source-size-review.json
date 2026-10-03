@@ -1,0 +1,74 @@
+[
+  {
+    "d": 0,
+    "original_bbox": [
+      319,
+      834,
+      2240,
+      1811
+    ],
+    "candidate_bbox": [
+      322,
+      836,
+      2238,
+      1810
+    ],
+    "width_ratio": 0.9973971889640812,
+    "height_ratio": 0.9969293756397134,
+    "same_canvas_and_registration": true
+  },
+  {
+    "d": 1,
+    "original_bbox": [
+      319,
+      834,
+      2240,
+      1811
+    ],
+    "candidate_bbox": [
+      322,
+      836,
+      2238,
+      1810
+    ],
+    "width_ratio": 0.9973971889640812,
+    "height_ratio": 0.9969293756397134,
+    "same_canvas_and_registration": true
+  },
+  {
+    "d": 2,
+    "original_bbox": [
+      319,
+      834,
+      2240,
+      1811
+    ],
+    "candidate_bbox": [
+      322,
+      836,
+      2238,
+      1810
+    ],
+    "width_ratio": 0.9973971889640812,
+    "height_ratio": 0.9969293756397134,
+    "same_canvas_and_registration": true
+  },
+  {
+    "d": 3,
+    "original_bbox": [
+      319,
+      834,
+      2240,
+      1811
+    ],
+    "candidate_bbox": [
+      322,
+      836,
+      2238,
+      1810
+    ],
+    "width_ratio": 0.9973971889640812,
+    "height_ratio": 0.9969293756397134,
+    "same_canvas_and_registration": true
+  }
+]

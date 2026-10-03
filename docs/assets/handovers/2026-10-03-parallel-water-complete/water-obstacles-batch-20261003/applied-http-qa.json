@@ -1,0 +1,198 @@
+[
+  {
+    "id": "rig_bridge",
+    "d": 0,
+    "sha256": "62a717e83cdb547bb3b238483de0cb2c32fa8be89d0d21f6322151a2481fa307",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 1,
+    "sha256": "9d051712967d421cdb97a8cbe2df46d213958eb63940c6ca57f4b879de8f69e9",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 2,
+    "sha256": "8cbce0b6c03867abf9c483a73294ae0fa9f2653b457276e9f98b483774429758",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 3,
+    "sha256": "08d7770c4fd2b8db1cc9a20e3789271135a385ade60638393b0b23ef32b192d9",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 0,
+    "sha256": "b6ee395d3c47c4adec35e7ef7ed2a88ae98b43e7616d73d931919ba9c7e89423",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 1,
+    "sha256": "35273b0467a4dc276443280212db513c4eb271e0350b4939ff1831ee74175ece",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 2,
+    "sha256": "6ba60005bf94e43ab47d9f3dad3f3e7b7e045b11c9f3748bd20b6b3acdd05c52",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 3,
+    "sha256": "5da6ed3e616fbfce951f100b71462b090e0d4cecd591784cbe11021dc2b527e4",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 0,
+    "sha256": "b5863da63e216ae239ca77c080f5bc5607ba384481f3bc9d179d05d9a80223dd",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 1,
+    "sha256": "9aa5dc01e9deb187dfd56b4150c553145441af50d93ba354eb26026523c3b12f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 2,
+    "sha256": "8d6960402c38e7ebc2a680a749d388f2b73550075de18d1a6a384d96f7deeb71",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 3,
+    "sha256": "15907e9b8a24a3065123e3b5ed6780a463bd18232f533275b13eb51588d97945",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 0,
+    "sha256": "18da73a0fc0ef388ef466b101397617e8bd3ca98225eae6ce32cb396f120c20d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 1,
+    "sha256": "0ffc029a0425e55a51bb0a77a44e83996905c87a503f22a83d8fc627bff302c4",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 2,
+    "sha256": "c13344d1b9a9a373d9230cc97bf351068ad1dae327e6b3e80143dfe03a7ce721",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 3,
+    "sha256": "147a61a0b2112ea32de42dc7186317a8e83b106aa27035bae9302ecf3c80fe2e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 0,
+    "sha256": "02306ff99287d1ae190301437708a5d7a074899e9dcdb93937d84a9af30ead7f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 1,
+    "sha256": "39f84f8c9d098b6fa87f37b5e737457d21c75bcb490b50bf38fa7cb18a89dda6",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 2,
+    "sha256": "4b88faca8ee0bc1b11f21b158112b425af6914614d161ac64027542a14dcbce5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 3,
+    "sha256": "15e70d7f02ffb57401f922eaf24a2e065f14f9fe14d0167cadb19ba333dc8d25",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 0,
+    "sha256": "484817bbbf56af2baec5022798f5dcd096abee494eb569304e8f7245ddf653d6",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 1,
+    "sha256": "2d2f36baf53e43e902ca2b93afb5f4bcb260fe8c0d4349eff0bff93a6272d025",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 2,
+    "sha256": "65d0b59f98d3f4df94b03e65556af80717ef4db92252f2d3c7dcb0628839e95b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 3,
+    "sha256": "2f3cdfbd47f588ff6427fb2d828aeaebf6432afba4f62387a684ad64e43c7418",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 0,
+    "sha256": "07d81b56c125bc087c483cbf83c33dbb525571ad1e2fb770b08ef636d4eeb5b3",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 1,
+    "sha256": "a92b37a2910ac997e7b88e52424a59c3b9ab1a86823f7f34323058416d513e43",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 2,
+    "sha256": "ba1af8d3ca86b2b0e0159ae79ab52b9716aca39e6affffc14b005f9504131b3e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 3,
+    "sha256": "c66a25432ad77e5ef441b382adeb5bcfe05c962ce56f0e4321bdb98f3aeb3d28",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

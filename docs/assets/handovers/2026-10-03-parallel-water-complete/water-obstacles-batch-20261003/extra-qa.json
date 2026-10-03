@@ -1,0 +1,1677 @@
+{
+  "status": "PASS",
+  "curved_member_radius": [
+    {
+      "id": "rig_bridge",
+      "name": "yellow-arch-0",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 2.220446049250313e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "rig_bridge",
+      "name": "yellow-arch-1",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 3.552713678800501e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_seesaw",
+      "name": "yellow-handle-0",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 3.3306690738754696e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_seesaw",
+      "name": "yellow-handle-1",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 7.771561172376096e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-0",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 3.552713678800501e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-1",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 1.1102230246251565e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-2",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 1.3322676295501878e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-3",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 3.552713678800501e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-0",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 3.552713678800501e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-1",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 1.3322676295501878e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-2",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 1.3322676295501878e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-3",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 3.552713678800501e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-0",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 4.218847493575595e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-1",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 1.9984014443252818e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-2",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 2.6645352591003757e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-3",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 3.3306690738754696e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-0",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 4.218847493575595e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-1",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 1.9984014443252818e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-2",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 2.6645352591003757e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-3",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 3.3306690738754696e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-0",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 3.3306690738754696e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-1",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 2.220446049250313e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-2",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 2.6645352591003757e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-3",
+      "actual_vertex_samples": 128,
+      "radius_max_error": 4.218847493575595e-15,
+      "path_stations": 2,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_disc",
+      "name": "yellow-radial-handle-0",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 1.9095836023552692e-14,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_disc",
+      "name": "yellow-radial-handle-1",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 7.993605777301127e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_disc",
+      "name": "yellow-radial-handle-2",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 1.2656542480726785e-14,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_disc",
+      "name": "yellow-radial-handle-3",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 6.439293542825908e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_disc",
+      "name": "yellow-radial-handle-4",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 4.440892098500626e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_disc",
+      "name": "yellow-radial-handle-5",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 1.7319479184152442e-14,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "name": "green-gate-0",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 3.9968028886505635e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "name": "green-gate-1",
+      "actual_vertex_samples": 2432,
+      "radius_max_error": 6.217248937900877e-15,
+      "path_stations": 20,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "name": "low-green-cheek-0",
+      "actual_vertex_samples": 2560,
+      "radius_max_error": 3.9968028886505635e-15,
+      "path_stations": 21,
+      "radial_segments": 16,
+      "pass": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "name": "low-green-cheek-1",
+      "actual_vertex_samples": 2560,
+      "radius_max_error": 3.9968028886505635e-15,
+      "path_stations": 21,
+      "radial_segments": 16,
+      "pass": true
+    }
+  ],
+  "mounted_pegs": [
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-0",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-1",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-2",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-3",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-0",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-1",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-2",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-3",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-0",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-1",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-2",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-3",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-0",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-1",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-2",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-3",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-0",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-1",
+      "root_radial_distance": 0.2000000000000001,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-2",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-3",
+      "root_radial_distance": 0.2,
+      "tip_radial_distance": 0.52,
+      "peg_radius_in_tile_metric": 0.04375,
+      "column_radius": 0.26,
+      "pass": true,
+      "proof": "Entire root disk is within cylinder radial extent; outer end is outside. This is a local analytic mount proof, not whole-asset collision certification."
+    }
+  ],
+  "round_pivot_and_low_cylinder": [
+    {
+      "id": "module_rig_seesaw",
+      "name": "green-pivot",
+      "cylinder_radius_error": 3.552713678800501e-15,
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-0-rounded-tip",
+      "spherical_tip_error": 7.993605777301127e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-1-rounded-tip",
+      "spherical_tip_error": 7.549516567451064e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-2-rounded-tip",
+      "spherical_tip_error": 5.10702591327572e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-0-3-rounded-tip",
+      "spherical_tip_error": 7.549516567451064e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-0-rounded-tip",
+      "spherical_tip_error": 7.993605777301127e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-1-rounded-tip",
+      "spherical_tip_error": 7.549516567451064e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-2-rounded-tip",
+      "spherical_tip_error": 5.10702591327572e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-1-3-rounded-tip",
+      "spherical_tip_error": 7.549516567451064e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-0-rounded-tip",
+      "spherical_tip_error": 7.993605777301127e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-1-rounded-tip",
+      "spherical_tip_error": 7.771561172376096e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-2-rounded-tip",
+      "spherical_tip_error": 6.8833827526759706e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-2-3-rounded-tip",
+      "spherical_tip_error": 7.771561172376096e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-0-rounded-tip",
+      "spherical_tip_error": 7.993605777301127e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-1-rounded-tip",
+      "spherical_tip_error": 7.771561172376096e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-2-rounded-tip",
+      "spherical_tip_error": 6.8833827526759706e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-3-3-rounded-tip",
+      "spherical_tip_error": 7.771561172376096e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-0-rounded-tip",
+      "spherical_tip_error": 9.769962616701378e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-1-rounded-tip",
+      "spherical_tip_error": 7.993605777301127e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-2-rounded-tip",
+      "spherical_tip_error": 6.8833827526759706e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_totem",
+      "name": "yellow-peg-4-3-rounded-tip",
+      "spherical_tip_error": 7.993605777301127e-15,
+      "sample_count": 448,
+      "capped_pole_samples_excluded": 192,
+      "limitation": "Lathe uses a tiny 0.003 tile radius at the two closed pole rings; those planar end caps are excluded from spherical-side equation. Closed edge topology checks still include all caps.",
+      "pass": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "name": "low-yellow-cushion",
+      "half_ellipse_error": 7.771561172376096e-16,
+      "cheeks_meet_deck_plane": true,
+      "zbase": 3.9,
+      "height": 4.5,
+      "pass": true
+    }
+  ],
+  "disc_wedges": [
+    {
+      "id": "module_rig_disc",
+      "wedges": 6,
+      "total_angle": 6.283185307179586,
+      "colour_pixels": [
+        {
+          "d": 0,
+          "wedge": 0,
+          "rgb": [
+            254.0,
+            228.0,
+            56.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 0,
+          "wedge": 1,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 0,
+          "wedge": 2,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 0,
+          "wedge": 3,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 0,
+          "wedge": 4,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 0,
+          "wedge": 5,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 1,
+          "wedge": 0,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 1,
+          "wedge": 1,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 1,
+          "wedge": 2,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 1,
+          "wedge": 3,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 1,
+          "wedge": 4,
+          "rgb": [
+            255.0,
+            230.0,
+            58.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 1,
+          "wedge": 5,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 2,
+          "wedge": 0,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 2,
+          "wedge": 1,
+          "rgb": [
+            137.0,
+            196.0,
+            50.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 2,
+          "wedge": 2,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 2,
+          "wedge": 3,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 2,
+          "wedge": 4,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 2,
+          "wedge": 5,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 3,
+          "wedge": 0,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 3,
+          "wedge": 1,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 3,
+          "wedge": 2,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 3,
+          "wedge": 3,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        },
+        {
+          "d": 3,
+          "wedge": 4,
+          "rgb": [
+            255.0,
+            229.0,
+            57.0
+          ],
+          "expected": "yellow",
+          "pass": true
+        },
+        {
+          "d": 3,
+          "wedge": 5,
+          "rgb": [
+            136.0,
+            195.0,
+            49.0
+          ],
+          "expected": "green",
+          "pass": true
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "isolated_openings": [
+    {
+      "id": "rig_bridge--yellow-arch-0",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            302,
+            216
+          ],
+          "projected_horizontal_leg_center_span": 40.95999999999998,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            210,
+            216
+          ],
+          "projected_horizontal_leg_center_span": 40.96000000000001,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            210,
+            262
+          ],
+          "projected_horizontal_leg_center_span": 40.96000000000001,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            302,
+            262
+          ],
+          "projected_horizontal_leg_center_span": 40.95999999999998,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        }
+      ]
+    },
+    {
+      "id": "rig_bridge--yellow-arch-1",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            210,
+            262
+          ],
+          "projected_horizontal_leg_center_span": 40.96000000000001,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            302,
+            262
+          ],
+          "projected_horizontal_leg_center_span": 40.95999999999998,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            302,
+            216
+          ],
+          "projected_horizontal_leg_center_span": 40.95999999999998,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            210,
+            216
+          ],
+          "projected_horizontal_leg_center_span": 40.96000000000001,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        }
+      ]
+    },
+    {
+      "id": "module_rig_seesaw--yellow-handle-0",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            220,
+            226
+          ],
+          "projected_horizontal_leg_center_span": 28.160000000000025,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            220,
+            262
+          ],
+          "projected_horizontal_leg_center_span": 28.160000000000025,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            292,
+            262
+          ],
+          "projected_horizontal_leg_center_span": 28.160000000000025,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            292,
+            226
+          ],
+          "projected_horizontal_leg_center_span": 28.160000000000025,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        }
+      ]
+    },
+    {
+      "id": "module_rig_seesaw--yellow-handle-1",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            292,
+            262
+          ],
+          "projected_horizontal_leg_center_span": 28.160000000000025,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            292,
+            226
+          ],
+          "projected_horizontal_leg_center_span": 28.160000000000025,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            220,
+            226
+          ],
+          "projected_horizontal_leg_center_span": 28.160000000000025,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            220,
+            262
+          ],
+          "projected_horizontal_leg_center_span": 28.160000000000025,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        }
+      ]
+    },
+    {
+      "id": "module_rig_disc--yellow-radial-handle-0",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            278,
+            292
+          ],
+          "projected_horizontal_leg_center_span": 38.46727537056972,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            340,
+            239
+          ],
+          "projected_horizontal_leg_center_span": 10.307275370569755,
+          "clear_3x3": false,
+          "status": "edge_on_unmeasured",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            234,
+            208
+          ],
+          "projected_horizontal_leg_center_span": 38.46727537056978,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            172,
+            261
+          ],
+          "projected_horizontal_leg_center_span": 10.307275370569812,
+          "clear_3x3": false,
+          "status": "edge_on_unmeasured",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        }
+      ]
+    },
+    {
+      "id": "module_rig_disc--yellow-radial-handle-1",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            195,
+            281
+          ],
+          "projected_horizontal_leg_center_span": 28.159999999999968,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            317,
+            281
+          ],
+          "projected_horizontal_leg_center_span": 28.159999999999968,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            317,
+            219
+          ],
+          "projected_horizontal_leg_center_span": 28.159999999999968,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            195,
+            219
+          ],
+          "projected_horizontal_leg_center_span": 28.159999999999968,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        }
+      ]
+    },
+    {
+      "id": "module_rig_disc--yellow-radial-handle-2",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            172,
+            239
+          ],
+          "projected_horizontal_leg_center_span": 10.307275370569783,
+          "clear_3x3": false,
+          "status": "edge_on_unmeasured",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            234,
+            292
+          ],
+          "projected_horizontal_leg_center_span": 38.46727537056981,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            340,
+            261
+          ],
+          "projected_horizontal_leg_center_span": 10.307275370569755,
+          "clear_3x3": false,
+          "status": "edge_on_unmeasured",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            278,
+            208
+          ],
+          "projected_horizontal_leg_center_span": 38.46727537056984,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        }
+      ]
+    },
+    {
+      "id": "module_rig_disc--yellow-radial-handle-3",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            234,
+            208
+          ],
+          "projected_horizontal_leg_center_span": 38.46727537056978,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            172,
+            261
+          ],
+          "projected_horizontal_leg_center_span": 10.307275370569812,
+          "clear_3x3": false,
+          "status": "edge_on_unmeasured",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            278,
+            292
+          ],
+          "projected_horizontal_leg_center_span": 38.46727537056978,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            340,
+            239
+          ],
+          "projected_horizontal_leg_center_span": 10.307275370569755,
+          "clear_3x3": false,
+          "status": "edge_on_unmeasured",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        }
+      ]
+    },
+    {
+      "id": "module_rig_disc--yellow-radial-handle-4",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            317,
+            219
+          ],
+          "projected_horizontal_leg_center_span": 28.159999999999968,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            195,
+            219
+          ],
+          "projected_horizontal_leg_center_span": 28.159999999999997,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            195,
+            281
+          ],
+          "projected_horizontal_leg_center_span": 28.159999999999997,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            317,
+            281
+          ],
+          "projected_horizontal_leg_center_span": 28.159999999999968,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        }
+      ]
+    },
+    {
+      "id": "module_rig_disc--yellow-radial-handle-5",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            340,
+            261
+          ],
+          "projected_horizontal_leg_center_span": 10.307275370569812,
+          "clear_3x3": false,
+          "status": "edge_on_unmeasured",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            278,
+            208
+          ],
+          "projected_horizontal_leg_center_span": 38.46727537056978,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            172,
+            239
+          ],
+          "projected_horizontal_leg_center_span": 10.307275370569812,
+          "clear_3x3": false,
+          "status": "edge_on_unmeasured",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            234,
+            292
+          ],
+          "projected_horizontal_leg_center_span": 38.46727537056978,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        }
+      ]
+    },
+    {
+      "id": "module_rig_kids_park--green-gate-0",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            196,
+            213
+          ],
+          "projected_horizontal_leg_center_span": 48.0,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            216,
+            263
+          ],
+          "projected_horizontal_leg_center_span": 48.00000000000003,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            316,
+            254
+          ],
+          "projected_horizontal_leg_center_span": 48.0,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            296,
+            204
+          ],
+          "projected_horizontal_leg_center_span": 48.0,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        }
+      ]
+    },
+    {
+      "id": "module_rig_kids_park--green-gate-1",
+      "frames": [
+        {
+          "d": 0,
+          "aperture_center": [
+            287,
+            267
+          ],
+          "projected_horizontal_leg_center_span": 48.0,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        },
+        {
+          "d": 1,
+          "aperture_center": [
+            307,
+            226
+          ],
+          "projected_horizontal_leg_center_span": 48.0,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 2,
+          "aperture_center": [
+            225,
+            216
+          ],
+          "projected_horizontal_leg_center_span": 48.0,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": true
+        },
+        {
+          "d": 3,
+          "aperture_center": [
+            205,
+            257
+          ],
+          "projected_horizontal_leg_center_span": 48.0,
+          "clear_3x3": true,
+          "status": "PASS",
+          "saved_path_coverage": 1.0,
+          "path_samples": 18,
+          "full_assembly_air": false
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "limitations": [
+    "Isolated arches certify saved transparent holes without occlusion; full-assembly projection may occlude their centers with other actual parts.",
+    "Edge-on apertures below 12px projected horizontal leg-center span remain unmeasured, never counted as pass.",
+    "Analytic peg mount is specific to cylindrical root; generic joints remain AABB screens only.",
+    "No runtime QA or art95 certification."
+  ]
+}

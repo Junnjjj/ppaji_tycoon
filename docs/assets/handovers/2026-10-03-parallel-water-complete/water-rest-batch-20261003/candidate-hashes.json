@@ -1,0 +1,130 @@
+{
+  "candidates/module_waterwalk/d0.png": {
+    "sha256": "76eb0eb592fa8c4968773589951db22e5085ea3afc6db0fb524e01f0186ff9e0",
+    "decoded_rgba_sha256": "b5d7d8e61102183e57da317e5b70c521aca5dd074a5cab5681eda974923b2486",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_waterwalk/d1.png": {
+    "sha256": "d3e49c9e33096919cc4bcdb65b89203667f6a5d79708a1818823b7355c10749c",
+    "decoded_rgba_sha256": "ab5d5f2cfa7aa2744212cb97ae53820626add024a6a6726f725ee879dc96690d",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_waterwalk/d2.png": {
+    "sha256": "fae3d42555a3d468aae70b88b1f4c51c29b7fdc86541378c55608a266955da0b",
+    "decoded_rgba_sha256": "8ac75db5a3cd795689a2a7fd99ccbb9f33524ef0a6dec77a04cdf9c3455bbe38",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_waterwalk/d3.png": {
+    "sha256": "e7de77fff9607ae09ba76321707de4b4ffed6b07352882ae151d2a550624b6ef",
+    "decoded_rgba_sha256": "4844ba81ac8c5c33b280272188c8523eb6276fa45d03e609d0a711c2ef36f308",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_hammock/d0.png": {
+    "sha256": "133956ef944c56937db5b08d10218e1cd648024eb8ebefd41c6b4d8ad481209d",
+    "decoded_rgba_sha256": "7825f19d20cffdf1d586c389e200813e3195fd705ecd9d18eb25ed1809b210f7",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_hammock/d1.png": {
+    "sha256": "dd32ba742e2e4848beb3567d23ab962773cd98d093c7284afda692752a9f28c4",
+    "decoded_rgba_sha256": "d852356e891aec65e86ea7d26d4524e7b797345deae9c540a46f4379f63c886e",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_hammock/d2.png": {
+    "sha256": "47f483b89631755d09a8926b6ca591de02bdebd1ecfc7d67129ae5b3800f3081",
+    "decoded_rgba_sha256": "7f3b0236646f54a2a35ebef6316372adbd73110180386e7eea589664afa83f5e",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_hammock/d3.png": {
+    "sha256": "c3daf3bda87bd49744a2d36d32ada58207bc5010844a140084151fff702e87e0",
+    "decoded_rgba_sha256": "48f4990d067c5270813472eef26d8da543f27a550e4a452d3ad8bd4ae06b8a3a",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_sunbed/d0.png": {
+    "sha256": "ed7bff97da5ecb3f8e639536bf44c1896f30306690186e539a5d6791cca833d1",
+    "decoded_rgba_sha256": "b0f38c7428f2531b7a267fac6d47de991cddb1cc56efbb7fd6b51e5567b38922",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_sunbed/d1.png": {
+    "sha256": "b62935e1e9c5a8bb27537e5a338eacbadcb76cd7984084a90035b38090e58cbc",
+    "decoded_rgba_sha256": "6d5a0988ced895726d33ec3c579170850ba6c50a32e87a1a2c5fb6beb173a022",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_sunbed/d2.png": {
+    "sha256": "07518378cdd6f408c78316985928bbab00cd175ceefef9df046f4036fee4056e",
+    "decoded_rgba_sha256": "7fa7769a2718e6268f8063ccb8ae753e9205d31249f10d231e906123303e159d",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_sunbed/d3.png": {
+    "sha256": "1946e86f0feb1c9d9e37ae35d38e69fc15c7d857032794d47a04cb7203c089c5",
+    "decoded_rgba_sha256": "99a2b2588cb52f7f44a8026b05768cd3d4e0a8337ff5c22bf8d72d6bef05da86",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_led_buoy/d0.png": {
+    "sha256": "d990186615c64469b3693d0aee2b7c94a4d2158c5d715ca4386e6444d26e3f91",
+    "decoded_rgba_sha256": "d4caab6e64c42a02968284cfdf6733178d0484190e0998f8979ac1a53b55f0d5",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_led_buoy/d1.png": {
+    "sha256": "2e76b777b1a9cefe2976f8b8faa7c287890fe1423f7327cc34a09faa22b7086e",
+    "decoded_rgba_sha256": "5160da2c687d86d7fe33ae881e73d4451497a3556454ad570a4d71cf3f4903b1",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_led_buoy/d2.png": {
+    "sha256": "fece1545a226c091286ceacf1899de37916aa0bca73290eb9ca52dbcc145666e",
+    "decoded_rgba_sha256": "1d746c42dd073986349e08b504c64e42940bea2bca5bdd7c896e1842ee553621",
+    "size": [
+      512,
+      512
+    ]
+  },
+  "candidates/module_rig_led_buoy/d3.png": {
+    "sha256": "985333d3b7ef52e06575840189bdc6cf960b339fdf9cbe66fe397ecadcdf357c",
+    "decoded_rgba_sha256": "c02e26a72c276f76c0165c6a4a173301c4d454b5f0f6533cefd74c267adb327f",
+    "size": [
+      512,
+      512
+    ]
+  }
+}

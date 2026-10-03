@@ -1,0 +1,543 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "module_waterwalk": "water-rest-batch-20261003",
+    "module_rig_hammock": "water-rest-batch-20261003",
+    "module_rig_sunbed": "water-rest-batch-20261003",
+    "module_rig_led_buoy": "water-rest-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "module_waterwalk",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_waterwalk/d0.png",
+      "source_sha256": "76eb0eb592fa8c4968773589951db22e5085ea3afc6db0fb524e01f0186ff9e0",
+      "old": {
+        "file": "fac_module_waterwalk_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "89dcfbd16baca5aae88ef8c99bfcf59e2b89db9f2ef1c3bc0f247fd310c04364",
+        "bytes": 67774
+      },
+      "new": {
+        "file": "fac_module_waterwalk_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "c473693a81b96e5fd1f2297b14145da8eaa376fb070119f3732c04855cf1db0d",
+        "bytes": 34972
+      },
+      "old_native": {
+        "file": "module_waterwalk/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "634f72532ff8207c13b322b93a74b0fbd5deaa63fd7c08a5e4adf9725014b985"
+      },
+      "new_native": {
+        "file": "module_waterwalk/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "7b23036617584d6345324af98e46afa400c8c0da2e687e930bb1c87950158fcf"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_waterwalk",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_waterwalk/d1.png",
+      "source_sha256": "d3e49c9e33096919cc4bcdb65b89203667f6a5d79708a1818823b7355c10749c",
+      "old": {
+        "file": "fac_module_waterwalk_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3780cdbccac4333f152afe8118d02f100b7b1200eb3dbea3331661d03cbb6774",
+        "bytes": 67798
+      },
+      "new": {
+        "file": "fac_module_waterwalk_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "2baa041e171ad50c164282688a5711782d51d4d086ea5bc1595590b47bcb417d",
+        "bytes": 35894
+      },
+      "old_native": {
+        "file": "module_waterwalk/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "acc932bb317524b5263f9370d3e2e2720bea80cc33e744ef2781dce256ff68c6"
+      },
+      "new_native": {
+        "file": "module_waterwalk/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "3a183129fdffc5507fb20c5fff3da30a8078f8c3a4b622e39b522cac867c7bd2"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_waterwalk",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_waterwalk/d2.png",
+      "source_sha256": "fae3d42555a3d468aae70b88b1f4c51c29b7fdc86541378c55608a266955da0b",
+      "old": {
+        "file": "fac_module_waterwalk_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f697505d307bb18f29c3dd26cf815ccdf4a7ab57bed36488828943540c01f33d",
+        "bytes": 71618
+      },
+      "new": {
+        "file": "fac_module_waterwalk_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "d841a22fc08653b62324b9f999177adc9a1d96e7afe5773142400cc610467b10",
+        "bytes": 34288
+      },
+      "old_native": {
+        "file": "module_waterwalk/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a80fb92879e8ba52f57c52ad9d2e27dd8ddd03b689f3c0abea9569f5243d3bef"
+      },
+      "new_native": {
+        "file": "module_waterwalk/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "abc6f75aa289f40fce7358e5a1019c939e41d31c526890ad512846b97df8c5e7"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_waterwalk",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_waterwalk/d3.png",
+      "source_sha256": "e7de77fff9607ae09ba76321707de4b4ffed6b07352882ae151d2a550624b6ef",
+      "old": {
+        "file": "fac_module_waterwalk_3.fix-1d36e3b636db.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "1d36e3b636db42feef9ce21352c9b1f4df4a33f2bd73b77333fd230429bea237",
+        "bytes": 72500
+      },
+      "new": {
+        "file": "fac_module_waterwalk_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f53c71b23f0d8175dbd3b7cd51abe64eb21bb13c2ebde6e851b36bce83d5aee4",
+        "bytes": 35308
+      },
+      "old_native": {
+        "file": "module_waterwalk/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "3be732237cc72289d5373050f413b29a84a3c62c2e68fc7be27e3e4f0096bffe"
+      },
+      "new_native": {
+        "file": "module_waterwalk/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "efc673998078d16b60cb418cd28cd4f9d430bad2f9633d40911837ec669f14ac"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_hammock",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_hammock/d0.png",
+      "source_sha256": "133956ef944c56937db5b08d10218e1cd648024eb8ebefd41c6b4d8ad481209d",
+      "old": {
+        "file": "fac_module_rig_hammock_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "121365b8ad3baf9b403439ae9ec4dba6a3a5d4b8773b603b68bde13b6cabad24",
+        "bytes": 64038
+      },
+      "new": {
+        "file": "fac_module_rig_hammock_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "6a1179e08db44d425359100b11566fe6f9a6e639e97dadba36e072e71effb64b",
+        "bytes": 27656
+      },
+      "old_native": {
+        "file": "module_rig_hammock/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "101839a775a15721e85aa3502743ae2ceaf3bc20f331bddcd9a35c6a979e65dc"
+      },
+      "new_native": {
+        "file": "module_rig_hammock/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "cb9c43f7b135841023fe83efbab80aafdf4b8bc85aa3a8088fea73f32dfd0d0a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_hammock",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_hammock/d1.png",
+      "source_sha256": "dd32ba742e2e4848beb3567d23ab962773cd98d093c7284afda692752a9f28c4",
+      "old": {
+        "file": "fac_module_rig_hammock_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "b9d851cad1fb0913975a0bcf5cf7b1a20dadf71402223e893523e3da36d19200",
+        "bytes": 71006
+      },
+      "new": {
+        "file": "fac_module_rig_hammock_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "97ff0c29cdc07874c9a79653a3b3f63ce23d300590673a5b83fbe12fa5427b51",
+        "bytes": 27538
+      },
+      "old_native": {
+        "file": "module_rig_hammock/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "d69acf02fa7bf14dff7a1f05736df5fd895d854cf033ca7a8769cfa1f61c7d7d"
+      },
+      "new_native": {
+        "file": "module_rig_hammock/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "c8ab38ccf417467e87bd4cdf2754cc0b48cc3030585971c294baf10dc6c627ad"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_hammock",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_hammock/d2.png",
+      "source_sha256": "47f483b89631755d09a8926b6ca591de02bdebd1ecfc7d67129ae5b3800f3081",
+      "old": {
+        "file": "fac_module_rig_hammock_2.fix-f8fe20479571.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f8fe20479571d1e6bd0c8e804a5ff4bfc782bb0ffba8488c18c57a7b0bb524a3",
+        "bytes": 71340
+      },
+      "new": {
+        "file": "fac_module_rig_hammock_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "786f658d12372ffa37e096eb4f22dc8a7889035442a7bff39c1f1be600d73104",
+        "bytes": 26768
+      },
+      "old_native": {
+        "file": "module_rig_hammock/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "9252dc4b48bb0640743d6bfb7b234642b9382a4bbd1b3258bd3267d06ed95207"
+      },
+      "new_native": {
+        "file": "module_rig_hammock/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "ea48539b13bdf884c72cc1b4e16f63293edadb396e475a4d23e6ab15643c717f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_hammock",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_hammock/d3.png",
+      "source_sha256": "c3daf3bda87bd49744a2d36d32ada58207bc5010844a140084151fff702e87e0",
+      "old": {
+        "file": "fac_module_rig_hammock_3.fix-098d9764cd54.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "098d9764cd54891c0a67796a00c4037806d1152dc470f3ed56668631293648fb",
+        "bytes": 66154
+      },
+      "new": {
+        "file": "fac_module_rig_hammock_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "6ceb02403d32d59f864c7dbe12314d4da99a71e46f5b52158f2209a62c8c3501",
+        "bytes": 26736
+      },
+      "old_native": {
+        "file": "module_rig_hammock/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "4f97c2ffa863edbf05854c31c081d7d8a4ac083125e125df307cb0daa7880b1c"
+      },
+      "new_native": {
+        "file": "module_rig_hammock/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "fe28311c3054f5ce119d751a871fb555019b6bb9580d7fe187762e74e0fde461"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_sunbed",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_sunbed/d0.png",
+      "source_sha256": "ed7bff97da5ecb3f8e639536bf44c1896f30306690186e539a5d6791cca833d1",
+      "old": {
+        "file": "fac_module_rig_sunbed_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "95842c6f04b57c2ed264e29bb02a291265cca81c5bd4624149a3e2feb4acbe34",
+        "bytes": 27252
+      },
+      "new": {
+        "file": "fac_module_rig_sunbed_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f145bd312080265beaac04c470a472c380b126b36cd4dfa8c8a073fd4eb68cee",
+        "bytes": 14304
+      },
+      "old_native": {
+        "file": "module_rig_sunbed/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "24be9b14d6ff8dd4eb3efcfee96d4222d8273f7627709804365b94ab4df24102"
+      },
+      "new_native": {
+        "file": "module_rig_sunbed/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "31a34f210546a68fe890d8fc13e495832bc0d48fdd80d1983a35db32b08ed8f4"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_sunbed",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_sunbed/d1.png",
+      "source_sha256": "b62935e1e9c5a8bb27537e5a338eacbadcb76cd7984084a90035b38090e58cbc",
+      "old": {
+        "file": "fac_module_rig_sunbed_1.fix-514983ae642d.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "514983ae642d196c6d20e5370c086f97ddef87f3c723ef1864d61a7202357557",
+        "bytes": 31196
+      },
+      "new": {
+        "file": "fac_module_rig_sunbed_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "248604d83266d38e6cfde23f0b89fe79a0b3820860db92c1230d5e8a40f53b2e",
+        "bytes": 14470
+      },
+      "old_native": {
+        "file": "module_rig_sunbed/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "70675eca644040801eed48b75e134157a0b703f41c20c1822b0c59dce7513180"
+      },
+      "new_native": {
+        "file": "module_rig_sunbed/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "2bad36e40027b9e49a8c994f8b81baec705ca75ff8e67483b7ff6e4c6aeef3d5"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_sunbed",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_sunbed/d2.png",
+      "source_sha256": "07518378cdd6f408c78316985928bbab00cd175ceefef9df046f4036fee4056e",
+      "old": {
+        "file": "fac_module_rig_sunbed_2.fix-c6daf53c225f.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "c6daf53c225f17f4ceadb7d2ee621f5eef9ed843b405c235ff89f204c6b7879b",
+        "bytes": 31598
+      },
+      "new": {
+        "file": "fac_module_rig_sunbed_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "31deb4c93cc4466728fc671d704d10cae5c21a2f4686dd8ba1851f1ed48a52d7",
+        "bytes": 14382
+      },
+      "old_native": {
+        "file": "module_rig_sunbed/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "9a1b4b9dcb6bf7c1c44a87d33c9083732101707105d5b0f739ddb6c8540159ba"
+      },
+      "new_native": {
+        "file": "module_rig_sunbed/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "b5cdac77e65f748aac33f7ba57aa1cdc2ce5ec809dff31260b1ea254ae03886c"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_sunbed",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_sunbed/d3.png",
+      "source_sha256": "1946e86f0feb1c9d9e37ae35d38e69fc15c7d857032794d47a04cb7203c089c5",
+      "old": {
+        "file": "fac_module_rig_sunbed_3.fix-82c056a20864.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "82c056a20864c55ec90d452dd42ee675f1bb80135a48306608b28cb1b8540f91",
+        "bytes": 32828
+      },
+      "new": {
+        "file": "fac_module_rig_sunbed_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "ac74a325afe43499a27b19521663b201b407a6188a23344d591f385da7d5ebe0",
+        "bytes": 14280
+      },
+      "old_native": {
+        "file": "module_rig_sunbed/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "2a605f77f4f25bf257c092b196c967932156a338753d0f44ee8dcc94f976563c"
+      },
+      "new_native": {
+        "file": "module_rig_sunbed/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "f7713f202c21fad1250f2fb812fab99632c4ca471139d48f2e50095ffcb72070"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_led_buoy",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_led_buoy/d0.png",
+      "source_sha256": "d990186615c64469b3693d0aee2b7c94a4d2158c5d715ca4386e6444d26e3f91",
+      "old": {
+        "file": "fac_module_rig_led_buoy_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "b4f75112c76d95d6f5d25002fe8a9215fa138c151ed177fec288a634e7a20ee1",
+        "bytes": 13008
+      },
+      "new": {
+        "file": "fac_module_rig_led_buoy_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "39b8d55ca821a50479e6b526aa9fb5e198dc8850c1f375b0d06a38ed84ad4a0b",
+        "bytes": 8040
+      },
+      "old_native": {
+        "file": "module_rig_led_buoy/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "e9bbc390e6997d92ce08692319492e1253d32f8394a78a2ec66c7a6c3b907f4d"
+      },
+      "new_native": {
+        "file": "module_rig_led_buoy/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "30fa4bf2e7bc1dfcf799fbfed601424b43d9e01ff73fb0d12c721b221bdd9673"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_led_buoy",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_led_buoy/d1.png",
+      "source_sha256": "2e76b777b1a9cefe2976f8b8faa7c287890fe1423f7327cc34a09faa22b7086e",
+      "old": {
+        "file": "fac_module_rig_led_buoy_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "838d63fda5656b6adeeaec426cf70ed509709952d4dfce7b057d16b8aa5a923d",
+        "bytes": 12860
+      },
+      "new": {
+        "file": "fac_module_rig_led_buoy_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "037f03896b7cffa005f7af70f1c56c9f2e8f7d4d1538a2b94ece0b54dd9cb1b2",
+        "bytes": 8196
+      },
+      "old_native": {
+        "file": "module_rig_led_buoy/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "d8ab1c966eb450d3c1c1ac62f2440afc3813e98c26d17f7fbd34aa403e34c701"
+      },
+      "new_native": {
+        "file": "module_rig_led_buoy/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "598ff587f10932348f4b58643dd69a09b44d162c4892056867c6bf36fe04c131"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_led_buoy",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_led_buoy/d2.png",
+      "source_sha256": "fece1545a226c091286ceacf1899de37916aa0bca73290eb9ca52dbcc145666e",
+      "old": {
+        "file": "fac_module_rig_led_buoy_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "034c4c6c0060e7d371ce57683afaa59cc1f0b33e5c6641217046031b4a9e2568",
+        "bytes": 12826
+      },
+      "new": {
+        "file": "fac_module_rig_led_buoy_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "e8e9c021fd2536aca7c16f208fb1c1df69917572c203b8d54857e39e05ca050a",
+        "bytes": 8114
+      },
+      "old_native": {
+        "file": "module_rig_led_buoy/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "7caf44e887546071de7450908e73cd394f162655b0094f1f93f03d180518c95f"
+      },
+      "new_native": {
+        "file": "module_rig_led_buoy/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "1bfdbe5c27ca43c59805575b6742f2a35b3ae7ce1d58d79fd68a8c527cfb8cdb"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_led_buoy",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-rest-batch-20261003/candidates/module_rig_led_buoy/d3.png",
+      "source_sha256": "985333d3b7ef52e06575840189bdc6cf960b339fdf9cbe66fe397ecadcdf357c",
+      "old": {
+        "file": "fac_module_rig_led_buoy_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "66ada67d6e9e372f5d681077c92c020f1f4400bd7b29401d862dba32fb2c1467",
+        "bytes": 13026
+      },
+      "new": {
+        "file": "fac_module_rig_led_buoy_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "ec2b3c34d79ad6ee0402a8e1eb41c4b0c3c618c4e9ed64529792b619018d0e9b",
+        "bytes": 8096
+      },
+      "old_native": {
+        "file": "module_rig_led_buoy/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "743cd88f797cb71138ff446947b1000a910638c2472d245f48184286f31b4872"
+      },
+      "new_native": {
+        "file": "module_rig_led_buoy/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "3989494cb210a1733f01bbcc0260affca0c93d8ca85d3a5725151097456b3ee9"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true,
+  "synchronized_native_visual_aliases": {}
+}

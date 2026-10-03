@@ -1,0 +1,58 @@
+{
+  "run": "run_fc9dbd55012a",
+  "groups": {
+    "water-curves-batch-20261003": [
+      "rig_blob",
+      "rig_iceberg",
+      "module_trampoline_w",
+      "module_rig_roller"
+    ],
+    "water-obstacles-batch-20261003": [
+      "rig_bridge",
+      "rig_stepstone",
+      "module_rig_beam",
+      "module_rig_seesaw",
+      "module_rig_totem",
+      "module_rig_disc",
+      "module_rig_kids_park"
+    ],
+    "water-rest-batch-20261003": [
+      "module_waterwalk",
+      "module_rig_hammock",
+      "module_rig_sunbed",
+      "module_rig_led_buoy"
+    ]
+  },
+  "dispatches": {
+    "water-curves-batch-20261003": "ctx_f5905f0bb359",
+    "water-obstacles-batch-20261003": "ctx_5b6a6db1d215",
+    "water-rest-batch-20261003": "ctx_e8b5fd0bd780"
+  },
+  "applied_before_wave": 84,
+  "main_previous_commit": "78c37e5",
+  "status": "all100_applied_final_documentation",
+  "remaining_after_these": 1,
+  "startup_failed": {
+    "water-curves-batch-20261003": "ctx_dcad5e9f780a",
+    "water-obstacles-batch-20261003": "ctx_e00be84f02b9",
+    "water-rest-batch-20261003": "ctx_8f9bae18457e"
+  },
+  "compound_task": "task_edb9cec4c9c4",
+  "settled_released": [
+    "ctx_e8b5fd0bd780",
+    "ctx_f5905f0bb359",
+    "ctx_587013741196"
+  ],
+  "reused_for_compound": {
+    "settled": "ctx_5b6a6db1d215",
+    "active": "ctx_587013741196"
+  },
+  "compound_dispatch": "ctx_587013741196",
+  "applied_packs": [
+    "water-rest-batch-20261003",
+    "water-curves-batch-20261003",
+    "water-obstacles-batch-20261003",
+    "water-playground-batch-20261003"
+  ],
+  "applied_current": 100
+}

@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "scope": "all4 registered source/candidate/line boards and actual source/candidate floor/water game maps",
+  "observations": [
+    "Root directly viewed final contact-board and registered all4 source/candidate comparison. Source-rich blue/green/yellow palette and complete13module composition retained in one shared assembly.",
+    "Outer occupied bounds within0.4% source; fixed instance geometry keeps all4 coherent. Source variable module offsets are not separately fitted.",
+    "Declared bevel edge measurement and independent depth-based route occlusion replace unsupported offset; original failures preserved.",
+    "Root directly viewed all four actual game maps (floor original/candidate, water original/candidate). Unclipped four-direction placements, consistent grid alignment, open water voids and correctly composited transparent sphere. All4 full2560px frames exact; storage unchanged; all4 complete240cell footprints lie on water code5."
+  ],
+  "limits": [
+    "Full compound d3 sphere air-background sample unmeasured; isolated alpha and compound transmission/depth measured separately.",
+    "AABB contact is a screen, not global collision proof. Numeric PASS is not art95."
+  ],
+  "candidate_sha256": {
+    "candidates/ppaji_playground/d0.png": "5a3913c7038aedcd16fd0d2322a162532ef08c1eac65a4f6815ba569afa93370",
+    "candidates/ppaji_playground/d1.png": "a40a5c9cd29d143c82d23cd3c35e24cd31622de61b046b6b7872423bde9a3beb",
+    "candidates/ppaji_playground/d2.png": "99cf27bd10a15bd2b5185766e89b6ff7c9aa37a49bef8d93bddddd98db6e36bc",
+    "candidates/ppaji_playground/d3.png": "afa7ab946c6ee31eb4324efbb3602fb4e3561812a0ba9e68e638cbaf6c437075"
+  },
+  "settlement_hashes_verified": 37
+}

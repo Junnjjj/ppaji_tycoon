@@ -1,0 +1,114 @@
+[
+  {
+    "id": "rig_blob",
+    "d": 0,
+    "sha256": "d9ebced46a55f9686e564e30ba2eef616c3a01b5e74184d3ad1a4708ed7a208d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_blob",
+    "d": 1,
+    "sha256": "29baa7c176b5b208cad62ea3d437f5fb239375515e485f1916965c4afda13f7f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_blob",
+    "d": 2,
+    "sha256": "b674dabf089a4defc73b379c9c1c18dfef51197a871f5ea35308f54382003489",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_blob",
+    "d": 3,
+    "sha256": "ba740ee4dbac760d0bb466b6d9aedf6187d610cfff2916b8a5495bed05a21c07",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 0,
+    "sha256": "97909da32996078c1adf9d3caac5f72d8e5db1f0f130e79e929025c524b5bd43",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 1,
+    "sha256": "8746e7c8a73b1ad3ac0ccd3b84498d1ab5342f680438dc2336c819b944b46479",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 2,
+    "sha256": "53f2c4caadcd5c2b6a404b5f66a3f5faa24ab8de0048369d24dbcf0fc669ee57",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 3,
+    "sha256": "1f653d2ea5bf3f12898278bfbfecfcaa01a6d613848bede58c3bb9a61fc95ca9",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 0,
+    "sha256": "6763d3f96af318e8121652cbdff4dbc295c7ffa2412b6580abc4a39f9a76d354",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 1,
+    "sha256": "858f639ff6c929c4203a1a0160322c4af5a9051f76f5a268b8e47bdb8f5a78d3",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 2,
+    "sha256": "6c7f00e3883d1886e7b092bd101430a12d888398d85096843d8d9447e852c2c8",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 3,
+    "sha256": "bf65f4b8985fac54cb55d647cab6484e9ba118a8667bbdb85a22ba4ecbf477ee",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 0,
+    "sha256": "6ae456d7a7378c2e14c8c592e9278d82e78daac484bf4a776f48f04cfdb11f8e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 1,
+    "sha256": "e9dedd0b05ff14f561d831f5e4d6b90eee08c96f4e7e2881345178b06ca2ce07",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 2,
+    "sha256": "0402193a471bca40b96f4a2c006aab83370dca34503eb68d8ea801b104fa8372",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 3,
+    "sha256": "9909b6633d93ae5d0c0e30613f91d5a23d6ba7021daafcc5a3bff3de71b35c7c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

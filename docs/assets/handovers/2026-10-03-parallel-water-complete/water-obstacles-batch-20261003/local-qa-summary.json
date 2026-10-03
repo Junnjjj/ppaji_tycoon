@@ -1,0 +1,89 @@
+{
+  "status": "PASS",
+  "counts": {
+    "candidate_files": 28,
+    "closed_parts": 312,
+    "aabb_joint_screens": 404,
+    "saved_straight_lines": 136,
+    "line_limitations": 184,
+    "curve_members": 34,
+    "analytic_peg_mounts": 20,
+    "isolated_aperture_visible_pass": 40,
+    "isolated_aperture_edge_on_unmeasured": 8,
+    "isolated_wedge_color_samples": 24
+  },
+  "main_modified": false,
+  "runtime_qa": "coordinator_pending",
+  "source_size_ratios": {
+    "rig_bridge": {
+      "width": [
+        0.9424083769633508,
+        0.972972972972973
+      ],
+      "height": [
+        1.0,
+        1.0251256281407035
+      ]
+    },
+    "rig_stepstone": {
+      "width": [
+        0.9836065573770492,
+        1.0256410256410255
+      ],
+      "height": [
+        1.0238095238095237,
+        1.036144578313253
+      ]
+    },
+    "module_rig_beam": {
+      "width": [
+        0.9606299212598425,
+        0.9644268774703557
+      ],
+      "height": [
+        1.0,
+        1.0121951219512195
+      ]
+    },
+    "module_rig_seesaw": {
+      "width": [
+        0.9594594594594594,
+        0.993006993006993
+      ],
+      "height": [
+        1.0229885057471264,
+        1.0289017341040463
+      ]
+    },
+    "module_rig_totem": {
+      "width": [
+        0.9752066115702479,
+        0.9915966386554622
+      ],
+      "height": [
+        0.9590163934426229,
+        0.9669421487603306
+      ]
+    },
+    "module_rig_disc": {
+      "width": [
+        0.9737827715355806,
+        1.015625
+      ],
+      "height": [
+        1.0,
+        1.037837837837838
+      ]
+    },
+    "module_rig_kids_park": {
+      "width": [
+        1.0029154518950438,
+        1.033033033033033
+      ],
+      "height": [
+        0.9144981412639405,
+        1.032258064516129
+      ]
+    }
+  }
+}

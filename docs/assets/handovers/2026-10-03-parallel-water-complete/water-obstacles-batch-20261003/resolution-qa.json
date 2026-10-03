@@ -1,0 +1,202 @@
+{
+  "status": "PASS",
+  "frames": [
+    {
+      "file": "candidates/module_rig_beam/d0.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 2736,
+      "opaque_blocks": 3785,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_beam/d1.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 2696,
+      "opaque_blocks": 3785,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_beam/d2.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 2730,
+      "opaque_blocks": 3785,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_beam/d3.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 2677,
+      "opaque_blocks": 3785,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_disc/d0.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 6850,
+      "opaque_blocks": 8411,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_disc/d1.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 6834,
+      "opaque_blocks": 8411,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_disc/d2.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 7098,
+      "opaque_blocks": 8752,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_disc/d3.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 7072,
+      "opaque_blocks": 8752,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_kids_park/d0.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 7536,
+      "opaque_blocks": 10201,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_kids_park/d1.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 7586,
+      "opaque_blocks": 10217,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_kids_park/d2.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 7716,
+      "opaque_blocks": 10405,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_kids_park/d3.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 7788,
+      "opaque_blocks": 10484,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_seesaw/d0.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 4332,
+      "opaque_blocks": 5874,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_seesaw/d1.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 4320,
+      "opaque_blocks": 5874,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_seesaw/d2.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 4348,
+      "opaque_blocks": 5874,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_seesaw/d3.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 4356,
+      "opaque_blocks": 5874,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_totem/d0.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 4397,
+      "opaque_blocks": 6579,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_totem/d1.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 4473,
+      "opaque_blocks": 6579,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_totem/d2.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 4552,
+      "opaque_blocks": 6579,
+      "pass": true
+    },
+    {
+      "file": "candidates/module_rig_totem/d3.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 4403,
+      "opaque_blocks": 6579,
+      "pass": true
+    },
+    {
+      "file": "candidates/rig_bridge/d0.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 3273,
+      "opaque_blocks": 4624,
+      "pass": true
+    },
+    {
+      "file": "candidates/rig_bridge/d1.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 3278,
+      "opaque_blocks": 4624,
+      "pass": true
+    },
+    {
+      "file": "candidates/rig_bridge/d2.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 3253,
+      "opaque_blocks": 4624,
+      "pass": true
+    },
+    {
+      "file": "candidates/rig_bridge/d3.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 3267,
+      "opaque_blocks": 4624,
+      "pass": true
+    },
+    {
+      "file": "candidates/rig_stepstone/d0.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 1216,
+      "opaque_blocks": 1612,
+      "pass": true
+    },
+    {
+      "file": "candidates/rig_stepstone/d1.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 1222,
+      "opaque_blocks": 1612,
+      "pass": true
+    },
+    {
+      "file": "candidates/rig_stepstone/d2.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 1224,
+      "opaque_blocks": 1612,
+      "pass": true
+    },
+    {
+      "file": "candidates/rig_stepstone/d3.png",
+      "two_packed_pixel_alpha_coverage": true,
+      "opaque_2x2_blocks_with_full_resolution_rgb_variation": 1210,
+      "opaque_blocks": 1612,
+      "pass": true
+    }
+  ],
+  "limitation": "This demonstrates saved RGB was not flattened to the two-packed-pixel coverage grid; it does not measure aesthetic texture fidelity."
+}

@@ -317,28 +317,28 @@
       "blueprint": "ppaji_playground/blueprint.json",
       "frames": {
         "d0": {
-          "file": "ppaji_playground/native-d0.png",
+          "file": "ppaji_playground/accepted-20261003-d0.png",
           "w": 640,
           "h": 640,
-          "sha256": "a244e755e71ddf77009215f59081987ac944f05e5575bbf2d84c5b4ecc24d80f"
+          "sha256": "b763380fb6c91025d30e83e9ac88e9ec0e3aa89450e455398aa39427e2a5fc75"
         },
         "d1": {
-          "file": "ppaji_playground/native-d1.png",
+          "file": "ppaji_playground/accepted-20261003-d1.png",
           "w": 640,
           "h": 640,
-          "sha256": "6289a79b794ee78348c53ab9d836afd5e8dd453c3e50a61c0a97cb928b3ba198"
+          "sha256": "7516b50e186ccca9bf05a8c41030256df8f569326720fae6edb42762783b360f"
         },
         "d2": {
-          "file": "ppaji_playground/native-d2.png",
+          "file": "ppaji_playground/accepted-20261003-d2.png",
           "w": 640,
           "h": 640,
-          "sha256": "27b2640e8a020e04c8c4da2fafb8adaab3488cec123f045410d0b82f026a879a"
+          "sha256": "64e28f8f266bab968793c9532e71f0702f1ca19d390585df0fae0c5696dc15f5"
         },
         "d3": {
-          "file": "ppaji_playground/native-d3.png",
+          "file": "ppaji_playground/accepted-20261003-d3.png",
           "w": 640,
           "h": 640,
-          "sha256": "c6e67b1dbda368ac9d96c89118294dec5089383858016c700158ce8452fa7cfc"
+          "sha256": "7f0ccc576dcd87ebbf28a6b8c3d0c54516de2148b6efea91768dc8de563d00b0"
         }
       },
       "deckTiles": [
@@ -1137,28 +1137,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rig_blob/native-d0.png",
+          "file": "rig_blob/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735"
+          "sha256": "7c2e87602bf3414024b9e6de3cd32475fe3cd7f0293187f6405d647b6245af04"
         },
         "d1": {
-          "file": "rig_blob/native-d1.png",
+          "file": "rig_blob/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3"
+          "sha256": "47cb9413c2af9b4466e18d96e409fdb247e868909dce4d1d25f69b1f02bb0e89"
         },
         "d2": {
-          "file": "rig_blob/native-d2.png",
+          "file": "rig_blob/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e"
+          "sha256": "58e275adf3437cc6a728a377e24351d042b586cd21868f288310190a09f059a2"
         },
         "d3": {
-          "file": "rig_blob/native-d3.png",
+          "file": "rig_blob/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef"
+          "sha256": "90ac57f9f64b99b52008c59221b44fee9c040e7d5806e2914b01f0bdb617b64d"
         }
       }
     },
@@ -1514,28 +1514,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rig_iceberg/native-d0.png",
+          "file": "rig_iceberg/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d"
+          "sha256": "881f8e872a334f86ee88831769e1e793e091f87306199338aac71237afc6bf58"
         },
         "d1": {
-          "file": "rig_iceberg/native-d1.png",
+          "file": "rig_iceberg/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07"
+          "sha256": "0dde08361debed5911ca648407750b4275a11026fbb32481221b74af2c7e0d63"
         },
         "d2": {
-          "file": "rig_iceberg/native-d2.png",
+          "file": "rig_iceberg/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d"
+          "sha256": "fa785156e7d8200946b5d6dafa9db403aebd301d256db7dbd1339b1f8e3621e4"
         },
         "d3": {
-          "file": "rig_iceberg/native-d3.png",
+          "file": "rig_iceberg/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f"
+          "sha256": "89c4d2453c88d74a7edc19f2ae46b60ae5b5593fcc7a30b351c2427173d7cbc7"
         }
       }
     },
@@ -1628,28 +1628,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rig_bridge/native-d0.png",
+          "file": "rig_bridge/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+          "sha256": "818a0cbef1f07f1f6409ccda17698884d2f797832b3cc3dbcbc816d422ca28ad"
         },
         "d1": {
-          "file": "rig_bridge/native-d1.png",
+          "file": "rig_bridge/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+          "sha256": "1b78bbefbed754d93833aea945395514ea018af4ad1777de1ab6c7d7587703d1"
         },
         "d2": {
-          "file": "rig_bridge/native-d2.png",
+          "file": "rig_bridge/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+          "sha256": "4a4490b87be31ee2d986b0daab77883fae14c7412c934cca709b70e75b0b102d"
         },
         "d3": {
-          "file": "rig_bridge/native-d3.png",
+          "file": "rig_bridge/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+          "sha256": "6239dbcfff3fa78c5c5a7a0b76008682682185244e24d79e1c8b79a3e6d5e753"
         }
       }
     },
@@ -1747,28 +1747,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rig_stepstone/native-d0.png",
+          "file": "rig_stepstone/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "e057ffbe95ca55c271e760485096283d1597445f76c6e8bb78bdd306228b0673"
+          "sha256": "d0af08baa8de224b9d49160e0ec84174a111c19889ef1650311be831efff1d54"
         },
         "d1": {
-          "file": "rig_stepstone/native-d1.png",
+          "file": "rig_stepstone/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "a643f3215c6fa85e0f65abec213a9c01365da2e1ba7b08f265ec7db596bae5ae"
+          "sha256": "435f57532bbf20a5405e30f5134fb64884be28ec69496649e59884504d64afe4"
         },
         "d2": {
-          "file": "rig_stepstone/native-d2.png",
+          "file": "rig_stepstone/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "7548853b61c19464bd3d9daee06ee2942ebc986aa2529984b05cae1e98cbba47"
+          "sha256": "a168ce866001ee706b34062949563b43e29e0f4f4244dc06f9a1ea4fe01eb2f6"
         },
         "d3": {
-          "file": "rig_stepstone/native-d3.png",
+          "file": "rig_stepstone/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "ff0021756ae29b301e6119b5092fe19834b02ddc8560f556bbf3a10fc3c6891f"
+          "sha256": "219da89047795c47732551146764dab0bf4fdd5810d622d763458727caca6d85"
         }
       }
     },
@@ -1861,28 +1861,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rig_bridge/native-d0.png",
+          "file": "rig_bridge/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+          "sha256": "818a0cbef1f07f1f6409ccda17698884d2f797832b3cc3dbcbc816d422ca28ad"
         },
         "d1": {
-          "file": "rig_bridge/native-d1.png",
+          "file": "rig_bridge/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+          "sha256": "1b78bbefbed754d93833aea945395514ea018af4ad1777de1ab6c7d7587703d1"
         },
         "d2": {
-          "file": "rig_bridge/native-d2.png",
+          "file": "rig_bridge/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+          "sha256": "4a4490b87be31ee2d986b0daab77883fae14c7412c934cca709b70e75b0b102d"
         },
         "d3": {
-          "file": "rig_bridge/native-d3.png",
+          "file": "rig_bridge/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+          "sha256": "6239dbcfff3fa78c5c5a7a0b76008682682185244e24d79e1c8b79a3e6d5e753"
         }
       },
       "visualSource": "rig_bridge",
@@ -1977,28 +1977,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rig_bridge/native-d0.png",
+          "file": "rig_bridge/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+          "sha256": "818a0cbef1f07f1f6409ccda17698884d2f797832b3cc3dbcbc816d422ca28ad"
         },
         "d1": {
-          "file": "rig_bridge/native-d1.png",
+          "file": "rig_bridge/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+          "sha256": "1b78bbefbed754d93833aea945395514ea018af4ad1777de1ab6c7d7587703d1"
         },
         "d2": {
-          "file": "rig_bridge/native-d2.png",
+          "file": "rig_bridge/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+          "sha256": "4a4490b87be31ee2d986b0daab77883fae14c7412c934cca709b70e75b0b102d"
         },
         "d3": {
-          "file": "rig_bridge/native-d3.png",
+          "file": "rig_bridge/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+          "sha256": "6239dbcfff3fa78c5c5a7a0b76008682682185244e24d79e1c8b79a3e6d5e753"
         }
       },
       "visualSource": "rig_bridge",
@@ -2108,28 +2108,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rig_iceberg/native-d0.png",
+          "file": "rig_iceberg/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d"
+          "sha256": "881f8e872a334f86ee88831769e1e793e091f87306199338aac71237afc6bf58"
         },
         "d1": {
-          "file": "rig_iceberg/native-d1.png",
+          "file": "rig_iceberg/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07"
+          "sha256": "0dde08361debed5911ca648407750b4275a11026fbb32481221b74af2c7e0d63"
         },
         "d2": {
-          "file": "rig_iceberg/native-d2.png",
+          "file": "rig_iceberg/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d"
+          "sha256": "fa785156e7d8200946b5d6dafa9db403aebd301d256db7dbd1339b1f8e3621e4"
         },
         "d3": {
-          "file": "rig_iceberg/native-d3.png",
+          "file": "rig_iceberg/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f"
+          "sha256": "89c4d2453c88d74a7edc19f2ae46b60ae5b5593fcc7a30b351c2427173d7cbc7"
         }
       },
       "visualSource": "rig_iceberg",
@@ -2244,28 +2244,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rig_blob/native-d0.png",
+          "file": "rig_blob/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735"
+          "sha256": "7c2e87602bf3414024b9e6de3cd32475fe3cd7f0293187f6405d647b6245af04"
         },
         "d1": {
-          "file": "rig_blob/native-d1.png",
+          "file": "rig_blob/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3"
+          "sha256": "47cb9413c2af9b4466e18d96e409fdb247e868909dce4d1d25f69b1f02bb0e89"
         },
         "d2": {
-          "file": "rig_blob/native-d2.png",
+          "file": "rig_blob/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e"
+          "sha256": "58e275adf3437cc6a728a377e24351d042b586cd21868f288310190a09f059a2"
         },
         "d3": {
-          "file": "rig_blob/native-d3.png",
+          "file": "rig_blob/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef"
+          "sha256": "90ac57f9f64b99b52008c59221b44fee9c040e7d5806e2914b01f0bdb617b64d"
         }
       },
       "visualSource": "rig_blob",
@@ -2632,28 +2632,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_trampoline_w/native-d0.png",
+          "file": "module_trampoline_w/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "016eaa1389b975111ec087c191a334d91eaf155d37fb07fd3cb37ed51d2aa312"
+          "sha256": "bbe12d6d078f1db6c4cd002b605ccc649152136f7aa302127adf808189c96189"
         },
         "d1": {
-          "file": "module_trampoline_w/native-d1.png",
+          "file": "module_trampoline_w/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "820e07a9d99752156b3163662927238ba1ac9bda35f2468f9488455efffa8457"
+          "sha256": "4bfdc8e956a7bd2a36ecd3ba09a2c03bf728fe3b2d15928cf9d0884dcda59f75"
         },
         "d2": {
-          "file": "module_trampoline_w/native-d2.png",
+          "file": "module_trampoline_w/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "95e0afe2426c11d1c12d6607f06f0de53b7f7340c123c0fffa85d086b8ed8844"
+          "sha256": "a2e74a7d8c8b05384ee56ad64d9b4875d1d463844870ecbb134da969595cc6dd"
         },
         "d3": {
-          "file": "module_trampoline_w/native-d3.png",
+          "file": "module_trampoline_w/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "16cd5116ebac6eb952a1ba5fa4e8bb205ad4c7026d43685ba36da05daa133697"
+          "sha256": "9a109fab67370b8fb980fe14a5a907a57939399e68967344f56677a802ef8bdd"
         }
       },
       "poseMasks": {},
@@ -2754,28 +2754,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_beam/native-d0.png",
+          "file": "module_rig_beam/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "e422f236a79e9bda9e87965e61ed8666ee6e1a9f20ed41341b0c5acd356448ed"
+          "sha256": "ba26f6e2d6b62cbef2eaeda2507ccd50ff3d503966305abd94b3c805210fe42f"
         },
         "d1": {
-          "file": "module_rig_beam/native-d1.png",
+          "file": "module_rig_beam/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "cc2e7853759007fefaf8abcb3c4aef16e068546e9e782c3fdcb0675b6bb3290d"
+          "sha256": "81e5c33072ea33547a7dfae0ef6d901637e05274dad1d1f5c93209a04493a354"
         },
         "d2": {
-          "file": "module_rig_beam/native-d2.png",
+          "file": "module_rig_beam/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "e6ef75ba8b83db6fd150e7d00ba79d5bdb55c35dcf949e46f54a263f06fda3fc"
+          "sha256": "f268da9aabf219e48484494017829c5c4cc29be20b0f64bca5013588ddde3198"
         },
         "d3": {
-          "file": "module_rig_beam/native-d3.png",
+          "file": "module_rig_beam/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "7d9848e0f45c2c594155b44ff78c8dfa96fce9e550775d168e66dbd69231a132"
+          "sha256": "1bf00b40013ce399115f71435d2627bc4fcc2f0e2d126c8f1a974d2c0a8aae47"
         }
       },
       "poseMasks": {},
@@ -2876,28 +2876,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_roller/native-d0.png",
+          "file": "module_rig_roller/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "b70f76fc8011459f1c8a92d7cbb0db68cd126a2f8149551fa682078635985342"
+          "sha256": "1220a38717458f7dc84c1f52e76aef187e868e74626aae7eb2a575f9a4aebaa4"
         },
         "d1": {
-          "file": "module_rig_roller/native-d1.png",
+          "file": "module_rig_roller/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "233f46b8d6a1911d5718531ae90b958de954915dec70ed2397b8dac281335100"
+          "sha256": "b29729488a9795f77817b57fd1ac73c6b2f2d077f3537ba87a8bd6015d631e4c"
         },
         "d2": {
-          "file": "module_rig_roller/native-d2.png",
+          "file": "module_rig_roller/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "cca88beea76a7f2068f106a8b6e516eaa851f8505a5084e67eb7f7ef5229bf4b"
+          "sha256": "ef3d108343384e1ee313638202c0b5cc59e9c8ddaa3f0b76c6739dcb088ed7b2"
         },
         "d3": {
-          "file": "module_rig_roller/native-d3.png",
+          "file": "module_rig_roller/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "626648e831a76d96717d8d5122094a3deeeef82b46c8d0be0471583fc5717536"
+          "sha256": "380cf1cfb00cf848297ee73f3497cc0f32edc1994b1708467308f8a2734d445d"
         }
       },
       "poseMasks": {},
@@ -3003,28 +3003,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_seesaw/native-d0.png",
+          "file": "module_rig_seesaw/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "9d62e4fdb1d25987f39eb3efc0ce05a5a39561d05ef313817cc73f173b668c86"
+          "sha256": "299912ac449903665b8bb4ffce1e51252cfa1b650ff7301cd04784fecba2ff0e"
         },
         "d1": {
-          "file": "module_rig_seesaw/native-d1.png",
+          "file": "module_rig_seesaw/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "b7d50ab5693b4885fb50b4a20bff977b6e167b19febec84981c28e70db90c3e6"
+          "sha256": "5a67cb32687b7e3d5d1b4ee39dcf6045baae34180d01575eabbab5e493fe58c7"
         },
         "d2": {
-          "file": "module_rig_seesaw/native-d2.png",
+          "file": "module_rig_seesaw/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "7e15656f07cab40ca7468c3f6032f99c55b67e69a673b91e5972fbf64a37dc17"
+          "sha256": "8ef3410b165997f86d3730c905ad86d913e7da87b53faa32296bf80585e9a5e7"
         },
         "d3": {
-          "file": "module_rig_seesaw/native-d3.png",
+          "file": "module_rig_seesaw/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "88dcfcdce7c33dda17cc5250ddd0f1e0c14dccde9acbd1c4bcd0b4fb7b41ddf5"
+          "sha256": "c2593c670acd79327b1769466d825a3f3638af1b9b561840ec705b327dbcaf2e"
         }
       },
       "poseMasks": {
@@ -3134,28 +3134,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_totem/native-d0.png",
+          "file": "module_rig_totem/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "a9690dc1d05eaf586fdb3c9aef94a5a81f8559241e6f59956ac963b27519558d"
+          "sha256": "0e9174ef6b5c695af531d4b6f5230fe55854886685651e18d8ff10775e819b9f"
         },
         "d1": {
-          "file": "module_rig_totem/native-d1.png",
+          "file": "module_rig_totem/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "195a08d52046dab36161afc87353d82b55d2104e7aff8d5eaf6df17c1c4c0cc8"
+          "sha256": "8179e74238e747683a10567ea3f57dc680c9aedc56ce6e2958b802f89b139681"
         },
         "d2": {
-          "file": "module_rig_totem/native-d2.png",
+          "file": "module_rig_totem/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "1b0150c4eb56b3069bfffda99b80a940d95c2c3ac938777bbe2a1df5ec122329"
+          "sha256": "ca812882d7530079e690e4839f7e6fd591d40a0e47c1809036c2bc8555510e3a"
         },
         "d3": {
-          "file": "module_rig_totem/native-d3.png",
+          "file": "module_rig_totem/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "775d559f87ba0df521f7bd086184a321a0c8f733e7053a2a27b5ef89928d1bf9"
+          "sha256": "0601d4cb60b4a559b09b5743326496ca5d38b916eb859f7092887b6415a16164"
         }
       },
       "poseMasks": {},
@@ -3251,28 +3251,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_disc/native-d0.png",
+          "file": "module_rig_disc/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "f0775c2366552ec95d80cdea5ceff233518630eeb1eed1c693822bca38c98acf"
+          "sha256": "f68e063bfaf152b975e56abffd75405df5251d063f66a00b227e7f3cf6c83803"
         },
         "d1": {
-          "file": "module_rig_disc/native-d1.png",
+          "file": "module_rig_disc/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "1ccd62d3c0b1ed1e80968d772e7adef221c3d074c2d698b1eaa42d1f48108335"
+          "sha256": "748f22fa18a31c4f1b8e94215e10212d887d5585902f3b53d988dd7e0790aa5d"
         },
         "d2": {
-          "file": "module_rig_disc/native-d2.png",
+          "file": "module_rig_disc/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "c26fa769ca6fd770d3900f7a63312a564b7b2f8922fd794eb4fe1550b6af8ab6"
+          "sha256": "759c50363ad8e94bbfa42806f54fc43308a4339b52d2d6231ab86af932ad7808"
         },
         "d3": {
-          "file": "module_rig_disc/native-d3.png",
+          "file": "module_rig_disc/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "0991b02b54fd1c069d351cff2f0ec5663510722c3c487101c94fd867777af774"
+          "sha256": "294871abc21e95cbf944b67aa0b45a7c0da159180e43f5c43d253074bc643f1a"
         }
       },
       "poseMasks": {},
@@ -3637,28 +3637,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_kids_park/native-d0.png",
+          "file": "module_rig_kids_park/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "4ccddaa350a1cf721087a1719ef70e9fbac010506b0910d8bcdc027a7269d86c"
+          "sha256": "3242f2f8cf9655a7f22ae4a6a84d0e51c6237c5b99ec3456fb76c496b046ff43"
         },
         "d1": {
-          "file": "module_rig_kids_park/native-d1.png",
+          "file": "module_rig_kids_park/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "fe79d09b6d5b05e87eec0722b7982983e902a0fc24f8dd020193d389aa61752c"
+          "sha256": "fe3ce8a2444d34a51fa6f6a2266d20b308d30ad55827cb5e2c209d742b991119"
         },
         "d2": {
-          "file": "module_rig_kids_park/native-d2.png",
+          "file": "module_rig_kids_park/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "a5be998bb8d0f395707b21f53ced11919545bd4c06b9821c328a8ca1bfa0a491"
+          "sha256": "5b854ebe32506fe472d39f867644ab2d73892ef16bfbafa314fac6e47df0fd5a"
         },
         "d3": {
-          "file": "module_rig_kids_park/native-d3.png",
+          "file": "module_rig_kids_park/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "f0b5d9c93216892cff646ea9a15ecd453d7d67bee03adf42b752466b7916d066"
+          "sha256": "b7a558a1f06395aa6ae7ce292e1cb3b304bfda2405c7e4e15ef46c8fecde5193"
         }
       },
       "poseMasks": {},
@@ -3759,28 +3759,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_waterwalk/native-d0.png",
+          "file": "module_waterwalk/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "634f72532ff8207c13b322b93a74b0fbd5deaa63fd7c08a5e4adf9725014b985"
+          "sha256": "7b23036617584d6345324af98e46afa400c8c0da2e687e930bb1c87950158fcf"
         },
         "d1": {
-          "file": "module_waterwalk/native-d1.png",
+          "file": "module_waterwalk/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "acc932bb317524b5263f9370d3e2e2720bea80cc33e744ef2781dce256ff68c6"
+          "sha256": "3a183129fdffc5507fb20c5fff3da30a8078f8c3a4b622e39b522cac867c7bd2"
         },
         "d2": {
-          "file": "module_waterwalk/native-d2.png",
+          "file": "module_waterwalk/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "a80fb92879e8ba52f57c52ad9d2e27dd8ddd03b689f3c0abea9569f5243d3bef"
+          "sha256": "abc6f75aa289f40fce7358e5a1019c939e41d31c526890ad512846b97df8c5e7"
         },
         "d3": {
-          "file": "module_waterwalk/native-d3.png",
+          "file": "module_waterwalk/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "3be732237cc72289d5373050f413b29a84a3c62c2e68fc7be27e3e4f0096bffe"
+          "sha256": "efc673998078d16b60cb418cd28cd4f9d430bad2f9633d40911837ec669f14ac"
         }
       },
       "poseMasks": {
@@ -3890,28 +3890,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_hammock/native-d0.png",
+          "file": "module_rig_hammock/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "101839a775a15721e85aa3502743ae2ceaf3bc20f331bddcd9a35c6a979e65dc"
+          "sha256": "cb9c43f7b135841023fe83efbab80aafdf4b8bc85aa3a8088fea73f32dfd0d0a"
         },
         "d1": {
-          "file": "module_rig_hammock/native-d1.png",
+          "file": "module_rig_hammock/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "d69acf02fa7bf14dff7a1f05736df5fd895d854cf033ca7a8769cfa1f61c7d7d"
+          "sha256": "c8ab38ccf417467e87bd4cdf2754cc0b48cc3030585971c294baf10dc6c627ad"
         },
         "d2": {
-          "file": "module_rig_hammock/native-d2.png",
+          "file": "module_rig_hammock/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "9252dc4b48bb0640743d6bfb7b234642b9382a4bbd1b3258bd3267d06ed95207"
+          "sha256": "ea48539b13bdf884c72cc1b4e16f63293edadb396e475a4d23e6ab15643c717f"
         },
         "d3": {
-          "file": "module_rig_hammock/native-d3.png",
+          "file": "module_rig_hammock/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "4f97c2ffa863edbf05854c31c081d7d8a4ac083125e125df307cb0daa7880b1c"
+          "sha256": "fe28311c3054f5ce119d751a871fb555019b6bb9580d7fe187762e74e0fde461"
         }
       },
       "poseMasks": {
@@ -4017,28 +4017,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_sunbed/native-d0.png",
+          "file": "module_rig_sunbed/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "24be9b14d6ff8dd4eb3efcfee96d4222d8273f7627709804365b94ab4df24102"
+          "sha256": "31a34f210546a68fe890d8fc13e495832bc0d48fdd80d1983a35db32b08ed8f4"
         },
         "d1": {
-          "file": "module_rig_sunbed/native-d1.png",
+          "file": "module_rig_sunbed/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "70675eca644040801eed48b75e134157a0b703f41c20c1822b0c59dce7513180"
+          "sha256": "2bad36e40027b9e49a8c994f8b81baec705ca75ff8e67483b7ff6e4c6aeef3d5"
         },
         "d2": {
-          "file": "module_rig_sunbed/native-d2.png",
+          "file": "module_rig_sunbed/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "9a1b4b9dcb6bf7c1c44a87d33c9083732101707105d5b0f739ddb6c8540159ba"
+          "sha256": "b5cdac77e65f748aac33f7ba57aa1cdc2ce5ec809dff31260b1ea254ae03886c"
         },
         "d3": {
-          "file": "module_rig_sunbed/native-d3.png",
+          "file": "module_rig_sunbed/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "2a605f77f4f25bf257c092b196c967932156a338753d0f44ee8dcc94f976563c"
+          "sha256": "f7713f202c21fad1250f2fb812fab99632c4ca471139d48f2e50095ffcb72070"
         }
       },
       "poseMasks": {
@@ -4135,28 +4135,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "module_rig_led_buoy/native-d0.png",
+          "file": "module_rig_led_buoy/accepted-20261003-d0.png",
           "w": 128,
           "h": 128,
-          "sha256": "e9bbc390e6997d92ce08692319492e1253d32f8394a78a2ec66c7a6c3b907f4d"
+          "sha256": "30fa4bf2e7bc1dfcf799fbfed601424b43d9e01ff73fb0d12c721b221bdd9673"
         },
         "d1": {
-          "file": "module_rig_led_buoy/native-d1.png",
+          "file": "module_rig_led_buoy/accepted-20261003-d1.png",
           "w": 128,
           "h": 128,
-          "sha256": "d8ab1c966eb450d3c1c1ac62f2440afc3813e98c26d17f7fbd34aa403e34c701"
+          "sha256": "598ff587f10932348f4b58643dd69a09b44d162c4892056867c6bf36fe04c131"
         },
         "d2": {
-          "file": "module_rig_led_buoy/native-d2.png",
+          "file": "module_rig_led_buoy/accepted-20261003-d2.png",
           "w": 128,
           "h": 128,
-          "sha256": "7caf44e887546071de7450908e73cd394f162655b0094f1f93f03d180518c95f"
+          "sha256": "1bfdbe5c27ca43c59805575b6742f2a35b3ae7ce1d58d79fd68a8c527cfb8cdb"
         },
         "d3": {
-          "file": "module_rig_led_buoy/native-d3.png",
+          "file": "module_rig_led_buoy/accepted-20261003-d3.png",
           "w": 128,
           "h": 128,
-          "sha256": "743cd88f797cb71138ff446947b1000a910638c2472d245f48184286f31b4872"
+          "sha256": "3989494cb210a1733f01bbcc0260affca0c93d8ca85d3a5725151097456b3ee9"
         }
       },
       "poseMasks": {},

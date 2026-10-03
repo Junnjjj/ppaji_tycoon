@@ -1,0 +1,326 @@
+[
+  {
+    "ready": true,
+    "id": "rig_blob",
+    "chainReview": false,
+    "waterReview": true,
+    "compoundReview": false,
+    "operationalTintSuppressed": true,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ],
+    "terrainCodes": [
+      5,
+      5,
+      5,
+      5
+    ],
+    "footprintTerrain": [
+      {
+        "d": 0,
+        "cells": 3,
+        "allWater": true
+      },
+      {
+        "d": 1,
+        "cells": 3,
+        "allWater": true
+      },
+      {
+        "d": 2,
+        "cells": 3,
+        "allWater": true
+      },
+      {
+        "d": 3,
+        "cells": 3,
+        "allWater": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "rig_iceberg",
+    "chainReview": false,
+    "waterReview": true,
+    "compoundReview": false,
+    "operationalTintSuppressed": true,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ],
+    "terrainCodes": [
+      5,
+      5,
+      5,
+      5
+    ],
+    "footprintTerrain": [
+      {
+        "d": 0,
+        "cells": 4,
+        "allWater": true
+      },
+      {
+        "d": 1,
+        "cells": 4,
+        "allWater": true
+      },
+      {
+        "d": 2,
+        "cells": 4,
+        "allWater": true
+      },
+      {
+        "d": 3,
+        "cells": 4,
+        "allWater": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "module_trampoline_w",
+    "chainReview": false,
+    "waterReview": true,
+    "compoundReview": false,
+    "operationalTintSuppressed": true,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ],
+    "terrainCodes": [
+      5,
+      5,
+      5,
+      5
+    ],
+    "footprintTerrain": [
+      {
+        "d": 0,
+        "cells": 9,
+        "allWater": true
+      },
+      {
+        "d": 1,
+        "cells": 9,
+        "allWater": true
+      },
+      {
+        "d": 2,
+        "cells": 9,
+        "allWater": true
+      },
+      {
+        "d": 3,
+        "cells": 9,
+        "allWater": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "module_rig_roller",
+    "chainReview": false,
+    "waterReview": true,
+    "compoundReview": false,
+    "operationalTintSuppressed": true,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ],
+    "terrainCodes": [
+      5,
+      5,
+      5,
+      5
+    ],
+    "footprintTerrain": [
+      {
+        "d": 0,
+        "cells": 4,
+        "allWater": true
+      },
+      {
+        "d": 1,
+        "cells": 4,
+        "allWater": true
+      },
+      {
+        "d": 2,
+        "cells": 4,
+        "allWater": true
+      },
+      {
+        "d": 3,
+        "cells": 4,
+        "allWater": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,1053 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "rig_bridge": "water-obstacles-batch-20261003",
+    "rig_stepstone": "water-obstacles-batch-20261003",
+    "module_rig_beam": "water-obstacles-batch-20261003",
+    "module_rig_seesaw": "water-obstacles-batch-20261003",
+    "module_rig_totem": "water-obstacles-batch-20261003",
+    "module_rig_disc": "water-obstacles-batch-20261003",
+    "module_rig_kids_park": "water-obstacles-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "rig_bridge",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/rig_bridge/d0.png",
+      "source_sha256": "9b50a30091417a370702f0b46cf7a80286b42c9fc42a7c5b86cff33ebdc6f4e8",
+      "old": {
+        "file": "fac_rig_bridge_0.fix-54fa6224a0b6.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "54fa6224a0b65931952b9429ae316fe335aea04ed11334691b623120b43d2f80",
+        "bytes": 39674
+      },
+      "new": {
+        "file": "fac_rig_bridge_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "62a717e83cdb547bb3b238483de0cb2c32fa8be89d0d21f6322151a2481fa307",
+        "bytes": 15756
+      },
+      "old_native": {
+        "file": "rig_bridge/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+      },
+      "new_native": {
+        "file": "rig_bridge/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "818a0cbef1f07f1f6409ccda17698884d2f797832b3cc3dbcbc816d422ca28ad"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_bridge",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/rig_bridge/d1.png",
+      "source_sha256": "85d33abbaec944520881fc837bd78cec6971e95620ee1d1df63129d52eb85865",
+      "old": {
+        "file": "fac_rig_bridge_1.fix-55f579ab11a9.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "55f579ab11a98253e910159d79e3d712d941bc5f08377dd9d3e8ca24f8b5ec18",
+        "bytes": 40332
+      },
+      "new": {
+        "file": "fac_rig_bridge_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "9d051712967d421cdb97a8cbe2df46d213958eb63940c6ca57f4b879de8f69e9",
+        "bytes": 15890
+      },
+      "old_native": {
+        "file": "rig_bridge/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+      },
+      "new_native": {
+        "file": "rig_bridge/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "1b78bbefbed754d93833aea945395514ea018af4ad1777de1ab6c7d7587703d1"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_bridge",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/rig_bridge/d2.png",
+      "source_sha256": "e8e7831ff3d7c47caacca818d33a5d3f3e47755f5e3b011ee46dbe8a09d0065c",
+      "old": {
+        "file": "fac_rig_bridge_2.fix-a3692f84056c.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "a3692f84056cd377eb15ef5f9e471bb1a3735d1886f022eba248eaacbcf1e5c9",
+        "bytes": 37872
+      },
+      "new": {
+        "file": "fac_rig_bridge_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "8cbce0b6c03867abf9c483a73294ae0fa9f2653b457276e9f98b483774429758",
+        "bytes": 15830
+      },
+      "old_native": {
+        "file": "rig_bridge/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+      },
+      "new_native": {
+        "file": "rig_bridge/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "4a4490b87be31ee2d986b0daab77883fae14c7412c934cca709b70e75b0b102d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_bridge",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/rig_bridge/d3.png",
+      "source_sha256": "9edd997b6b205d895636c46a5545b14853db508e934eef322296a0239c3a0e31",
+      "old": {
+        "file": "fac_rig_bridge_3.fix-532e2f956c72.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "532e2f956c72b9427f64717289db48bedf504677f09c01f647e2b3ea83822fd9",
+        "bytes": 39938
+      },
+      "new": {
+        "file": "fac_rig_bridge_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "08d7770c4fd2b8db1cc9a20e3789271135a385ade60638393b0b23ef32b192d9",
+        "bytes": 16044
+      },
+      "old_native": {
+        "file": "rig_bridge/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+      },
+      "new_native": {
+        "file": "rig_bridge/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "6239dbcfff3fa78c5c5a7a0b76008682682185244e24d79e1c8b79a3e6d5e753"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_stepstone",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/rig_stepstone/d0.png",
+      "source_sha256": "7e1725f80d643f11f1968f60c2d1397cff380ad67017b55f55a2b3159cb5c26a",
+      "old": {
+        "file": "fac_rig_stepstone_0.fix-2d70687faec8.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "2d70687faec87ba30c3bb7a69a2652ddd61bfbf24417f8a40c0ee3811cabec5e",
+        "bytes": 14424
+      },
+      "new": {
+        "file": "fac_rig_stepstone_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "b6ee395d3c47c4adec35e7ef7ed2a88ae98b43e7616d73d931919ba9c7e89423",
+        "bytes": 7388
+      },
+      "old_native": {
+        "file": "rig_stepstone/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "e057ffbe95ca55c271e760485096283d1597445f76c6e8bb78bdd306228b0673"
+      },
+      "new_native": {
+        "file": "rig_stepstone/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "d0af08baa8de224b9d49160e0ec84174a111c19889ef1650311be831efff1d54"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_stepstone",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/rig_stepstone/d1.png",
+      "source_sha256": "ff18ebb4e1bcba396859568f816d41f76c70041c4944e81bb9341a3d1e781978",
+      "old": {
+        "file": "fac_rig_stepstone_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "a03a185e8b82b305943122b886604d6bfd867a3612540833756d2ce36efd3f06",
+        "bytes": 13748
+      },
+      "new": {
+        "file": "fac_rig_stepstone_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "35273b0467a4dc276443280212db513c4eb271e0350b4939ff1831ee74175ece",
+        "bytes": 7292
+      },
+      "old_native": {
+        "file": "rig_stepstone/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a643f3215c6fa85e0f65abec213a9c01365da2e1ba7b08f265ec7db596bae5ae"
+      },
+      "new_native": {
+        "file": "rig_stepstone/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "435f57532bbf20a5405e30f5134fb64884be28ec69496649e59884504d64afe4"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_stepstone",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/rig_stepstone/d2.png",
+      "source_sha256": "3cc9942a9310c14a00e479f64ae969c7ed0e2acd5e83b6feabd88295a2e469c3",
+      "old": {
+        "file": "fac_rig_stepstone_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "48640cea52c31078d7f560e205a6ff55d2373fff9071a1c940c07a8ba7c94ee9",
+        "bytes": 13650
+      },
+      "new": {
+        "file": "fac_rig_stepstone_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "6ba60005bf94e43ab47d9f3dad3f3e7b7e045b11c9f3748bd20b6b3acdd05c52",
+        "bytes": 7360
+      },
+      "old_native": {
+        "file": "rig_stepstone/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "7548853b61c19464bd3d9daee06ee2942ebc986aa2529984b05cae1e98cbba47"
+      },
+      "new_native": {
+        "file": "rig_stepstone/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a168ce866001ee706b34062949563b43e29e0f4f4244dc06f9a1ea4fe01eb2f6"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_stepstone",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/rig_stepstone/d3.png",
+      "source_sha256": "c527c82ffa7c2bc7985376e3e7d9b12cc90caae34a1f4323aacb4bcf9c7b596f",
+      "old": {
+        "file": "fac_rig_stepstone_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "c466973b0d425c4e975bd75c4ba414e66378200bf5f5a086b4842c747f5b81bc",
+        "bytes": 13486
+      },
+      "new": {
+        "file": "fac_rig_stepstone_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "5da6ed3e616fbfce951f100b71462b090e0d4cecd591784cbe11021dc2b527e4",
+        "bytes": 7398
+      },
+      "old_native": {
+        "file": "rig_stepstone/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "ff0021756ae29b301e6119b5092fe19834b02ddc8560f556bbf3a10fc3c6891f"
+      },
+      "new_native": {
+        "file": "rig_stepstone/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "219da89047795c47732551146764dab0bf4fdd5810d622d763458727caca6d85"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_beam",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_beam/d0.png",
+      "source_sha256": "ebd065af08082da2c16518eceb4ac47d65d011858d3ec838cbcc04d43b8ad487",
+      "old": {
+        "file": "fac_module_rig_beam_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "948526b25ecb4cf96adb5547972a09d650efcf59c6cbea42cc9f96ab545ae871",
+        "bytes": 31842
+      },
+      "new": {
+        "file": "fac_module_rig_beam_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "b5863da63e216ae239ca77c080f5bc5607ba384481f3bc9d179d05d9a80223dd",
+        "bytes": 12942
+      },
+      "old_native": {
+        "file": "module_rig_beam/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "e422f236a79e9bda9e87965e61ed8666ee6e1a9f20ed41341b0c5acd356448ed"
+      },
+      "new_native": {
+        "file": "module_rig_beam/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "ba26f6e2d6b62cbef2eaeda2507ccd50ff3d503966305abd94b3c805210fe42f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_beam",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_beam/d1.png",
+      "source_sha256": "fcdfeb37d1a46e207699f3cc98f358bf543676d70b11f4293829959f638cf6b3",
+      "old": {
+        "file": "fac_module_rig_beam_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "6d8c3c06bb2e7688c5e530265215842c36a5f3bfe583b2b58b57cc4ae7d2bdb5",
+        "bytes": 31886
+      },
+      "new": {
+        "file": "fac_module_rig_beam_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "9aa5dc01e9deb187dfd56b4150c553145441af50d93ba354eb26026523c3b12f",
+        "bytes": 13064
+      },
+      "old_native": {
+        "file": "module_rig_beam/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "cc2e7853759007fefaf8abcb3c4aef16e068546e9e782c3fdcb0675b6bb3290d"
+      },
+      "new_native": {
+        "file": "module_rig_beam/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "81e5c33072ea33547a7dfae0ef6d901637e05274dad1d1f5c93209a04493a354"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_beam",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_beam/d2.png",
+      "source_sha256": "5acfa28d505560d829d26e8bdfcea79357e9fb0688e15e7d0f3f377883f78342",
+      "old": {
+        "file": "fac_module_rig_beam_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "5f8ac90199cee2d179b9648e8a0927319ba84033c77a6372b5a3888fc5cc0151",
+        "bytes": 31416
+      },
+      "new": {
+        "file": "fac_module_rig_beam_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "8d6960402c38e7ebc2a680a749d388f2b73550075de18d1a6a384d96f7deeb71",
+        "bytes": 13034
+      },
+      "old_native": {
+        "file": "module_rig_beam/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "e6ef75ba8b83db6fd150e7d00ba79d5bdb55c35dcf949e46f54a263f06fda3fc"
+      },
+      "new_native": {
+        "file": "module_rig_beam/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "f268da9aabf219e48484494017829c5c4cc29be20b0f64bca5013588ddde3198"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_beam",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_beam/d3.png",
+      "source_sha256": "e14d40ca8fe2bd85fa4524066dfdf474fae028a2dab5bbd39317584b0d78b02e",
+      "old": {
+        "file": "fac_module_rig_beam_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "ced0799eb4ef30fc21d2667c80f1b2d1d5b74d0a514ca9575fad813a7144f74b",
+        "bytes": 31692
+      },
+      "new": {
+        "file": "fac_module_rig_beam_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "15907e9b8a24a3065123e3b5ed6780a463bd18232f533275b13eb51588d97945",
+        "bytes": 13200
+      },
+      "old_native": {
+        "file": "module_rig_beam/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "7d9848e0f45c2c594155b44ff78c8dfa96fce9e550775d168e66dbd69231a132"
+      },
+      "new_native": {
+        "file": "module_rig_beam/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "1bf00b40013ce399115f71435d2627bc4fcc2f0e2d126c8f1a974d2c0a8aae47"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_seesaw",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_seesaw/d0.png",
+      "source_sha256": "9e5d9532753602aa56d1aa76d64d48b584931078e891295aa5622f56635d3ca8",
+      "old": {
+        "file": "fac_module_rig_seesaw_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "510472e854a9732a9cf5e48a7df72db87c44dd87e086901c473ddc062ec8eefb",
+        "bytes": 46980
+      },
+      "new": {
+        "file": "fac_module_rig_seesaw_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "18da73a0fc0ef388ef466b101397617e8bd3ca98225eae6ce32cb396f120c20d",
+        "bytes": 23100
+      },
+      "old_native": {
+        "file": "module_rig_seesaw/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "9d62e4fdb1d25987f39eb3efc0ce05a5a39561d05ef313817cc73f173b668c86"
+      },
+      "new_native": {
+        "file": "module_rig_seesaw/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "299912ac449903665b8bb4ffce1e51252cfa1b650ff7301cd04784fecba2ff0e"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_seesaw",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_seesaw/d1.png",
+      "source_sha256": "b8d2ba8e34bfa2070955273837772604ad2ea399dda925962a44870e1938b7ee",
+      "old": {
+        "file": "fac_module_rig_seesaw_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "87a0752d06f02cf8d8544267c37bf1d2b5a129ebdb1dd23f8728a0bcf315f086",
+        "bytes": 45678
+      },
+      "new": {
+        "file": "fac_module_rig_seesaw_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "0ffc029a0425e55a51bb0a77a44e83996905c87a503f22a83d8fc627bff302c4",
+        "bytes": 23386
+      },
+      "old_native": {
+        "file": "module_rig_seesaw/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "b7d50ab5693b4885fb50b4a20bff977b6e167b19febec84981c28e70db90c3e6"
+      },
+      "new_native": {
+        "file": "module_rig_seesaw/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "5a67cb32687b7e3d5d1b4ee39dcf6045baae34180d01575eabbab5e493fe58c7"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_seesaw",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_seesaw/d2.png",
+      "source_sha256": "0eb392fe5e46eaa94111490be6bdbdb5224561219bf7e1a75ec9d56d6e4fd7af",
+      "old": {
+        "file": "fac_module_rig_seesaw_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "78af0c29e14ecf3b7018f3f1a5a22dcc551b0fb9ec4d5ac3813584449f32e005",
+        "bytes": 47334
+      },
+      "new": {
+        "file": "fac_module_rig_seesaw_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "c13344d1b9a9a373d9230cc97bf351068ad1dae327e6b3e80143dfe03a7ce721",
+        "bytes": 23258
+      },
+      "old_native": {
+        "file": "module_rig_seesaw/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "7e15656f07cab40ca7468c3f6032f99c55b67e69a673b91e5972fbf64a37dc17"
+      },
+      "new_native": {
+        "file": "module_rig_seesaw/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "8ef3410b165997f86d3730c905ad86d913e7da87b53faa32296bf80585e9a5e7"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_seesaw",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_seesaw/d3.png",
+      "source_sha256": "de2841c2abba13794bff3a4de6117b022f832e1190aa315583fbc3197113db73",
+      "old": {
+        "file": "fac_module_rig_seesaw_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3d183a5daddc59049a6cd730268b05fb1fed3feb56a515db964d813c3dd9051e",
+        "bytes": 47128
+      },
+      "new": {
+        "file": "fac_module_rig_seesaw_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "147a61a0b2112ea32de42dc7186317a8e83b106aa27035bae9302ecf3c80fe2e",
+        "bytes": 23454
+      },
+      "old_native": {
+        "file": "module_rig_seesaw/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "88dcfcdce7c33dda17cc5250ddd0f1e0c14dccde9acbd1c4bcd0b4fb7b41ddf5"
+      },
+      "new_native": {
+        "file": "module_rig_seesaw/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "c2593c670acd79327b1769466d825a3f3638af1b9b561840ec705b327dbcaf2e"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_totem",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_totem/d0.png",
+      "source_sha256": "604816d4ee0a2d95f4c75617ef450778f72fd5713eae418d8e5cd12286d40e0c",
+      "old": {
+        "file": "fac_module_rig_totem_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "36affdab302968c5ccd028af0d33e6951d3c17c0752331cd711dcec6b5f8b581",
+        "bytes": 56064
+      },
+      "new": {
+        "file": "fac_module_rig_totem_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "02306ff99287d1ae190301437708a5d7a074899e9dcdb93937d84a9af30ead7f",
+        "bytes": 22432
+      },
+      "old_native": {
+        "file": "module_rig_totem/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a9690dc1d05eaf586fdb3c9aef94a5a81f8559241e6f59956ac963b27519558d"
+      },
+      "new_native": {
+        "file": "module_rig_totem/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "0e9174ef6b5c695af531d4b6f5230fe55854886685651e18d8ff10775e819b9f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_totem",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_totem/d1.png",
+      "source_sha256": "4fa3ac94ac23f7de4b70f7a89281b0e31bcf96585353aa754197b4f7408539ab",
+      "old": {
+        "file": "fac_module_rig_totem_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "233567ff5530b5cac8c10a994e8fc310f82a597f396925e98528b307c147286b",
+        "bytes": 56112
+      },
+      "new": {
+        "file": "fac_module_rig_totem_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "39f84f8c9d098b6fa87f37b5e737457d21c75bcb490b50bf38fa7cb18a89dda6",
+        "bytes": 22820
+      },
+      "old_native": {
+        "file": "module_rig_totem/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "195a08d52046dab36161afc87353d82b55d2104e7aff8d5eaf6df17c1c4c0cc8"
+      },
+      "new_native": {
+        "file": "module_rig_totem/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "8179e74238e747683a10567ea3f57dc680c9aedc56ce6e2958b802f89b139681"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_totem",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_totem/d2.png",
+      "source_sha256": "1a9167157305b2d8cc05e224f3d729cb9f07bf2efa86c5e80330625f1775ef06",
+      "old": {
+        "file": "fac_module_rig_totem_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "2a6306565f9df7fa166c6243de78211c1a253900818df5bfa101d2b3776396b3",
+        "bytes": 54804
+      },
+      "new": {
+        "file": "fac_module_rig_totem_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "4b88faca8ee0bc1b11f21b158112b425af6914614d161ac64027542a14dcbce5",
+        "bytes": 22550
+      },
+      "old_native": {
+        "file": "module_rig_totem/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "1b0150c4eb56b3069bfffda99b80a940d95c2c3ac938777bbe2a1df5ec122329"
+      },
+      "new_native": {
+        "file": "module_rig_totem/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "ca812882d7530079e690e4839f7e6fd591d40a0e47c1809036c2bc8555510e3a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_totem",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_totem/d3.png",
+      "source_sha256": "9e475129c004651fd12379a3085049094ed27f0902d5655e03a55d73042deb43",
+      "old": {
+        "file": "fac_module_rig_totem_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "2b22021faa51da4f69c5b09cd38fb30b70cee194bc9df50a8a80be7aec35b94f",
+        "bytes": 54998
+      },
+      "new": {
+        "file": "fac_module_rig_totem_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "15e70d7f02ffb57401f922eaf24a2e065f14f9fe14d0167cadb19ba333dc8d25",
+        "bytes": 23094
+      },
+      "old_native": {
+        "file": "module_rig_totem/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "775d559f87ba0df521f7bd086184a321a0c8f733e7053a2a27b5ef89928d1bf9"
+      },
+      "new_native": {
+        "file": "module_rig_totem/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "0601d4cb60b4a559b09b5743326496ca5d38b916eb859f7092887b6415a16164"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_disc",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_disc/d0.png",
+      "source_sha256": "c5d9915ea7063ff75a201bbd1db30ecca97d88ec10d37c6e7d0af47e4a17735a",
+      "old": {
+        "file": "fac_module_rig_disc_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "6c32507ae95564477b8f194d32d4de5817cc4634c0a8443b22361c96839505a9",
+        "bytes": 54468
+      },
+      "new": {
+        "file": "fac_module_rig_disc_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "484817bbbf56af2baec5022798f5dcd096abee494eb569304e8f7245ddf653d6",
+        "bytes": 30818
+      },
+      "old_native": {
+        "file": "module_rig_disc/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "f0775c2366552ec95d80cdea5ceff233518630eeb1eed1c693822bca38c98acf"
+      },
+      "new_native": {
+        "file": "module_rig_disc/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "f68e063bfaf152b975e56abffd75405df5251d063f66a00b227e7f3cf6c83803"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_disc",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_disc/d1.png",
+      "source_sha256": "b8b92c8e9f8b7b9246dc185dcfd6e5f69f1889fb62f5249e063e7fde4d1dbbca",
+      "old": {
+        "file": "fac_module_rig_disc_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "bad755e121c6411a5d220aebaf0fbbc2324b32be5266fecb51f948fcbabff1fd",
+        "bytes": 55204
+      },
+      "new": {
+        "file": "fac_module_rig_disc_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "2d2f36baf53e43e902ca2b93afb5f4bcb260fe8c0d4349eff0bff93a6272d025",
+        "bytes": 30624
+      },
+      "old_native": {
+        "file": "module_rig_disc/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "1ccd62d3c0b1ed1e80968d772e7adef221c3d074c2d698b1eaa42d1f48108335"
+      },
+      "new_native": {
+        "file": "module_rig_disc/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "748f22fa18a31c4f1b8e94215e10212d887d5585902f3b53d988dd7e0790aa5d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_disc",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_disc/d2.png",
+      "source_sha256": "430e577e10c756e16ed99c7f89e66e77626887e6e6a758ac5bf73ea96654a7dc",
+      "old": {
+        "file": "fac_module_rig_disc_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "78eff109fbc8dc7f4c1d727ca49cae0a3f94fd124c1cfccdfcee1d6859995425",
+        "bytes": 60462
+      },
+      "new": {
+        "file": "fac_module_rig_disc_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "65d0b59f98d3f4df94b03e65556af80717ef4db92252f2d3c7dcb0628839e95b",
+        "bytes": 31854
+      },
+      "old_native": {
+        "file": "module_rig_disc/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "c26fa769ca6fd770d3900f7a63312a564b7b2f8922fd794eb4fe1550b6af8ab6"
+      },
+      "new_native": {
+        "file": "module_rig_disc/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "759c50363ad8e94bbfa42806f54fc43308a4339b52d2d6231ab86af932ad7808"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_disc",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_disc/d3.png",
+      "source_sha256": "f4a1ea212503c06fff9169431aba6cec00068ae342bd7c292f76e2219a1ab054",
+      "old": {
+        "file": "fac_module_rig_disc_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f55130bfc3a00406e96c5043da98e431345d60069201e088e47fa14ae4d20425",
+        "bytes": 61996
+      },
+      "new": {
+        "file": "fac_module_rig_disc_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "2f3cdfbd47f588ff6427fb2d828aeaebf6432afba4f62387a684ad64e43c7418",
+        "bytes": 32174
+      },
+      "old_native": {
+        "file": "module_rig_disc/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "0991b02b54fd1c069d351cff2f0ec5663510722c3c487101c94fd867777af774"
+      },
+      "new_native": {
+        "file": "module_rig_disc/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "294871abc21e95cbf944b67aa0b45a7c0da159180e43f5c43d253074bc643f1a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_kids_park/d0.png",
+      "source_sha256": "d1e407b946600539b97e43741b99c1526d218911de33df5516046c87575882e0",
+      "old": {
+        "file": "fac_module_rig_kids_park_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "a470bc0983cb324b739e7bbfdb653d71ccc9eaef3f52b76e89e498a18fbfe948",
+        "bytes": 78838
+      },
+      "new": {
+        "file": "fac_module_rig_kids_park_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "07d81b56c125bc087c483cbf83c33dbb525571ad1e2fb770b08ef636d4eeb5b3",
+        "bytes": 30136
+      },
+      "old_native": {
+        "file": "module_rig_kids_park/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "4ccddaa350a1cf721087a1719ef70e9fbac010506b0910d8bcdc027a7269d86c"
+      },
+      "new_native": {
+        "file": "module_rig_kids_park/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "3242f2f8cf9655a7f22ae4a6a84d0e51c6237c5b99ec3456fb76c496b046ff43"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_kids_park/d1.png",
+      "source_sha256": "c7d8266b9d1189207491dfb7e31e4c321bd6d01fad5f9352fda85c6f7b448439",
+      "old": {
+        "file": "fac_module_rig_kids_park_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f2b80db04c9748cafe2f0036900555e8b14ac9b4e5c40bdcb4b540b0b2ea0c37",
+        "bytes": 75608
+      },
+      "new": {
+        "file": "fac_module_rig_kids_park_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "a92b37a2910ac997e7b88e52424a59c3b9ab1a86823f7f34323058416d513e43",
+        "bytes": 32322
+      },
+      "old_native": {
+        "file": "module_rig_kids_park/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "fe79d09b6d5b05e87eec0722b7982983e902a0fc24f8dd020193d389aa61752c"
+      },
+      "new_native": {
+        "file": "module_rig_kids_park/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "fe3ce8a2444d34a51fa6f6a2266d20b308d30ad55827cb5e2c209d742b991119"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_kids_park/d2.png",
+      "source_sha256": "d5e8e29a94354c6a9caea20b0f6f8a95311ec282d50947fabbec5758690d1b81",
+      "old": {
+        "file": "fac_module_rig_kids_park_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "7b8d5ae359da6b0b5db6d09b88c17f7e4b5942562d4ebcb67972f5c29ecf920c",
+        "bytes": 87682
+      },
+      "new": {
+        "file": "fac_module_rig_kids_park_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "ba1af8d3ca86b2b0e0159ae79ab52b9716aca39e6affffc14b005f9504131b3e",
+        "bytes": 32678
+      },
+      "old_native": {
+        "file": "module_rig_kids_park/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a5be998bb8d0f395707b21f53ced11919545bd4c06b9821c328a8ca1bfa0a491"
+      },
+      "new_native": {
+        "file": "module_rig_kids_park/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "5b854ebe32506fe472d39f867644ab2d73892ef16bfbafa314fac6e47df0fd5a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-obstacles-batch-20261003/candidates/module_rig_kids_park/d3.png",
+      "source_sha256": "8640dfa4186d464fcfe998b47b10a78ff173e3d60f7170a3128a67d712160bab",
+      "old": {
+        "file": "fac_module_rig_kids_park_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f36f33f632c84807b5c27e0239b154c39b022efc97d9a2c9019effcdf34fe9e5",
+        "bytes": 88886
+      },
+      "new": {
+        "file": "fac_module_rig_kids_park_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "c66a25432ad77e5ef441b382adeb5bcfe05c962ce56f0e4321bdb98f3aeb3d28",
+        "bytes": 33722
+      },
+      "old_native": {
+        "file": "module_rig_kids_park/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "f0b5d9c93216892cff646ea9a15ecd453d7d67bee03adf42b752466b7916d066"
+      },
+      "new_native": {
+        "file": "module_rig_kids_park/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "b7a558a1f06395aa6ae7ce292e1cb3b304bfda2405c7e4e15ef46c8fecde5193"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true,
+  "synchronized_native_visual_aliases": {
+    "rig_bridge_swing": {
+      "source": "rig_bridge",
+      "old_frames": {
+        "d0": {
+          "file": "rig_bridge/native-d0.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+        },
+        "d1": {
+          "file": "rig_bridge/native-d1.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+        },
+        "d2": {
+          "file": "rig_bridge/native-d2.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+        },
+        "d3": {
+          "file": "rig_bridge/native-d3.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+        }
+      },
+      "new_frames": {
+        "d0": {
+          "file": "rig_bridge/accepted-20261003-d0.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "818a0cbef1f07f1f6409ccda17698884d2f797832b3cc3dbcbc816d422ca28ad"
+        },
+        "d1": {
+          "file": "rig_bridge/accepted-20261003-d1.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "1b78bbefbed754d93833aea945395514ea018af4ad1777de1ab6c7d7587703d1"
+        },
+        "d2": {
+          "file": "rig_bridge/accepted-20261003-d2.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "4a4490b87be31ee2d986b0daab77883fae14c7412c934cca709b70e75b0b102d"
+        },
+        "d3": {
+          "file": "rig_bridge/accepted-20261003-d3.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "6239dbcfff3fa78c5c5a7a0b76008682682185244e24d79e1c8b79a3e6d5e753"
+        }
+      }
+    },
+    "rig_bridge_long": {
+      "source": "rig_bridge",
+      "old_frames": {
+        "d0": {
+          "file": "rig_bridge/native-d0.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+        },
+        "d1": {
+          "file": "rig_bridge/native-d1.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+        },
+        "d2": {
+          "file": "rig_bridge/native-d2.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+        },
+        "d3": {
+          "file": "rig_bridge/native-d3.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+        }
+      },
+      "new_frames": {
+        "d0": {
+          "file": "rig_bridge/accepted-20261003-d0.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "818a0cbef1f07f1f6409ccda17698884d2f797832b3cc3dbcbc816d422ca28ad"
+        },
+        "d1": {
+          "file": "rig_bridge/accepted-20261003-d1.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "1b78bbefbed754d93833aea945395514ea018af4ad1777de1ab6c7d7587703d1"
+        },
+        "d2": {
+          "file": "rig_bridge/accepted-20261003-d2.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "4a4490b87be31ee2d986b0daab77883fae14c7412c934cca709b70e75b0b102d"
+        },
+        "d3": {
+          "file": "rig_bridge/accepted-20261003-d3.png",
+          "w": 128,
+          "h": 128,
+          "sha256": "6239dbcfff3fa78c5c5a7a0b76008682682185244e24d79e1c8b79a3e6d5e753"
+        }
+      }
+    }
+  }
+}

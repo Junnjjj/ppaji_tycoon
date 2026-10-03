@@ -1,0 +1,1999 @@
+{
+  "id": "d75261a4-1116-4c3c-abf3-eb6247d075ea",
+  "ok": true,
+  "result": {
+    "workers": [
+      {
+        "dispatchId": "ctx_587013741196",
+        "taskId": "task_edb9cec4c9c4",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_9e4e5412-229e-4e5a-bc90-e85e7f4242c7",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_cfc7a9059e69",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_9e4e5412-229e-4e5a-bc90-e85e7f4242c7",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@e79afb4c:b1ca6b3e-319d-4126-8d73-69f221bf742f",
+          "originDispatchId": "ctx_e00be84f02b9",
+          "ownerDispatchId": "ctx_587013741196",
+          "releaseRequestedAt": "2026-10-03 11:32:47",
+          "releaseCompletedAt": "2026-10-03 11:32:49",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_587013741196",
+          "dispatchId": "ctx_587013741196",
+          "taskId": "task_edb9cec4c9c4",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_e8b5fd0bd780",
+        "taskId": "task_21d9d262d18d",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_87262e2e-ea62-4b17-bcb3-1ac462eacfe7",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_01c2805b6066",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_87262e2e-ea62-4b17-bcb3-1ac462eacfe7",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@01daaadd:db5635c7-1863-42e7-aa7f-50558df99e10",
+          "originDispatchId": "ctx_8f9bae18457e",
+          "ownerDispatchId": "ctx_e8b5fd0bd780",
+          "releaseRequestedAt": "2026-10-03 11:10:55",
+          "releaseCompletedAt": "2026-10-03 11:10:57",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_e8b5fd0bd780",
+          "dispatchId": "ctx_e8b5fd0bd780",
+          "taskId": "task_21d9d262d18d",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_5b6a6db1d215",
+        "taskId": "task_bfa599fbff92",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_9e4e5412-229e-4e5a-bc90-e85e7f4242c7",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_5b6a6db1d215",
+          "dispatchId": "ctx_5b6a6db1d215",
+          "taskId": "task_bfa599fbff92",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "unverifiable",
+              "root_completion"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_f5905f0bb359",
+        "taskId": "task_9e9a3999a40c",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_b6957ef2-9580-464e-b868-ade11895bb20",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_c976d5481c30",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_b6957ef2-9580-464e-b868-ade11895bb20",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@ff16d535:dcad9db7-2cba-4887-8b70-a55a43779d35",
+          "originDispatchId": "ctx_dcad5e9f780a",
+          "ownerDispatchId": "ctx_f5905f0bb359",
+          "releaseRequestedAt": "2026-10-03 11:13:19",
+          "releaseCompletedAt": "2026-10-03 11:13:21",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_f5905f0bb359",
+          "dispatchId": "ctx_f5905f0bb359",
+          "taskId": "task_9e9a3999a40c",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_8f9bae18457e",
+        "taskId": "task_21d9d262d18d",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_87262e2e-ea62-4b17-bcb3-1ac462eacfe7",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_8f9bae18457e",
+          "dispatchId": "ctx_8f9bae18457e",
+          "taskId": "task_21d9d262d18d",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_e00be84f02b9",
+        "taskId": "task_bfa599fbff92",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_9e4e5412-229e-4e5a-bc90-e85e7f4242c7",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_e00be84f02b9",
+          "dispatchId": "ctx_e00be84f02b9",
+          "taskId": "task_bfa599fbff92",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_dcad5e9f780a",
+        "taskId": "task_9e9a3999a40c",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_b6957ef2-9580-464e-b868-ade11895bb20",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_dcad5e9f780a",
+          "dispatchId": "ctx_dcad5e9f780a",
+          "taskId": "task_9e9a3999a40c",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_d5efc504062c",
+        "taskId": "task_7ddb6a714113",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_b5d41737-6087-4f72-a7e7-a8aa57f2e36e",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_5bad7b744101",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_b5d41737-6087-4f72-a7e7-a8aa57f2e36e",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@c30d3f65:eb147feb-dcbf-4978-a2e0-4106c8dc55c7",
+          "originDispatchId": "ctx_8583d7fc93c5",
+          "ownerDispatchId": "ctx_d5efc504062c",
+          "releaseRequestedAt": "2026-10-03 10:42:29",
+          "releaseCompletedAt": "2026-10-03 10:42:31",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_d5efc504062c",
+          "dispatchId": "ctx_d5efc504062c",
+          "taskId": "task_7ddb6a714113",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_6d1126edee76",
+        "taskId": "task_dbeb01552dfd",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_74d49602-dafd-4b88-a0be-b5df1fad0d62",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_803aeafd9faa",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_74d49602-dafd-4b88-a0be-b5df1fad0d62",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@c3aa7c4a:fa19141a-cf66-4cad-9541-dc71bbabca7c",
+          "originDispatchId": "ctx_f52119536f49",
+          "ownerDispatchId": "ctx_6d1126edee76",
+          "releaseRequestedAt": "2026-10-03 10:43:08",
+          "releaseCompletedAt": "2026-10-03 10:43:11",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_6d1126edee76",
+          "dispatchId": "ctx_6d1126edee76",
+          "taskId": "task_dbeb01552dfd",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_3d64ba3391b6",
+        "taskId": "task_1e6034b44ef9",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_b5d41737-6087-4f72-a7e7-a8aa57f2e36e",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_3d64ba3391b6",
+          "dispatchId": "ctx_3d64ba3391b6",
+          "taskId": "task_1e6034b44ef9",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "unverifiable",
+              "root_completion"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_1ca5d829544d",
+        "taskId": "task_8b3abbd2b6b7",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_74d49602-dafd-4b88-a0be-b5df1fad0d62",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_1ca5d829544d",
+          "dispatchId": "ctx_1ca5d829544d",
+          "taskId": "task_8b3abbd2b6b7",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "unverifiable",
+              "root_completion"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_f52119536f49",
+        "taskId": "task_8b3abbd2b6b7",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_74d49602-dafd-4b88-a0be-b5df1fad0d62",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_f52119536f49",
+          "dispatchId": "ctx_f52119536f49",
+          "taskId": "task_8b3abbd2b6b7",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_fa607e3aac30",
+        "taskId": "task_766eee2e3bf6",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_b5d41737-6087-4f72-a7e7-a8aa57f2e36e",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_fa607e3aac30",
+          "dispatchId": "ctx_fa607e3aac30",
+          "taskId": "task_766eee2e3bf6",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "unverifiable",
+              "root_completion"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_8583d7fc93c5",
+        "taskId": "task_766eee2e3bf6",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_b5d41737-6087-4f72-a7e7-a8aa57f2e36e",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_8583d7fc93c5",
+          "dispatchId": "ctx_8583d7fc93c5",
+          "taskId": "task_766eee2e3bf6",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_41095014286a",
+        "taskId": "task_5c3055ba51e9",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_52e0ee6b-8856-4cb2-a35b-8137f6eaab7e",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_0757ddcf75f0",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_52e0ee6b-8856-4cb2-a35b-8137f6eaab7e",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@9049b4fe:984e29f8-aba8-4f7d-a43e-3528cf9c96a5",
+          "originDispatchId": "ctx_26bd7fe16ca7",
+          "ownerDispatchId": "ctx_41095014286a",
+          "releaseRequestedAt": "2026-10-03 10:35:16",
+          "releaseCompletedAt": "2026-10-03 10:35:18",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_41095014286a",
+          "dispatchId": "ctx_41095014286a",
+          "taskId": "task_5c3055ba51e9",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_26bd7fe16ca7",
+        "taskId": "task_5c3055ba51e9",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_52e0ee6b-8856-4cb2-a35b-8137f6eaab7e",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_26bd7fe16ca7",
+          "dispatchId": "ctx_26bd7fe16ca7",
+          "taskId": "task_5c3055ba51e9",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_0c44aa604017",
+        "taskId": "task_89963b04f982",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_c2f34d28-d19e-4819-a84a-f68235caf4a7",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_b4e38f1a6636",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_c2f34d28-d19e-4819-a84a-f68235caf4a7",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@c98d690e:b6f23a9b-b359-470c-9d65-ea8437dcb51b",
+          "originDispatchId": "ctx_309556527bbb",
+          "ownerDispatchId": "ctx_0c44aa604017",
+          "releaseRequestedAt": "2026-10-03 10:15:51",
+          "releaseCompletedAt": "2026-10-03 10:15:53",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_0c44aa604017",
+          "dispatchId": "ctx_0c44aa604017",
+          "taskId": "task_89963b04f982",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_4f7409e92deb",
+        "taskId": "task_a92d42e4e597",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_f8fabab0-fd40-4221-aa87-b64fba4621c1",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_9db449f08fa9",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_f8fabab0-fd40-4221-aa87-b64fba4621c1",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@1b674ddc:e8ff0f16-af71-407d-821b-710b2cf0229e",
+          "originDispatchId": "ctx_279d2341a099",
+          "ownerDispatchId": "ctx_4f7409e92deb",
+          "releaseRequestedAt": "2026-10-03 10:12:36",
+          "releaseCompletedAt": "2026-10-03 10:12:39",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_4f7409e92deb",
+          "dispatchId": "ctx_4f7409e92deb",
+          "taskId": "task_a92d42e4e597",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_279d2341a099",
+        "taskId": "task_a92d42e4e597",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_f8fabab0-fd40-4221-aa87-b64fba4621c1",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_279d2341a099",
+          "dispatchId": "ctx_279d2341a099",
+          "taskId": "task_a92d42e4e597",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_70595405f32e",
+        "taskId": "task_0705ff17eb49",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_943422c6-57ca-4712-985e-63230380c4a0",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_241a0de95dda",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_943422c6-57ca-4712-985e-63230380c4a0",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@953e862a:6d408a19-09cc-4ecf-bc52-06684efc24ca",
+          "originDispatchId": "ctx_0887cc1ee07e",
+          "ownerDispatchId": "ctx_70595405f32e",
+          "releaseRequestedAt": "2026-10-03 10:14:40",
+          "releaseCompletedAt": "2026-10-03 10:14:42",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_70595405f32e",
+          "dispatchId": "ctx_70595405f32e",
+          "taskId": "task_0705ff17eb49",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_0887cc1ee07e",
+        "taskId": "task_0705ff17eb49",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_943422c6-57ca-4712-985e-63230380c4a0",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_0887cc1ee07e",
+          "dispatchId": "ctx_0887cc1ee07e",
+          "taskId": "task_0705ff17eb49",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_c9bded2d9197",
+        "taskId": "task_6c1ce2529618",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_c2f34d28-d19e-4819-a84a-f68235caf4a7",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_c9bded2d9197",
+          "dispatchId": "ctx_c9bded2d9197",
+          "taskId": "task_6c1ce2529618",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "unverifiable",
+              "root_completion"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_309556527bbb",
+        "taskId": "task_6c1ce2529618",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_c2f34d28-d19e-4819-a84a-f68235caf4a7",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_309556527bbb",
+          "dispatchId": "ctx_309556527bbb",
+          "taskId": "task_6c1ce2529618",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_0130fe112f25",
+        "taskId": "task_49856df8fe53",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_1187076e-9322-4c1b-97cf-9df57a31753c",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_53a58b164c11",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_1187076e-9322-4c1b-97cf-9df57a31753c",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@5192e9c1:7a88677d-e76b-4caa-b5cd-9b1bca660e8f",
+          "originDispatchId": "ctx_0e98eeee41ac",
+          "ownerDispatchId": "ctx_0130fe112f25",
+          "releaseRequestedAt": "2026-10-03 09:53:56",
+          "releaseCompletedAt": "2026-10-03 09:53:58",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_0130fe112f25",
+          "dispatchId": "ctx_0130fe112f25",
+          "taskId": "task_49856df8fe53",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_8137409f36a8",
+        "taskId": "task_8495bb1dd3ef",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_31b5e02a-2968-4ab2-99de-3ed7c3388772",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_8c6ed794d344",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_31b5e02a-2968-4ab2-99de-3ed7c3388772",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@0e445287:b5a1152e-8863-4e26-bad6-98d59272ad04",
+          "originDispatchId": "ctx_3a813f9d947f",
+          "ownerDispatchId": "ctx_8137409f36a8",
+          "releaseRequestedAt": "2026-10-03 09:53:44",
+          "releaseCompletedAt": "2026-10-03 09:53:46",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_8137409f36a8",
+          "dispatchId": "ctx_8137409f36a8",
+          "taskId": "task_8495bb1dd3ef",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_8f2e99c5a91f",
+        "taskId": "task_6f770cd2a90c",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_27ef2252-609f-4c49-a81f-7a7044e2a6b4",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_98fe38babba5",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_27ef2252-609f-4c49-a81f-7a7044e2a6b4",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@72359afc:804a2d76-8922-45db-8ca0-6e5944d21d08",
+          "originDispatchId": "ctx_33b33a7190e6",
+          "ownerDispatchId": "ctx_8f2e99c5a91f",
+          "releaseRequestedAt": "2026-10-03 09:55:06",
+          "releaseCompletedAt": "2026-10-03 09:55:08",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "transcript",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_8f2e99c5a91f",
+          "dispatchId": "ctx_8f2e99c5a91f",
+          "taskId": "task_6f770cd2a90c",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "root_completion"
+            ],
+            "requiresAction": false
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_3a813f9d947f",
+        "taskId": "task_8495bb1dd3ef",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_31b5e02a-2968-4ab2-99de-3ed7c3388772",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_3a813f9d947f",
+          "dispatchId": "ctx_3a813f9d947f",
+          "taskId": "task_8495bb1dd3ef",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_33b33a7190e6",
+        "taskId": "task_6f770cd2a90c",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_27ef2252-609f-4c49-a81f-7a7044e2a6b4",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_33b33a7190e6",
+          "dispatchId": "ctx_33b33a7190e6",
+          "taskId": "task_6f770cd2a90c",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure",
+              "unverifiable"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_02e0369a3d08",
+        "taskId": "task_6f770cd2a90c",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "failed",
+        "dispatchStatus": "failed",
+        "agentTerminalHandle": "term_dfc6d72e-a775-4799-bed4-9d6c73f4f3b3",
+        "terminalState": "released",
+        "resource": {
+          "id": "wtr_c779540b1960",
+          "ownershipState": "released",
+          "releaseState": "released",
+          "retainedReason": null,
+          "terminalHandle": "term_dfc6d72e-a775-4799-bed4-9d6c73f4f3b3",
+          "worktreeId": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+          "endpointId": "b959872a-a282-4eda-b3a7-85dbdac99267",
+          "endpointIncarnation": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3@@98353bc6:02416dfc-7302-4780-80b9-83d29df145f8",
+          "originDispatchId": "ctx_02e0369a3d08",
+          "ownerDispatchId": "ctx_02e0369a3d08",
+          "releaseRequestedAt": "2026-10-03 09:45:50",
+          "releaseCompletedAt": "2026-10-03 09:45:52",
+          "releaseError": null,
+          "recoveryAttemptCount": 0,
+          "lastRecoveryAt": null,
+          "archive": {
+            "source": "terminal",
+            "status": "captured"
+          }
+        },
+        "projection": {
+          "id": "ctx_02e0369a3d08",
+          "dispatchId": "ctx_02e0369a3d08",
+          "taskId": "task_6f770cd2a90c",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "failed",
+            "dispatch": "failed",
+            "detail": "agent_readiness",
+            "activity": "unknown"
+          },
+          "outcome": "failed",
+          "liveness": {
+            "verdict": "exited",
+            "source": "resource_release"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "released"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "failure"
+            ],
+            "requiresAction": true
+          }
+        }
+      },
+      {
+        "dispatchId": "ctx_0e98eeee41ac",
+        "taskId": "task_5af033c2ef93",
+        "runId": "run_fc9dbd55012a",
+        "workerState": "succeeded",
+        "dispatchStatus": "completed",
+        "agentTerminalHandle": "term_1187076e-9322-4c1b-97cf-9df57a31753c",
+        "terminalState": "retained",
+        "resource": null,
+        "projection": {
+          "id": "ctx_0e98eeee41ac",
+          "dispatchId": "ctx_0e98eeee41ac",
+          "taskId": "task_5af033c2ef93",
+          "runId": "run_fc9dbd55012a",
+          "role": "worker",
+          "parent": null,
+          "provider": null,
+          "host": {
+            "kind": "local",
+            "id": "local"
+          },
+          "workspace": {
+            "id": "37496c43-c5e0-4dcc-8943-b66f6bfb6e84::/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+            "kind": "folder_or_worktree"
+          },
+          "stage": {
+            "worker": "succeeded",
+            "dispatch": "completed",
+            "detail": "settled",
+            "activity": "unknown"
+          },
+          "outcome": "succeeded",
+          "liveness": {
+            "verdict": "unverifiable",
+            "reason": "missing_status"
+          },
+          "evidence": {
+            "durable": true,
+            "liveStatus": "unavailable",
+            "lastObservedAt": null
+          },
+          "resource": {
+            "state": "absent",
+            "reason": "not_materialized"
+          },
+          "nextAction": {
+            "kind": "none",
+            "argv": []
+          },
+          "attention": {
+            "categories": [
+              "unverifiable",
+              "root_completion"
+            ],
+            "requiresAction": true
+          }
+        }
+      }
+    ],
+    "counts": {
+      "retained": 17,
+      "released": 13
+    },
+    "page": {
+      "limit": 100,
+      "total": 30,
+      "hasMore": false,
+      "nextCursor": null
+    },
+    "scope": {
+      "run": "run_fc9dbd55012a",
+      "source": "flag"
+    }
+  },
+  "_meta": {
+    "runtimeId": "b959872a-a282-4eda-b3a7-85dbdac99267"
+  }
+}

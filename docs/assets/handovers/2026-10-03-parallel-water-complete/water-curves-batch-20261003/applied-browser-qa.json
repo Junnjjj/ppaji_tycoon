@@ -1,0 +1,98 @@
+[
+  {
+    "id": "rig_blob",
+    "d": 0,
+    "file": "fac_rig_blob_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_blob",
+    "d": 1,
+    "file": "fac_rig_blob_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_blob",
+    "d": 2,
+    "file": "fac_rig_blob_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_blob",
+    "d": 3,
+    "file": "fac_rig_blob_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 0,
+    "file": "fac_rig_iceberg_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 1,
+    "file": "fac_rig_iceberg_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 2,
+    "file": "fac_rig_iceberg_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 3,
+    "file": "fac_rig_iceberg_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 0,
+    "file": "fac_module_trampoline_w_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 1,
+    "file": "fac_module_trampoline_w_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 2,
+    "file": "fac_module_trampoline_w_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 3,
+    "file": "fac_module_trampoline_w_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 0,
+    "file": "fac_module_rig_roller_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 1,
+    "file": "fac_module_rig_roller_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 2,
+    "file": "fac_module_rig_roller_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 3,
+    "file": "fac_module_rig_roller_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

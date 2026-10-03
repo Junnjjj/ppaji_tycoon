@@ -1,0 +1,322 @@
+[
+  {
+    "id": "rig_blob",
+    "d": 0,
+    "original_bbox": [
+      129,
+      126,
+      357,
+      338
+    ],
+    "candidate_bbox": [
+      127,
+      125,
+      357,
+      345
+    ],
+    "width_ratio": 1.0087719298245614,
+    "height_ratio": 1.0377358490566038,
+    "registered_same_canvas": true,
+    "interpretation": "Source capsule and tower scale varies by direction. Fixed squat tower is29.64logicalpx high; long capsule is2.07tiles. One rear ladder and fixed alternating stripes."
+  },
+  {
+    "id": "rig_blob",
+    "d": 1,
+    "original_bbox": [
+      130,
+      194,
+      358,
+      370
+    ],
+    "candidate_bbox": [
+      127,
+      191,
+      357,
+      369
+    ],
+    "width_ratio": 1.0087719298245614,
+    "height_ratio": 1.0113636363636365,
+    "registered_same_canvas": true,
+    "interpretation": "Source capsule and tower scale varies by direction. Fixed squat tower is29.64logicalpx high; long capsule is2.07tiles. One rear ladder and fixed alternating stripes."
+  },
+  {
+    "id": "rig_blob",
+    "d": 2,
+    "original_bbox": [
+      154,
+      207,
+      382,
+      369
+    ],
+    "candidate_bbox": [
+      155,
+      191,
+      385,
+      369
+    ],
+    "width_ratio": 1.0087719298245614,
+    "height_ratio": 1.0987654320987654,
+    "registered_same_canvas": true,
+    "interpretation": "Source capsule and tower scale varies by direction. Fixed squat tower is29.64logicalpx high; long capsule is2.07tiles. One rear ladder and fixed alternating stripes."
+  },
+  {
+    "id": "rig_blob",
+    "d": 3,
+    "original_bbox": [
+      154,
+      139,
+      383,
+      338
+    ],
+    "candidate_bbox": [
+      155,
+      125,
+      385,
+      345
+    ],
+    "width_ratio": 1.0043668122270741,
+    "height_ratio": 1.1055276381909547,
+    "registered_same_canvas": true,
+    "interpretation": "Source capsule and tower scale varies by direction. Fixed squat tower is29.64logicalpx high; long capsule is2.07tiles. One rear ladder and fixed alternating stripes."
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 0,
+    "original_bbox": [
+      139,
+      162,
+      376,
+      362
+    ],
+    "candidate_bbox": [
+      139,
+      149,
+      373,
+      359
+    ],
+    "width_ratio": 0.9873417721518988,
+    "height_ratio": 1.05,
+    "registered_same_canvas": true,
+    "interpretation": "Sources show holds on changing flanks. Fixed east/northeast climbing face (d0 right flank) is authored; rear is plain pale faceted ice. Summit offset and uneven middle ridge preserve broad irregular silhouette."
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 1,
+    "original_bbox": [
+      138,
+      162,
+      372,
+      361
+    ],
+    "candidate_bbox": [
+      139,
+      159,
+      373,
+      359
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0050251256281406,
+    "registered_same_canvas": true,
+    "interpretation": "Sources show holds on changing flanks. Fixed east/northeast climbing face (d0 right flank) is authored; rear is plain pale faceted ice. Summit offset and uneven middle ridge preserve broad irregular silhouette."
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 2,
+    "original_bbox": [
+      136,
+      159,
+      374,
+      365
+    ],
+    "candidate_bbox": [
+      139,
+      167,
+      373,
+      359
+    ],
+    "width_ratio": 0.9831932773109243,
+    "height_ratio": 0.9320388349514563,
+    "registered_same_canvas": true,
+    "interpretation": "Sources show holds on changing flanks. Fixed east/northeast climbing face (d0 right flank) is authored; rear is plain pale faceted ice. Summit offset and uneven middle ridge preserve broad irregular silhouette."
+  },
+  {
+    "id": "rig_iceberg",
+    "d": 3,
+    "original_bbox": [
+      138,
+      157,
+      377,
+      367
+    ],
+    "candidate_bbox": [
+      139,
+      157,
+      373,
+      359
+    ],
+    "width_ratio": 0.9790794979079498,
+    "height_ratio": 0.9619047619047619,
+    "registered_same_canvas": true,
+    "interpretation": "Sources show holds on changing flanks. Fixed east/northeast climbing face (d0 right flank) is authored; rear is plain pale faceted ice. Summit offset and uneven middle ridge preserve broad irregular silhouette."
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 0,
+    "original_bbox": [
+      131,
+      215,
+      369,
+      370
+    ],
+    "candidate_bbox": [
+      121,
+      211,
+      379,
+      373
+    ],
+    "width_ratio": 1.084033613445378,
+    "height_ratio": 1.0451612903225806,
+    "registered_same_canvas": true,
+    "interpretation": "Central opening is filled by recessed dark elastic mesh in assembled sprite; ring-only isolation proves its aperture. Source eight alternating rim sectors and fixed entry dock retained."
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 1,
+    "original_bbox": [
+      142,
+      215,
+      380,
+      370
+    ],
+    "candidate_bbox": [
+      133,
+      211,
+      391,
+      373
+    ],
+    "width_ratio": 1.084033613445378,
+    "height_ratio": 1.0451612903225806,
+    "registered_same_canvas": true,
+    "interpretation": "Central opening is filled by recessed dark elastic mesh in assembled sprite; ring-only isolation proves its aperture. Source eight alternating rim sectors and fixed entry dock retained."
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 2,
+    "original_bbox": [
+      150,
+      222,
+      373,
+      351
+    ],
+    "candidate_bbox": [
+      133,
+      211,
+      391,
+      357
+    ],
+    "width_ratio": 1.15695067264574,
+    "height_ratio": 1.1317829457364341,
+    "registered_same_canvas": true,
+    "interpretation": "Central opening is filled by recessed dark elastic mesh in assembled sprite; ring-only isolation proves its aperture. Source eight alternating rim sectors and fixed entry dock retained."
+  },
+  {
+    "id": "module_trampoline_w",
+    "d": 3,
+    "original_bbox": [
+      139,
+      222,
+      361,
+      351
+    ],
+    "candidate_bbox": [
+      121,
+      211,
+      379,
+      357
+    ],
+    "width_ratio": 1.162162162162162,
+    "height_ratio": 1.1317829457364341,
+    "registered_same_canvas": true,
+    "interpretation": "Central opening is filled by recessed dark elastic mesh in assembled sprite; ring-only isolation proves its aperture. Source eight alternating rim sectors and fixed entry dock retained."
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 0,
+    "original_bbox": [
+      129,
+      183,
+      382,
+      369
+    ],
+    "candidate_bbox": [
+      135,
+      175,
+      377,
+      363
+    ],
+    "width_ratio": 0.9565217391304348,
+    "height_ratio": 1.010752688172043,
+    "registered_same_canvas": true,
+    "interpretation": "Fixed entry ramp on positive-v side. Real bored ramp cells; blue deck may be visible through holes. Sloping frames are deliberately not tested as horizontal iso lines."
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 1,
+    "original_bbox": [
+      130,
+      184,
+      383,
+      369
+    ],
+    "candidate_bbox": [
+      135,
+      175,
+      377,
+      363
+    ],
+    "width_ratio": 0.9565217391304348,
+    "height_ratio": 1.0162162162162163,
+    "registered_same_canvas": true,
+    "interpretation": "Fixed entry ramp on positive-v side. Real bored ramp cells; blue deck may be visible through holes. Sloping frames are deliberately not tested as horizontal iso lines."
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 2,
+    "original_bbox": [
+      129,
+      190,
+      383,
+      369
+    ],
+    "candidate_bbox": [
+      135,
+      179,
+      377,
+      363
+    ],
+    "width_ratio": 0.952755905511811,
+    "height_ratio": 1.0279329608938548,
+    "registered_same_canvas": true,
+    "interpretation": "Fixed entry ramp on positive-v side. Real bored ramp cells; blue deck may be visible through holes. Sloping frames are deliberately not tested as horizontal iso lines."
+  },
+  {
+    "id": "module_rig_roller",
+    "d": 3,
+    "original_bbox": [
+      129,
+      191,
+      383,
+      369
+    ],
+    "candidate_bbox": [
+      135,
+      179,
+      377,
+      363
+    ],
+    "width_ratio": 0.952755905511811,
+    "height_ratio": 1.0337078651685394,
+    "registered_same_canvas": true,
+    "interpretation": "Fixed entry ramp on positive-v side. Real bored ramp cells; blue deck may be visible through holes. Sloping frames are deliberately not tested as horizontal iso lines."
+  }
+]

@@ -1,0 +1,534 @@
+[
+  {
+    "id": "rig_bridge",
+    "d": 0,
+    "original_bbox": [
+      161,
+      154,
+      352,
+      354
+    ],
+    "candidate_bbox": [
+      166,
+      148,
+      346,
+      352
+    ],
+    "width_ratio": 0.9424083769633508,
+    "height_ratio": 1.02,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 1,
+    "original_bbox": [
+      161,
+      151,
+      352,
+      355
+    ],
+    "candidate_bbox": [
+      166,
+      148,
+      346,
+      352
+    ],
+    "width_ratio": 0.9424083769633508,
+    "height_ratio": 1.0,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 2,
+    "original_bbox": [
+      164,
+      152,
+      349,
+      355
+    ],
+    "candidate_bbox": [
+      166,
+      148,
+      346,
+      352
+    ],
+    "width_ratio": 0.972972972972973,
+    "height_ratio": 1.0049261083743843,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_bridge",
+    "d": 3,
+    "original_bbox": [
+      162,
+      158,
+      351,
+      357
+    ],
+    "candidate_bbox": [
+      166,
+      148,
+      346,
+      352
+    ],
+    "width_ratio": 0.9523809523809523,
+    "height_ratio": 1.0251256281407035,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 0,
+    "original_bbox": [
+      195,
+      253,
+      317,
+      336
+    ],
+    "candidate_bbox": [
+      196,
+      252,
+      316,
+      338
+    ],
+    "width_ratio": 0.9836065573770492,
+    "height_ratio": 1.036144578313253,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 1,
+    "original_bbox": [
+      197,
+      254,
+      315,
+      338
+    ],
+    "candidate_bbox": [
+      196,
+      252,
+      316,
+      338
+    ],
+    "width_ratio": 1.0169491525423728,
+    "height_ratio": 1.0238095238095237,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 2,
+    "original_bbox": [
+      197,
+      254,
+      315,
+      338
+    ],
+    "candidate_bbox": [
+      196,
+      252,
+      316,
+      338
+    ],
+    "width_ratio": 1.0169491525423728,
+    "height_ratio": 1.0238095238095237,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_stepstone",
+    "d": 3,
+    "original_bbox": [
+      198,
+      254,
+      315,
+      337
+    ],
+    "candidate_bbox": [
+      196,
+      252,
+      316,
+      338
+    ],
+    "width_ratio": 1.0256410256410255,
+    "height_ratio": 1.036144578313253,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 0,
+    "original_bbox": [
+      130,
+      204,
+      383,
+      370
+    ],
+    "candidate_bbox": [
+      134,
+      202,
+      378,
+      368
+    ],
+    "width_ratio": 0.9644268774703557,
+    "height_ratio": 1.0,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 1,
+    "original_bbox": [
+      130,
+      204,
+      383,
+      370
+    ],
+    "candidate_bbox": [
+      134,
+      202,
+      378,
+      368
+    ],
+    "width_ratio": 0.9644268774703557,
+    "height_ratio": 1.0,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 2,
+    "original_bbox": [
+      129,
+      205,
+      383,
+      369
+    ],
+    "candidate_bbox": [
+      134,
+      202,
+      378,
+      368
+    ],
+    "width_ratio": 0.9606299212598425,
+    "height_ratio": 1.0121951219512195,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_beam",
+    "d": 3,
+    "original_bbox": [
+      129,
+      205,
+      382,
+      370
+    ],
+    "candidate_bbox": [
+      134,
+      202,
+      378,
+      368
+    ],
+    "width_ratio": 0.9644268774703557,
+    "height_ratio": 1.006060606060606,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 0,
+    "original_bbox": [
+      113,
+      211,
+      399,
+      385
+    ],
+    "candidate_bbox": [
+      114,
+      200,
+      398,
+      378
+    ],
+    "width_ratio": 0.993006993006993,
+    "height_ratio": 1.0229885057471264,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 1,
+    "original_bbox": [
+      113,
+      212,
+      399,
+      386
+    ],
+    "candidate_bbox": [
+      114,
+      200,
+      398,
+      378
+    ],
+    "width_ratio": 0.993006993006993,
+    "height_ratio": 1.0229885057471264,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 2,
+    "original_bbox": [
+      109,
+      211,
+      403,
+      385
+    ],
+    "candidate_bbox": [
+      114,
+      200,
+      398,
+      378
+    ],
+    "width_ratio": 0.9659863945578231,
+    "height_ratio": 1.0229885057471264,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_seesaw",
+    "d": 3,
+    "original_bbox": [
+      108,
+      212,
+      404,
+      385
+    ],
+    "candidate_bbox": [
+      114,
+      200,
+      398,
+      378
+    ],
+    "width_ratio": 0.9594594594594594,
+    "height_ratio": 1.0289017341040463,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 0,
+    "original_bbox": [
+      136,
+      127,
+      376,
+      370
+    ],
+    "candidate_bbox": [
+      138,
+      132,
+      374,
+      366
+    ],
+    "width_ratio": 0.9833333333333333,
+    "height_ratio": 0.9629629629629629,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 1,
+    "original_bbox": [
+      135,
+      127,
+      377,
+      369
+    ],
+    "candidate_bbox": [
+      138,
+      132,
+      374,
+      366
+    ],
+    "width_ratio": 0.9752066115702479,
+    "height_ratio": 0.9669421487603306,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 2,
+    "original_bbox": [
+      135,
+      126,
+      377,
+      370
+    ],
+    "candidate_bbox": [
+      138,
+      132,
+      374,
+      366
+    ],
+    "width_ratio": 0.9752066115702479,
+    "height_ratio": 0.9590163934426229,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_totem",
+    "d": 3,
+    "original_bbox": [
+      137,
+      126,
+      375,
+      370
+    ],
+    "candidate_bbox": [
+      138,
+      132,
+      374,
+      366
+    ],
+    "width_ratio": 0.9915966386554622,
+    "height_ratio": 0.9590163934426229,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 0,
+    "original_bbox": [
+      133,
+      185,
+      389,
+      370
+    ],
+    "candidate_bbox": [
+      138,
+      174,
+      398,
+      366
+    ],
+    "width_ratio": 1.015625,
+    "height_ratio": 1.037837837837838,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 1,
+    "original_bbox": [
+      123,
+      184,
+      380,
+      371
+    ],
+    "candidate_bbox": [
+      114,
+      174,
+      374,
+      366
+    ],
+    "width_ratio": 1.0116731517509727,
+    "height_ratio": 1.0267379679144386,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 2,
+    "original_bbox": [
+      118,
+      174,
+      385,
+      375
+    ],
+    "candidate_bbox": [
+      114,
+      174,
+      374,
+      378
+    ],
+    "width_ratio": 0.9737827715355806,
+    "height_ratio": 1.0149253731343284,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_disc",
+    "d": 3,
+    "original_bbox": [
+      127,
+      170,
+      394,
+      374
+    ],
+    "candidate_bbox": [
+      138,
+      174,
+      398,
+      378
+    ],
+    "width_ratio": 0.9737827715355806,
+    "height_ratio": 1.0,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 0,
+    "original_bbox": [
+      74,
+      154,
+      412,
+      402
+    ],
+    "candidate_bbox": [
+      84,
+      136,
+      428,
+      392
+    ],
+    "width_ratio": 1.017751479289941,
+    "height_ratio": 1.032258064516129,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 1,
+    "original_bbox": [
+      102,
+      154,
+      435,
+      402
+    ],
+    "candidate_bbox": [
+      84,
+      156,
+      428,
+      392
+    ],
+    "width_ratio": 1.033033033033033,
+    "height_ratio": 0.9516129032258065,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 2,
+    "original_bbox": [
+      97,
+      119,
+      439,
+      388
+    ],
+    "candidate_bbox": [
+      84,
+      146,
+      428,
+      392
+    ],
+    "width_ratio": 1.0058479532163742,
+    "height_ratio": 0.9144981412639405,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "module_rig_kids_park",
+    "d": 3,
+    "original_bbox": [
+      72,
+      119,
+      415,
+      388
+    ],
+    "candidate_bbox": [
+      84,
+      126,
+      428,
+      392
+    ],
+    "width_ratio": 1.0029154518950438,
+    "height_ratio": 0.9888475836431226,
+    "same_canvas_and_registration": true
+  }
+]

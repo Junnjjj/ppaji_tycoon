@@ -1,0 +1,2333 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "rig_blob",
+      "status": "PASS",
+      "errors": [],
+      "closed_parts": [
+        {
+          "part": "tower-float",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "towerpost-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "towerpost-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "towerpost-2",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "towerpost-3",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "platform",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "guard-0-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guard-0-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardtop-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guard-1-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guard-1-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardtop-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "accessrail-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "accessrail-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rung-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rung-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rung-2",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rung-3",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rung-4",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rung-5",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "blob-capsule",
+          "edges": 1152,
+          "bad": 0
+        },
+        {
+          "part": "end-grip",
+          "edges": 60,
+          "bad": 0
+        }
+      ],
+      "joints": [
+        {
+          "a": "towerpost-0",
+          "b": "tower-float",
+          "overlap": [
+            0.140625,
+            0.140625,
+            0.3480000000000003
+          ],
+          "passed": true
+        },
+        {
+          "a": "towerpost-0",
+          "b": "platform",
+          "overlap": [
+            0.140625,
+            0.140625,
+            1.3049999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "towerpost-1",
+          "b": "tower-float",
+          "overlap": [
+            0.140625,
+            0.140625,
+            0.3480000000000003
+          ],
+          "passed": true
+        },
+        {
+          "a": "towerpost-1",
+          "b": "platform",
+          "overlap": [
+            0.140625,
+            0.140625,
+            1.3049999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "towerpost-2",
+          "b": "tower-float",
+          "overlap": [
+            0.140625,
+            0.140625,
+            0.3480000000000003
+          ],
+          "passed": true
+        },
+        {
+          "a": "towerpost-2",
+          "b": "platform",
+          "overlap": [
+            0.140625,
+            0.140625,
+            1.3049999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "towerpost-3",
+          "b": "tower-float",
+          "overlap": [
+            0.140625,
+            0.140625,
+            0.3480000000000003
+          ],
+          "passed": true
+        },
+        {
+          "a": "towerpost-3",
+          "b": "platform",
+          "overlap": [
+            0.140625,
+            0.140625,
+            1.3049999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "platform",
+          "b": "towerpost-0",
+          "overlap": [
+            0.140625,
+            0.140625,
+            1.3049999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "guard-0-0",
+          "b": "platform",
+          "overlap": [
+            0.11249999999999999,
+            0.11249999999999999,
+            0.347999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "guard-0-1",
+          "b": "platform",
+          "overlap": [
+            0.11249999999999999,
+            0.11250000000000004,
+            0.347999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop-0",
+          "b": "guard-0-0",
+          "overlap": [
+            0.109375,
+            0.056249999999999994,
+            1.5225000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop-0",
+          "b": "guard-0-1",
+          "overlap": [
+            0.109375,
+            0.05625000000000002,
+            1.5225000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "guard-1-0",
+          "b": "platform",
+          "overlap": [
+            0.11250000000000004,
+            0.11249999999999999,
+            0.347999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "guard-1-1",
+          "b": "platform",
+          "overlap": [
+            0.11250000000000004,
+            0.11250000000000004,
+            0.347999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop-1",
+          "b": "guard-1-0",
+          "overlap": [
+            0.109375,
+            0.056249999999999994,
+            1.5225000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop-1",
+          "b": "guard-1-1",
+          "overlap": [
+            0.109375,
+            0.05625000000000002,
+            1.5225000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "accessrail-0",
+          "b": "tower-float",
+          "overlap": [
+            0.03343750000000001,
+            0.046875,
+            0.17400000000000038
+          ],
+          "passed": true
+        },
+        {
+          "a": "accessrail-0",
+          "b": "platform",
+          "overlap": [
+            0.043437500000000004,
+            0.046875,
+            0.870000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "accessrail-1",
+          "b": "tower-float",
+          "overlap": [
+            0.03343750000000001,
+            0.046875,
+            0.17400000000000038
+          ],
+          "passed": true
+        },
+        {
+          "a": "accessrail-1",
+          "b": "platform",
+          "overlap": [
+            0.043437500000000004,
+            0.046875,
+            0.870000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-0",
+          "b": "accessrail-0",
+          "overlap": [
+            0.0403125,
+            0.03343749999999995,
+            1.2180000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-0",
+          "b": "accessrail-1",
+          "overlap": [
+            0.0403125,
+            0.03343750000000001,
+            1.2180000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-1",
+          "b": "accessrail-0",
+          "overlap": [
+            0.0403125,
+            0.03343749999999995,
+            1.2179999999999982
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-1",
+          "b": "accessrail-1",
+          "overlap": [
+            0.0403125,
+            0.03343750000000001,
+            1.2179999999999982
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-2",
+          "b": "accessrail-0",
+          "overlap": [
+            0.0403125,
+            0.03343749999999995,
+            1.218
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-2",
+          "b": "accessrail-1",
+          "overlap": [
+            0.0403125,
+            0.03343750000000001,
+            1.218
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-3",
+          "b": "accessrail-0",
+          "overlap": [
+            0.0403125,
+            0.03343749999999995,
+            1.218
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-3",
+          "b": "accessrail-1",
+          "overlap": [
+            0.0403125,
+            0.03343750000000001,
+            1.218
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-4",
+          "b": "accessrail-0",
+          "overlap": [
+            0.0403125,
+            0.03343749999999995,
+            1.218
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-4",
+          "b": "accessrail-1",
+          "overlap": [
+            0.0403125,
+            0.03343750000000001,
+            1.218
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-5",
+          "b": "accessrail-0",
+          "overlap": [
+            0.0403125,
+            0.03343749999999995,
+            1.218
+          ],
+          "passed": true
+        },
+        {
+          "a": "rung-5",
+          "b": "accessrail-1",
+          "overlap": [
+            0.0403125,
+            0.03343750000000001,
+            1.218
+          ],
+          "passed": true
+        },
+        {
+          "a": "blob-capsule",
+          "b": "tower-float",
+          "overlap": [
+            0.11000000000000054,
+            0.8399999999999999,
+            3.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "end-grip",
+          "b": "blob-capsule",
+          "overlap": [
+            0.028999999999999915,
+            0.10000000000000003,
+            1.5999999999999996
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 3.5388358909926865e-16,
+      "curve_qa": {
+        "contact_graph_connected": true,
+        "separate_pieces": "No detached components intended; source-like single mounted facility.",
+        "capsule_sections": 12,
+        "round_section_vertices": 32,
+        "tapered_both_ends": true,
+        "tower_to_capsule_height": 2.3337795275590554,
+        "actual_capsule_cross_section_variation": 12.6,
+        "actual_surface_vertex_equation_samples": 384,
+        "actual_surface_equation_max_residual": 2.220446049250313e-15
+      },
+      "frames": [
+        {
+          "d": 0,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            22404
+          ],
+          "sha256": "1f095652d1ae27aee4ebaf3deb4c068965237eaf5ef372f68d95c4a9836c13f5",
+          "lines": [
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.36363636363636365,
+              "samples": 12,
+              "actual_mesh_edge": [
+                [
+                  0.875,
+                  0.095,
+                  0.0
+                ],
+                [
+                  0.875,
+                  0.9049999999999999,
+                  0.0
+                ]
+              ],
+              "required_samples": 12
+            },
+            {
+              "part": "tower-float",
+              "status": "PASS",
+              "samples": 30,
+              "actual_mesh_edge": [
+                [
+                  0.825,
+                  0.955,
+                  0.0
+                ],
+                [
+                  0.10500000000000001,
+                  0.955,
+                  0.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.4983314794215793,
+              "expected": 0.49999999999999906,
+              "rms_packed": 0.5578353913266747,
+              "offset_packed": 0.6870062132747383
+            }
+          ],
+          "full_resolution_unique_RGB": 5033
+        },
+        {
+          "d": 1,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            22684
+          ],
+          "sha256": "42b473f2240e51376c7b199af480c05f4ba2f38a375e890264167f06c0174171",
+          "lines": [
+            {
+              "part": "tower-float",
+              "status": "PASS",
+              "samples": 29,
+              "actual_mesh_edge": [
+                [
+                  0.825,
+                  0.955,
+                  0.0
+                ],
+                [
+                  0.10500000000000001,
+                  0.955,
+                  0.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.5034482758620694,
+              "expected": -0.5000000000000003,
+              "rms_packed": 0.5504295155651011,
+              "offset_packed": 0.6651999913224833
+            },
+            {
+              "part": "tower-float",
+              "status": "PASS",
+              "samples": 34,
+              "actual_mesh_edge": [
+                [
+                  0.055,
+                  0.9049999999999999,
+                  0.0
+                ],
+                [
+                  0.055,
+                  0.095,
+                  0.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5011459129106175,
+              "expected": 0.5000000000000006,
+              "rms_packed": 0.5455893420821954,
+              "offset_packed": 0.9293866498900911
+            }
+          ],
+          "full_resolution_unique_RGB": 5288
+        },
+        {
+          "d": 2,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            22684
+          ],
+          "sha256": "0d3f829c5e103b5f36c5d105900d2efbd73da891dc9d0f198f50301f28ecbae4",
+          "lines": [
+            {
+              "part": "tower-float",
+              "status": "PASS",
+              "samples": 29,
+              "actual_mesh_edge": [
+                [
+                  0.10500000000000001,
+                  0.045,
+                  0.0
+                ],
+                [
+                  0.825,
+                  0.045,
+                  0.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.49655172413793086,
+              "expected": 0.5000000000000007,
+              "rms_packed": 0.565349007777082,
+              "offset_packed": 0.6824413706328281
+            },
+            {
+              "part": "tower-float",
+              "status": "PASS",
+              "samples": 34,
+              "actual_mesh_edge": [
+                [
+                  0.055,
+                  0.9049999999999999,
+                  0.0
+                ],
+                [
+                  0.055,
+                  0.095,
+                  0.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.49870129870130153,
+              "expected": -0.5000000000000006,
+              "rms_packed": 0.55809731269247,
+              "offset_packed": 0.8999748851842088
+            }
+          ],
+          "full_resolution_unique_RGB": 5539
+        },
+        {
+          "d": 3,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            22404
+          ],
+          "sha256": "e1b5dbe11ac48fe42301caf12a6969a1747c345df08335dc8275a6c8623726ff",
+          "lines": [
+            {
+              "part": "tower-float",
+              "status": "PASS",
+              "samples": 30,
+              "actual_mesh_edge": [
+                [
+                  0.10500000000000001,
+                  0.045,
+                  0.0
+                ],
+                [
+                  0.825,
+                  0.045,
+                  0.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.5014460511679658,
+              "expected": -0.4999999999999994,
+              "rms_packed": 0.5437616001430605,
+              "offset_packed": 0.653672879941405
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.3939393939393939,
+              "samples": 13,
+              "actual_mesh_edge": [
+                [
+                  0.875,
+                  0.095,
+                  0.0
+                ],
+                [
+                  0.875,
+                  0.9049999999999999,
+                  0.0
+                ]
+              ],
+              "required_samples": 12
+            }
+          ],
+          "full_resolution_unique_RGB": 5044
+        }
+      ]
+    },
+    {
+      "id": "rig_iceberg",
+      "status": "PASS",
+      "errors": [],
+      "closed_parts": [
+        {
+          "part": "ice-float",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "ice-mound",
+          "edges": 120,
+          "bad": 0
+        },
+        {
+          "part": "hold-0",
+          "edges": 216,
+          "bad": 0
+        },
+        {
+          "part": "hold-1",
+          "edges": 216,
+          "bad": 0
+        },
+        {
+          "part": "hold-2",
+          "edges": 216,
+          "bad": 0
+        },
+        {
+          "part": "hold-3",
+          "edges": 216,
+          "bad": 0
+        },
+        {
+          "part": "hold-4",
+          "edges": 216,
+          "bad": 0
+        }
+      ],
+      "joints": [
+        {
+          "a": "ice-mound",
+          "b": "ice-float",
+          "overlap": [
+            1.7098,
+            1.5715257875261117,
+            0.2999999999999998
+          ],
+          "passed": true
+        },
+        {
+          "a": "hold-0",
+          "b": "ice-mound",
+          "overlap": [
+            0.13637144143062074,
+            0.1259805487174568,
+            2.9586340986675443
+          ],
+          "passed": true
+        },
+        {
+          "a": "hold-1",
+          "b": "ice-mound",
+          "overlap": [
+            0.14178527913573902,
+            0.12598054871745656,
+            2.9586340986675443
+          ],
+          "passed": true
+        },
+        {
+          "a": "hold-2",
+          "b": "ice-mound",
+          "overlap": [
+            0.14178527913573946,
+            0.12598054871745656,
+            2.9586340986675452
+          ],
+          "passed": true
+        },
+        {
+          "a": "hold-3",
+          "b": "ice-mound",
+          "overlap": [
+            0.14178527913573902,
+            0.12598054871745656,
+            2.9586340986675452
+          ],
+          "passed": true
+        },
+        {
+          "a": "hold-4",
+          "b": "ice-mound",
+          "overlap": [
+            0.14178527913573946,
+            0.12598054871745656,
+            2.9586340986675452
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 2.220446049250313e-16,
+      "curve_qa": {
+        "contact_graph_connected": true,
+        "separate_pieces": "No detached components intended; source-like single mounted facility.",
+        "summit_center_offset": 0.19485235488811023,
+        "middle_z_irregularity": 2.1999999999999993,
+        "hold_mounts": [
+          {
+            "part": "hold-0",
+            "triangle": "ice-mound/s0-9a",
+            "physical_offset": 0.37908021716909107,
+            "inside_hold_radii": true
+          },
+          {
+            "part": "hold-1",
+            "triangle": "ice-mound/s0-0a",
+            "physical_offset": 0.3811801369381351,
+            "inside_hold_radii": true
+          },
+          {
+            "part": "hold-2",
+            "triangle": "ice-mound/s1-9a",
+            "physical_offset": 0.3741731178855318,
+            "inside_hold_radii": true
+          },
+          {
+            "part": "hold-3",
+            "triangle": "ice-mound/s1-0a",
+            "physical_offset": 0.37540576829353256,
+            "inside_hold_radii": true
+          },
+          {
+            "part": "hold-4",
+            "triangle": "ice-mound/s2-9a",
+            "physical_offset": 0.36660858033280463,
+            "inside_hold_radii": true
+          }
+        ]
+      },
+      "frames": [
+        {
+          "d": 0,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            26448
+          ],
+          "sha256": "8f13ae51de6bcfcd42570291141b4df2c89ea51bc6149ee23f5e79e55bc645f1",
+          "lines": [
+            {
+              "part": "ice-float",
+              "status": "PASS",
+              "samples": 68,
+              "actual_mesh_edge": [
+                [
+                  1.885,
+                  0.16499999999999998,
+                  1.4
+                ],
+                [
+                  1.885,
+                  1.835,
+                  1.4
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.500324464633357,
+              "expected": -0.5,
+              "rms_packed": 0.5589807169490104,
+              "offset_packed": 0.6196933249450467
+            },
+            {
+              "part": "ice-float",
+              "status": "PASS",
+              "samples": 68,
+              "actual_mesh_edge": [
+                [
+                  1.835,
+                  1.885,
+                  1.4
+                ],
+                [
+                  0.16499999999999998,
+                  1.885,
+                  1.4
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5009733939000646,
+              "expected": 0.5,
+              "rms_packed": 0.5586904127398987,
+              "offset_packed": 0.6196933249450467
+            }
+          ],
+          "full_resolution_unique_RGB": 2957
+        },
+        {
+          "d": 1,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            25040
+          ],
+          "sha256": "289a21b6d4b9e41f6ad6cd9becdc70f8f30de3111d89731267f37ad641c5a495",
+          "lines": [
+            {
+              "part": "ice-float",
+              "status": "PASS",
+              "samples": 68,
+              "actual_mesh_edge": [
+                [
+                  1.835,
+                  1.885,
+                  1.4
+                ],
+                [
+                  0.16499999999999998,
+                  1.885,
+                  1.4
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.500324464633357,
+              "expected": -0.5,
+              "rms_packed": 0.5589807169490104,
+              "offset_packed": 0.6196933249450467
+            },
+            {
+              "part": "ice-float",
+              "status": "PASS",
+              "samples": 68,
+              "actual_mesh_edge": [
+                [
+                  0.11499999999999999,
+                  1.835,
+                  1.4
+                ],
+                [
+                  0.11499999999999999,
+                  0.16499999999999998,
+                  1.4
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5009733939000646,
+              "expected": 0.5,
+              "rms_packed": 0.5586904127398987,
+              "offset_packed": 0.6196933249450467
+            }
+          ],
+          "full_resolution_unique_RGB": 2648
+        },
+        {
+          "d": 2,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            24992
+          ],
+          "sha256": "8390ce1aea9952b1e7829d79c1de202edeb60f3e9e6dc8f3a48d1c036348a51c",
+          "lines": [
+            {
+              "part": "ice-float",
+              "status": "PASS",
+              "samples": 68,
+              "actual_mesh_edge": [
+                [
+                  0.16499999999999998,
+                  0.11499999999999999,
+                  1.4
+                ],
+                [
+                  1.835,
+                  0.11499999999999999,
+                  1.4
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5009733939000646,
+              "expected": 0.5,
+              "rms_packed": 0.5586904127398987,
+              "offset_packed": 0.6196933249450467
+            },
+            {
+              "part": "ice-float",
+              "status": "PASS",
+              "samples": 68,
+              "actual_mesh_edge": [
+                [
+                  0.11499999999999999,
+                  1.835,
+                  1.4
+                ],
+                [
+                  0.11499999999999999,
+                  0.16499999999999998,
+                  1.4
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.500324464633357,
+              "expected": -0.5,
+              "rms_packed": 0.5589807169490104,
+              "offset_packed": 0.6196933249450467
+            }
+          ],
+          "full_resolution_unique_RGB": 2460
+        },
+        {
+          "d": 3,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            25460
+          ],
+          "sha256": "de346302ad2f54407d5fc248c1a713341f08d4d20a29c6a0962adda823651a84",
+          "lines": [
+            {
+              "part": "ice-float",
+              "status": "PASS",
+              "samples": 68,
+              "actual_mesh_edge": [
+                [
+                  0.16499999999999998,
+                  0.11499999999999999,
+                  1.4
+                ],
+                [
+                  1.835,
+                  0.11499999999999999,
+                  1.4
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.500324464633357,
+              "expected": -0.5,
+              "rms_packed": 0.5589807169490104,
+              "offset_packed": 0.6196933249450467
+            },
+            {
+              "part": "ice-float",
+              "status": "PASS",
+              "samples": 68,
+              "actual_mesh_edge": [
+                [
+                  1.885,
+                  0.16499999999999998,
+                  1.4
+                ],
+                [
+                  1.885,
+                  1.835,
+                  1.4
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5009733939000646,
+              "expected": 0.5,
+              "rms_packed": 0.5586904127398987,
+              "offset_packed": 0.6196933249450467
+            }
+          ],
+          "full_resolution_unique_RGB": 3014
+        }
+      ]
+    },
+    {
+      "id": "module_trampoline_w",
+      "status": "PASS",
+      "errors": [],
+      "closed_parts": [
+        {
+          "part": "inflatable-ring",
+          "edges": 3072,
+          "bad": 0
+        },
+        {
+          "part": "elastic-mesh",
+          "edges": 384,
+          "bad": 0
+        },
+        {
+          "part": "entry-float",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rimgrip-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rimgrip-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rimgrip-2",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rimgrip-3",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rimgrip-4",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rimgrip-5",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rimgrip-6",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "rimgrip-7",
+          "edges": 60,
+          "bad": 0
+        }
+      ],
+      "joints": [
+        {
+          "a": "elastic-mesh",
+          "b": "inflatable-ring",
+          "overlap": [
+            1.5300000000000002,
+            1.5300000000000002,
+            0.6500000000000035
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-float",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.96,
+            0.20499999999999963,
+            3.4
+          ],
+          "passed": true
+        },
+        {
+          "a": "rimgrip-0",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.04468749999999977,
+            0.05937500000000018,
+            4.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "rimgrip-1",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.05937500000000018,
+            0.05937500000000018,
+            4.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "rimgrip-2",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.05937500000000018,
+            0.04468749999999977,
+            4.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "rimgrip-3",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.059374999999999956,
+            0.05937500000000018,
+            4.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "rimgrip-4",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.04468749999999991,
+            0.05937500000000018,
+            4.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "rimgrip-5",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.059374999999999956,
+            0.059374999999999956,
+            4.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "rimgrip-6",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.05937500000000018,
+            0.04468749999999991,
+            4.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "rimgrip-7",
+          "b": "inflatable-ring",
+          "overlap": [
+            0.05937500000000018,
+            0.059374999999999956,
+            4.0
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 5.134781488891349e-16,
+      "curve_qa": {
+        "contact_graph_connected": true,
+        "separate_pieces": "No detached components intended; source-like single mounted facility.",
+        "radial_segments": 64,
+        "section_segments": 16,
+        "inner_aperture_diameter": 1.4700000000000002,
+        "mesh_radial_mount_overlap": 0.009202071102783038,
+        "mesh_recess_below_rim": 6.6,
+        "actual_surface_vertex_equation_samples": 1024,
+        "actual_surface_equation_max_residual": 3.552713678800501e-15
+      },
+      "frames": [
+        {
+          "d": 0,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            30016
+          ],
+          "sha256": "f9ac11636e22e2c0186f57f95557a6e93e4d749ca7e88131de70a786b262d6aa",
+          "lines": [
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 16,
+              "actual_mesh_edge": [
+                [
+                  1.955,
+                  2.675,
+                  0.2
+                ],
+                [
+                  1.955,
+                  3.0650000000000004,
+                  0.2
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.47058823529411103,
+              "expected": -0.5,
+              "rms_packed": 0.5423261445466407,
+              "offset_packed": 0.7693866498901798
+            },
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 33,
+              "actual_mesh_edge": [
+                [
+                  1.905,
+                  3.115,
+                  0.2
+                ],
+                [
+                  1.095,
+                  3.115,
+                  0.2
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5026737967914432,
+              "expected": 0.5000000000000011,
+              "rms_packed": 0.5515602026613522,
+              "offset_packed": 0.4921397984881778
+            }
+          ],
+          "full_resolution_unique_RGB": 6753
+        },
+        {
+          "d": 1,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            30016
+          ],
+          "sha256": "517f85771195012949d14a5bb1ac970e1abebdcaee44498b52de8349da4b4ff5",
+          "lines": [
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 33,
+              "actual_mesh_edge": [
+                [
+                  1.905,
+                  3.115,
+                  0.2
+                ],
+                [
+                  1.095,
+                  3.115,
+                  0.2
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.497326203208559,
+              "expected": -0.5000000000000011,
+              "rms_packed": 0.5647220869494745,
+              "offset_packed": 0.5072913136396929
+            },
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 16,
+              "actual_mesh_edge": [
+                [
+                  1.045,
+                  3.0650000000000004,
+                  0.2
+                ],
+                [
+                  1.045,
+                  2.675,
+                  0.2
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5058823529411778,
+              "expected": 0.5,
+              "rms_packed": 0.5583589400039607,
+              "offset_packed": 0.7693866498901798
+            }
+          ],
+          "full_resolution_unique_RGB": 6632
+        },
+        {
+          "d": 2,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            28304
+          ],
+          "sha256": "876b15480e3ba983672082491a29baec5e53c356fd5b7a41092926d0ce9179ca",
+          "lines": [
+            {
+              "part": "entry-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.0,
+              "samples": 0,
+              "actual_mesh_edge": [
+                [
+                  1.095,
+                  2.625,
+                  0.2
+                ],
+                [
+                  1.905,
+                  2.625,
+                  0.2
+                ]
+              ],
+              "required_samples": 12
+            },
+            {
+              "part": "entry-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.1875,
+              "samples": 3,
+              "actual_mesh_edge": [
+                [
+                  1.045,
+                  3.0650000000000004,
+                  0.2
+                ],
+                [
+                  1.045,
+                  2.675,
+                  0.2
+                ]
+              ],
+              "required_samples": 12
+            }
+          ],
+          "full_resolution_unique_RGB": 6340
+        },
+        {
+          "d": 3,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            28304
+          ],
+          "sha256": "f144953439956cc471bbd132b67547cf11f7c6dad57d21c6295427c62118bf49",
+          "lines": [
+            {
+              "part": "entry-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.0,
+              "samples": 0,
+              "actual_mesh_edge": [
+                [
+                  1.095,
+                  2.625,
+                  0.2
+                ],
+                [
+                  1.905,
+                  2.625,
+                  0.2
+                ]
+              ],
+              "required_samples": 12
+            },
+            {
+              "part": "entry-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.125,
+              "samples": 2,
+              "actual_mesh_edge": [
+                [
+                  1.955,
+                  2.675,
+                  0.2
+                ],
+                [
+                  1.955,
+                  3.0650000000000004,
+                  0.2
+                ]
+              ],
+              "required_samples": 12
+            }
+          ],
+          "full_resolution_unique_RGB": 6344
+        }
+      ]
+    },
+    {
+      "id": "module_rig_roller",
+      "status": "PASS",
+      "errors": [],
+      "closed_parts": [
+        {
+          "part": "roller-float",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "frame-0-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "frame-0-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "framecrown-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "framecap-0-0",
+          "edges": 384,
+          "bad": 0
+        },
+        {
+          "part": "framecap-0-1",
+          "edges": 384,
+          "bad": 0
+        },
+        {
+          "part": "axlebrace-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "axle-cap-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "handle-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "handlelink-0-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "handlelink-0-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "frame-1-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "frame-1-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "framecrown-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "framecap-1-0",
+          "edges": 384,
+          "bad": 0
+        },
+        {
+          "part": "framecap-1-1",
+          "edges": 384,
+          "bad": 0
+        },
+        {
+          "part": "axlebrace-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "axle-cap-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "handle-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "handlelink-1-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "handlelink-1-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "roller-axle",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "striped-roller",
+          "edges": 960,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-0-0",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-0-1",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-0-2",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-1-0",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-1-1",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-1-2",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-2-0",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-2-1",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "rampcell-2-2",
+          "edges": 96,
+          "bad": 0
+        },
+        {
+          "part": "ramp-mount",
+          "edges": 12,
+          "bad": 0
+        }
+      ],
+      "joints": [
+        {
+          "a": "frame-0-0",
+          "b": "roller-float",
+          "overlap": [
+            0.21875,
+            0.6407655551823097,
+            2.133941664441028
+          ],
+          "passed": true
+        },
+        {
+          "a": "frame-0-1",
+          "b": "roller-float",
+          "overlap": [
+            0.21875,
+            0.6407655551823098,
+            2.133941664441028
+          ],
+          "passed": true
+        },
+        {
+          "a": "frame-0-0",
+          "b": "frame-0-1",
+          "overlap": [
+            0.21875,
+            0.0007655551823096962,
+            21.199883328882056
+          ],
+          "passed": true
+        },
+        {
+          "a": "framecrown-0",
+          "b": "frame-0-0",
+          "overlap": [
+            0.21875,
+            0.09038277759115487,
+            4.5409416644410285
+          ],
+          "passed": true
+        },
+        {
+          "a": "framecrown-0",
+          "b": "frame-0-1",
+          "overlap": [
+            0.21875,
+            0.09038277759115487,
+            4.5409416644410285
+          ],
+          "passed": true
+        },
+        {
+          "a": "framecap-0-0",
+          "b": "framecrown-0",
+          "overlap": [
+            0.21841922402072472,
+            0.10682067590207545,
+            5.674314303918251
+          ],
+          "passed": true
+        },
+        {
+          "a": "framecap-0-1",
+          "b": "framecrown-0",
+          "overlap": [
+            0.21841922402072472,
+            0.10682067590207556,
+            5.674314303918251
+          ],
+          "passed": true
+        },
+        {
+          "a": "axlebrace-0",
+          "b": "frame-0-0",
+          "overlap": [
+            0.16875000000000004,
+            0.2503827775911549,
+            4.481999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "axlebrace-0",
+          "b": "frame-0-1",
+          "overlap": [
+            0.16875000000000004,
+            0.2503827775911548,
+            4.481999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "axle-cap-0",
+          "b": "axlebrace-0",
+          "overlap": [
+            0.14,
+            0.14374999999999993,
+            3.8180000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "handlelink-0-0",
+          "b": "handle-0",
+          "overlap": [
+            0.03593750000000001,
+            0.07187499999999991,
+            0.9545000000000012
+          ],
+          "passed": true
+        },
+        {
+          "a": "handlelink-0-0",
+          "b": "frame-0-1",
+          "overlap": [
+            0.109375,
+            0.07187499999999991,
+            1.9090000000000007
+          ],
+          "passed": true
+        },
+        {
+          "a": "handlelink-0-1",
+          "b": "handle-0",
+          "overlap": [
+            0.03593750000000001,
+            0.07187499999999991,
+            0.9544999999999959
+          ],
+          "passed": true
+        },
+        {
+          "a": "handlelink-0-1",
+          "b": "frame-0-1",
+          "overlap": [
+            0.109375,
+            0.07187499999999991,
+            1.908999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "frame-1-0",
+          "b": "roller-float",
+          "overlap": [
+            0.21875,
+            0.6407655551823097,
+            2.133941664441028
+          ],
+          "passed": true
+        },
+        {
+          "a": "frame-1-1",
+          "b": "roller-float",
+          "overlap": [
+            0.21875,
+            0.6407655551823098,
+            2.133941664441028
+          ],
+          "passed": true
+        },
+        {
+          "a": "frame-1-0",
+          "b": "frame-1-1",
+          "overlap": [
+            0.21875,
+            0.0007655551823096962,
+            21.199883328882056
+          ],
+          "passed": true
+        },
+        {
+          "a": "framecrown-1",
+          "b": "frame-1-0",
+          "overlap": [
+            0.21875,
+            0.09038277759115487,
+            4.5409416644410285
+          ],
+          "passed": true
+        },
+        {
+          "a": "framecrown-1",
+          "b": "frame-1-1",
+          "overlap": [
+            0.21875,
+            0.09038277759115487,
+            4.5409416644410285
+          ],
+          "passed": true
+        },
+        {
+          "a": "framecap-1-0",
+          "b": "framecrown-1",
+          "overlap": [
+            0.218419224020725,
+            0.10682067590207545,
+            5.674314303918251
+          ],
+          "passed": true
+        },
+        {
+          "a": "framecap-1-1",
+          "b": "framecrown-1",
+          "overlap": [
+            0.218419224020725,
+            0.10682067590207556,
+            5.674314303918251
+          ],
+          "passed": true
+        },
+        {
+          "a": "axlebrace-1",
+          "b": "frame-1-0",
+          "overlap": [
+            0.16875000000000018,
+            0.2503827775911549,
+            4.481999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "axlebrace-1",
+          "b": "frame-1-1",
+          "overlap": [
+            0.16875000000000018,
+            0.2503827775911548,
+            4.481999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "axle-cap-1",
+          "b": "axlebrace-1",
+          "overlap": [
+            0.14000000000000012,
+            0.14374999999999993,
+            3.8180000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "handlelink-1-0",
+          "b": "handle-1",
+          "overlap": [
+            0.035937499999999956,
+            0.07187499999999991,
+            0.9545000000000012
+          ],
+          "passed": true
+        },
+        {
+          "a": "handlelink-1-0",
+          "b": "frame-1-1",
+          "overlap": [
+            0.109375,
+            0.07187499999999991,
+            1.9090000000000007
+          ],
+          "passed": true
+        },
+        {
+          "a": "handlelink-1-1",
+          "b": "handle-1",
+          "overlap": [
+            0.035937499999999956,
+            0.07187499999999991,
+            0.9544999999999959
+          ],
+          "passed": true
+        },
+        {
+          "a": "handlelink-1-1",
+          "b": "frame-1-1",
+          "overlap": [
+            0.109375,
+            0.07187499999999991,
+            1.908999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "roller-axle",
+          "b": "axle-cap-0",
+          "overlap": [
+            0.14,
+            0.10000000000000009,
+            2.6560000000000024
+          ],
+          "passed": true
+        },
+        {
+          "a": "roller-axle",
+          "b": "axle-cap-1",
+          "overlap": [
+            0.14000000000000012,
+            0.10000000000000009,
+            2.6560000000000024
+          ],
+          "passed": true
+        },
+        {
+          "a": "striped-roller",
+          "b": "roller-axle",
+          "overlap": [
+            1.2600000000000007,
+            0.10000000000000009,
+            2.6560000000000024
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-0-0",
+          "b": "ramp-mount",
+          "overlap": [
+            0.2333333333333334,
+            0.08000000000000007,
+            2.822000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-0-1",
+          "b": "ramp-mount",
+          "overlap": [
+            0.23333333333333328,
+            0.08000000000000007,
+            2.822000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-0-2",
+          "b": "ramp-mount",
+          "overlap": [
+            0.2333333333333334,
+            0.08000000000000007,
+            2.822000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-1-0",
+          "b": "rampcell-0-0",
+          "overlap": [
+            0.2333333333333334,
+            0.0,
+            0.33200000000000074
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-1-1",
+          "b": "rampcell-0-1",
+          "overlap": [
+            0.23333333333333328,
+            0.0,
+            0.33200000000000074
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-1-2",
+          "b": "rampcell-0-2",
+          "overlap": [
+            0.2333333333333334,
+            0.0,
+            0.33200000000000074
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-2-0",
+          "b": "rampcell-1-0",
+          "overlap": [
+            0.2333333333333334,
+            0.0,
+            0.33200000000000074
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-2-1",
+          "b": "rampcell-1-1",
+          "overlap": [
+            0.23333333333333328,
+            0.0,
+            0.33200000000000074
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-2-2",
+          "b": "rampcell-1-2",
+          "overlap": [
+            0.2333333333333334,
+            0.0,
+            0.33200000000000074
+          ],
+          "passed": true
+        },
+        {
+          "a": "ramp-mount",
+          "b": "roller-float",
+          "overlap": [
+            0.7200000000000001,
+            0.09000000000000008,
+            0.33200000000000074
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-2-0",
+          "b": "roller-float",
+          "overlap": [
+            0.2333333333333334,
+            0.2266666666666668,
+            0.41500000000000004
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-2-1",
+          "b": "roller-float",
+          "overlap": [
+            0.23333333333333328,
+            0.2266666666666668,
+            0.41500000000000004
+          ],
+          "passed": true
+        },
+        {
+          "a": "rampcell-2-2",
+          "b": "roller-float",
+          "overlap": [
+            0.2333333333333334,
+            0.2266666666666668,
+            0.41500000000000004
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 4.440892098500626e-16,
+      "curve_qa": {
+        "contact_graph_connected": true,
+        "separate_pieces": "No detached components intended; source-like single mounted facility.",
+        "cylinder_sections": 32,
+        "cylinder_axis_length": 1.2599999999999998,
+        "axle_center_z": 18.28,
+        "true_ramp_bores": 9,
+        "axle_cap_0_same_axis": true,
+        "axle_cap_1_same_axis": true,
+        "actual_surface_vertex_equation_samples": 320,
+        "actual_surface_equation_max_residual": 1.3322676295501878e-15
+      },
+      "frames": [
+        {
+          "d": 0,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            25404
+          ],
+          "sha256": "b5031a34f3db6505d87da4d469cb5e7ae5b7b6c6530ca8e8965a389617982012",
+          "lines": [
+            {
+              "part": "roller-float",
+              "status": "PASS",
+              "samples": 72,
+              "actual_mesh_edge": [
+                [
+                  1.925,
+                  0.125,
+                  1.0
+                ],
+                [
+                  1.925,
+                  1.875,
+                  1.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.49855296160524715,
+              "expected": -0.5,
+              "rms_packed": 0.5582074892038621,
+              "offset_packed": 0.6996933249450876
+            },
+            {
+              "part": "roller-float",
+              "status": "PASS",
+              "samples": 72,
+              "actual_mesh_edge": [
+                [
+                  1.875,
+                  1.925,
+                  1.0
+                ],
+                [
+                  0.125,
+                  1.925,
+                  1.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5002894076789505,
+              "expected": 0.5,
+              "rms_packed": 0.5589846366762973,
+              "offset_packed": 0.6996933249450876
+            }
+          ],
+          "full_resolution_unique_RGB": 5850
+        },
+        {
+          "d": 1,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            25404
+          ],
+          "sha256": "a015fff4b14ca3e4d67b3adb9eb860f534010deddd520653c226b086eac31a0c",
+          "lines": [
+            {
+              "part": "roller-float",
+              "status": "PASS",
+              "samples": 72,
+              "actual_mesh_edge": [
+                [
+                  1.875,
+                  1.925,
+                  1.0
+                ],
+                [
+                  0.125,
+                  1.925,
+                  1.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.49855296160524715,
+              "expected": -0.5,
+              "rms_packed": 0.5582074892038621,
+              "offset_packed": 0.6996933249450876
+            },
+            {
+              "part": "roller-float",
+              "status": "PASS",
+              "samples": 72,
+              "actual_mesh_edge": [
+                [
+                  0.07500000000000001,
+                  1.875,
+                  1.0
+                ],
+                [
+                  0.07500000000000001,
+                  0.125,
+                  1.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5002894076789505,
+              "expected": 0.5,
+              "rms_packed": 0.5589846366762973,
+              "offset_packed": 0.6996933249450876
+            }
+          ],
+          "full_resolution_unique_RGB": 5820
+        },
+        {
+          "d": 2,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            24848
+          ],
+          "sha256": "0fdfe717e9a672e4a0e889001285180037e7e712f6b6891d53a3038a65da536e",
+          "lines": [
+            {
+              "part": "roller-float",
+              "status": "PASS",
+              "samples": 72,
+              "actual_mesh_edge": [
+                [
+                  0.125,
+                  0.07500000000000001,
+                  1.0
+                ],
+                [
+                  1.875,
+                  0.07500000000000001,
+                  1.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5002894076789505,
+              "expected": 0.5,
+              "rms_packed": 0.5589846366762973,
+              "offset_packed": 0.6996933249450876
+            },
+            {
+              "part": "roller-float",
+              "status": "PASS",
+              "samples": 72,
+              "actual_mesh_edge": [
+                [
+                  0.07500000000000001,
+                  1.875,
+                  1.0
+                ],
+                [
+                  0.07500000000000001,
+                  0.125,
+                  1.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.49855296160524715,
+              "expected": -0.5,
+              "rms_packed": 0.5582074892038621,
+              "offset_packed": 0.6996933249450876
+            }
+          ],
+          "full_resolution_unique_RGB": 4967
+        },
+        {
+          "d": 3,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            24848
+          ],
+          "sha256": "35a58476f2b544107c909d3137d71bd56d04cf986e82175d296573d6442388d2",
+          "lines": [
+            {
+              "part": "roller-float",
+              "status": "PASS",
+              "samples": 72,
+              "actual_mesh_edge": [
+                [
+                  0.125,
+                  0.07500000000000001,
+                  1.0
+                ],
+                [
+                  1.875,
+                  0.07500000000000001,
+                  1.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": -0.49855296160524715,
+              "expected": -0.5,
+              "rms_packed": 0.5582074892038621,
+              "offset_packed": 0.6996933249450876
+            },
+            {
+              "part": "roller-float",
+              "status": "PASS",
+              "samples": 72,
+              "actual_mesh_edge": [
+                [
+                  1.925,
+                  0.125,
+                  1.0
+                ],
+                [
+                  1.925,
+                  1.875,
+                  1.0
+                ]
+              ],
+              "coverage": 1.0,
+              "slope": 0.5002894076789505,
+              "expected": 0.5,
+              "rms_packed": 0.5589846366762973,
+              "offset_packed": 0.6996933249450876
+            }
+          ],
+          "full_resolution_unique_RGB": 4849
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "rotation_max_error": 1e-08,
+    "closed_mesh_edge_multiplicity": 2,
+    "minimum_line_span_packed": 20,
+    "minimum_line_samples": 12,
+    "line_coverage": 0.9,
+    "slope_error": 0.04,
+    "rms_packed": 1.5,
+    "offset_packed": 1.5
+  },
+  "limitations": [
+    "AABB contacts are broad structural checks, not exact collision certification. Exact primitive/face mounting checks are limited to the separately named tested features.",
+    "Curved surfaces, sloping A-frames, ramp slopes and climbing facets intentionally excluded from horizontal iso-line tests.",
+    "Occluded and short base segments are explicitly unmeasured; numeric results do not establish art95 or runtime QA."
+  ]
+}

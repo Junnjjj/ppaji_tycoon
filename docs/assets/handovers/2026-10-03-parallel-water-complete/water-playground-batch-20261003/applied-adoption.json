@@ -1,0 +1,144 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "ppaji_playground": "water-playground-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "ppaji_playground",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-playground-batch-20261003/candidates/ppaji_playground/d0.png",
+      "source_sha256": "5a3913c7038aedcd16fd0d2322a162532ef08c1eac65a4f6815ba569afa93370",
+      "old": {
+        "file": "fac_ppaji_playground_0.webp",
+        "w": 640,
+        "h": 640,
+        "sha256": "e737fec16f99417d97288b73469e9dfa42bb89bc9f18659ddac3859249bf4d3c",
+        "bytes": 731010
+      },
+      "new": {
+        "file": "fac_ppaji_playground_0_accepted_20261003.webp",
+        "w": 640,
+        "h": 640,
+        "sha256": "603b25c6616ab0090d87adb24f042681494fc66f079db0ef8dfc627ead93bff6",
+        "bytes": 325208
+      },
+      "old_native": {
+        "file": "ppaji_playground/native-d0.png",
+        "w": 640,
+        "h": 640,
+        "sha256": "a244e755e71ddf77009215f59081987ac944f05e5575bbf2d84c5b4ecc24d80f"
+      },
+      "new_native": {
+        "file": "ppaji_playground/accepted-20261003-d0.png",
+        "w": 640,
+        "h": 640,
+        "sha256": "b763380fb6c91025d30e83e9ac88e9ec0e3aa89450e455398aa39427e2a5fc75"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "ppaji_playground",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-playground-batch-20261003/candidates/ppaji_playground/d1.png",
+      "source_sha256": "a40a5c9cd29d143c82d23cd3c35e24cd31622de61b046b6b7872423bde9a3beb",
+      "old": {
+        "file": "fac_ppaji_playground_1.webp",
+        "w": 640,
+        "h": 640,
+        "sha256": "2d90c7c9f763c0e43301bb06beb19b426112c9c30c2e0e97814fc182bd2a6eca",
+        "bytes": 699120
+      },
+      "new": {
+        "file": "fac_ppaji_playground_1_accepted_20261003.webp",
+        "w": 640,
+        "h": 640,
+        "sha256": "35c2dd48c1c798c0d808256c17b985881dfd262042b5d784425a7bec55102dec",
+        "bytes": 321582
+      },
+      "old_native": {
+        "file": "ppaji_playground/native-d1.png",
+        "w": 640,
+        "h": 640,
+        "sha256": "6289a79b794ee78348c53ab9d836afd5e8dd453c3e50a61c0a97cb928b3ba198"
+      },
+      "new_native": {
+        "file": "ppaji_playground/accepted-20261003-d1.png",
+        "w": 640,
+        "h": 640,
+        "sha256": "7516b50e186ccca9bf05a8c41030256df8f569326720fae6edb42762783b360f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "ppaji_playground",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-playground-batch-20261003/candidates/ppaji_playground/d2.png",
+      "source_sha256": "99cf27bd10a15bd2b5185766e89b6ff7c9aa37a49bef8d93bddddd98db6e36bc",
+      "old": {
+        "file": "fac_ppaji_playground_2.webp",
+        "w": 640,
+        "h": 640,
+        "sha256": "ad90daa2dc6db416d3aeb01d599c61aff24f88d0154f021550ef1011a1d4129c",
+        "bytes": 729152
+      },
+      "new": {
+        "file": "fac_ppaji_playground_2_accepted_20261003.webp",
+        "w": 640,
+        "h": 640,
+        "sha256": "2b52e540ef0e477f9207b3100bb009e7b3339d32858c4c99dd97b02ff5aafc08",
+        "bytes": 323070
+      },
+      "old_native": {
+        "file": "ppaji_playground/native-d2.png",
+        "w": 640,
+        "h": 640,
+        "sha256": "27b2640e8a020e04c8c4da2fafb8adaab3488cec123f045410d0b82f026a879a"
+      },
+      "new_native": {
+        "file": "ppaji_playground/accepted-20261003-d2.png",
+        "w": 640,
+        "h": 640,
+        "sha256": "64e28f8f266bab968793c9532e71f0702f1ca19d390585df0fae0c5696dc15f5"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "ppaji_playground",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-playground-batch-20261003/candidates/ppaji_playground/d3.png",
+      "source_sha256": "afa7ab946c6ee31eb4324efbb3602fb4e3561812a0ba9e68e638cbaf6c437075",
+      "old": {
+        "file": "fac_ppaji_playground_3.webp",
+        "w": 640,
+        "h": 640,
+        "sha256": "43284bf1c6fab689d03b15740264e0a97274ccfbba0191c6a8e53dbe9dd72231",
+        "bytes": 748094
+      },
+      "new": {
+        "file": "fac_ppaji_playground_3_accepted_20261003.webp",
+        "w": 640,
+        "h": 640,
+        "sha256": "3a90ce2e4cbbd14aafd097c5471965c058a9eac8a2d8fc51d69738098d20361d",
+        "bytes": 325710
+      },
+      "old_native": {
+        "file": "ppaji_playground/native-d3.png",
+        "w": 640,
+        "h": 640,
+        "sha256": "c6e67b1dbda368ac9d96c89118294dec5089383858016c700158ce8452fa7cfc"
+      },
+      "new_native": {
+        "file": "ppaji_playground/accepted-20261003-d3.png",
+        "w": 640,
+        "h": 640,
+        "sha256": "7f0ccc576dcd87ebbf28a6b8c3d0c54516de2148b6efea91768dc8de563d00b0"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true,
+  "synchronized_native_visual_aliases": {}
+}

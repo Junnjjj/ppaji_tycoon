@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "sphere_original_p95": 135.0,
+  "sphere_forced_opaque_p95": 255.0,
+  "opaque_shell_rejected": true,
+  "line_fixtures": [
+    {
+      "fixture": "straight-control.png",
+      "rms_packed": 0.5588875733174158,
+      "max_residual_packed": 0.770023766165636,
+      "slope": 0.4997685113738078,
+      "accepted": true
+    },
+    {
+      "fixture": "rejected-bent-edge.png",
+      "rms_packed": 3.0832051060505443,
+      "max_residual_packed": 7.336305990239762,
+      "slope": 0.5026657201353951,
+      "accepted": false
+    }
+  ],
+  "limits": "These sensitivity fixtures supplement actual candidate measurements; they are not additional candidate or art approvals."
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "ppaji_playground",
+    "d": 0,
+    "sha256": "603b25c6616ab0090d87adb24f042681494fc66f079db0ef8dfc627ead93bff6",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "ppaji_playground",
+    "d": 1,
+    "sha256": "35c2dd48c1c798c0d808256c17b985881dfd262042b5d784425a7bec55102dec",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "ppaji_playground",
+    "d": 2,
+    "sha256": "2b52e540ef0e477f9207b3100bb009e7b3339d32858c4c99dd97b02ff5aafc08",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "ppaji_playground",
+    "d": 3,
+    "sha256": "3a90ce2e4cbbd14aafd097c5471965c058a9eac8a2d8fc51d69738098d20361d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

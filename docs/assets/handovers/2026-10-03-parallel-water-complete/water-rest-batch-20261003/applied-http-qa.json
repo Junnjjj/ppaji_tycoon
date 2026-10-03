@@ -1,0 +1,114 @@
+[
+  {
+    "id": "module_waterwalk",
+    "d": 0,
+    "sha256": "c473693a81b96e5fd1f2297b14145da8eaa376fb070119f3732c04855cf1db0d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 1,
+    "sha256": "2baa041e171ad50c164282688a5711782d51d4d086ea5bc1595590b47bcb417d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 2,
+    "sha256": "d841a22fc08653b62324b9f999177adc9a1d96e7afe5773142400cc610467b10",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_waterwalk",
+    "d": 3,
+    "sha256": "f53c71b23f0d8175dbd3b7cd51abe64eb21bb13c2ebde6e851b36bce83d5aee4",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 0,
+    "sha256": "6a1179e08db44d425359100b11566fe6f9a6e639e97dadba36e072e71effb64b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 1,
+    "sha256": "97ff0c29cdc07874c9a79653a3b3f63ce23d300590673a5b83fbe12fa5427b51",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 2,
+    "sha256": "786f658d12372ffa37e096eb4f22dc8a7889035442a7bff39c1f1be600d73104",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_hammock",
+    "d": 3,
+    "sha256": "6ceb02403d32d59f864c7dbe12314d4da99a71e46f5b52158f2209a62c8c3501",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 0,
+    "sha256": "f145bd312080265beaac04c470a472c380b126b36cd4dfa8c8a073fd4eb68cee",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 1,
+    "sha256": "248604d83266d38e6cfde23f0b89fe79a0b3820860db92c1230d5e8a40f53b2e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 2,
+    "sha256": "31deb4c93cc4466728fc671d704d10cae5c21a2f4686dd8ba1851f1ed48a52d7",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_sunbed",
+    "d": 3,
+    "sha256": "ac74a325afe43499a27b19521663b201b407a6188a23344d591f385da7d5ebe0",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 0,
+    "sha256": "39b8d55ca821a50479e6b526aa9fb5e198dc8850c1f375b0d06a38ed84ad4a0b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 1,
+    "sha256": "037f03896b7cffa005f7af70f1c56c9f2e8f7d4d1538a2b94ece0b54dd9cb1b2",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 2,
+    "sha256": "e8e9c021fd2536aca7c16f208fb1c1df69917572c203b8d54857e39e05ca050a",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "d": 3,
+    "sha256": "ec2b3c34d79ad6ee0402a8e1eb41c4b0c3c618c4e9ed64529792b619018d0e9b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]
