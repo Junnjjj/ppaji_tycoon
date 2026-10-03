@@ -1,0 +1,86 @@
+[
+  {
+    "id": "stage_river_lv1",
+    "d": 0,
+    "sha256": "57b5a00c4cf40bb62993305d4792dcb9a0b98299a162d42ff48ee09ceaaac320",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv1",
+    "d": 1,
+    "sha256": "a5503b422d3fe3abc728f02a8620381fb18fefd9c2e4f79ee7b16c6c843f1740",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv1",
+    "d": 2,
+    "sha256": "9a62973e5a3e53b9965f22ecbe2ad30412152b2b06461ea98e268c6ce30833c1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv1",
+    "d": 3,
+    "sha256": "9f127998a4b6f8425cdd896e7a951e3bb3622904ebacc0dc95736008fdeefac5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv2",
+    "d": 0,
+    "sha256": "f953c5f945033d2308b7b8510d425b98c7bd588a96704c8a8e9d68375587ced1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv2",
+    "d": 1,
+    "sha256": "f96c5ad10f058d7efd91fa7bcbf77ba4d35bffa39ba8dd8c721699a1a0c72ba9",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv2",
+    "d": 2,
+    "sha256": "2e7ea1e8689461ad589d9b0b08da2450294b3794df2b78a7365ebfde69eee639",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv2",
+    "d": 3,
+    "sha256": "ccb98000935cd7627acf5e31320ab322c6a12da1c6f52b709d80213c50e858f1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv3",
+    "d": 0,
+    "sha256": "ffc95d7c13171995061fee6afdbc07f6bf60b0f159b0116390048b29de748032",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv3",
+    "d": 1,
+    "sha256": "cb396b7929118c05837960b75277d0645a1bfddfcce43e037b886c4c07ccd192",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv3",
+    "d": 2,
+    "sha256": "d9ae848d268cb7a27facad73406955e473260d287d4e9b0cde450788a16d7d29",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "stage_river_lv3",
+    "d": 3,
+    "sha256": "04b840630631ca580d5c065625b77fa9674a61dfcd99387070a24336dda6480a",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

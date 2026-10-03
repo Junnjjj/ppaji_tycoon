@@ -1,0 +1,4591 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "stage_river_lv1",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "wood-stage-leg-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.08800000000000008,
+            0.08799999999999997,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.08800000000000008,
+            0.08799999999999997,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.08800000000000008,
+            0.08800000000000008,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-3",
+          "b": "wood-stage",
+          "overlap": [
+            0.08800000000000008,
+            0.08800000000000008,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-step-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.5100000000000002,
+            0.020000000000000018,
+            0.6280000000000006
+          ]
+        },
+        {
+          "a": "wood-step-0",
+          "b": "wood-step-1",
+          "overlap": [
+            0.5100000000000002,
+            0.040000000000000036,
+            1.564
+          ]
+        },
+        {
+          "a": "wood-curtain-post-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.10400000000000009,
+            0.12,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-curtain-post-0",
+          "b": "curtain",
+          "overlap": [
+            0.052000000000000046,
+            0.089,
+            24.650000000000002
+          ]
+        },
+        {
+          "a": "wood-curtain-post-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.10400000000000009,
+            0.12,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-curtain-post-1",
+          "b": "curtain",
+          "overlap": [
+            0.052000000000000046,
+            0.089,
+            24.650000000000002
+          ]
+        },
+        {
+          "a": "wood-curtain-rail",
+          "b": "curtain",
+          "overlap": [
+            2.54,
+            0.08399999999999999,
+            0.15000000000000213
+          ]
+        },
+        {
+          "a": "bench-0-metal-leg-0-0",
+          "b": "wood-bench-0-seat",
+          "overlap": [
+            0.053999999999999826,
+            0.053999999999999826,
+            0.2999999999999998
+          ]
+        },
+        {
+          "a": "bench-0-metal-leg-0-1",
+          "b": "wood-bench-0-seat",
+          "overlap": [
+            0.053999999999999826,
+            0.03699999999999992,
+            0.9500000000000002
+          ]
+        },
+        {
+          "a": "bench-0-metal-leg-0-1",
+          "b": "wood-bench-0-back",
+          "overlap": [
+            0.053999999999999826,
+            0.037000000000000366,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "bench-0-metal-leg-1-0",
+          "b": "wood-bench-0-seat",
+          "overlap": [
+            0.05400000000000027,
+            0.053999999999999826,
+            0.2999999999999998
+          ]
+        },
+        {
+          "a": "bench-0-metal-leg-1-1",
+          "b": "wood-bench-0-seat",
+          "overlap": [
+            0.05400000000000027,
+            0.03699999999999992,
+            0.9500000000000002
+          ]
+        },
+        {
+          "a": "bench-0-metal-leg-1-1",
+          "b": "wood-bench-0-back",
+          "overlap": [
+            0.05400000000000027,
+            0.037000000000000366,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "bench-1-metal-leg-0-0",
+          "b": "wood-bench-1-seat",
+          "overlap": [
+            0.053999999999999826,
+            0.05400000000000027,
+            0.2999999999999998
+          ]
+        },
+        {
+          "a": "bench-1-metal-leg-0-1",
+          "b": "wood-bench-1-seat",
+          "overlap": [
+            0.053999999999999826,
+            0.037000000000000366,
+            0.9500000000000002
+          ]
+        },
+        {
+          "a": "bench-1-metal-leg-0-1",
+          "b": "wood-bench-1-back",
+          "overlap": [
+            0.053999999999999826,
+            0.03699999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "bench-1-metal-leg-1-0",
+          "b": "wood-bench-1-seat",
+          "overlap": [
+            0.05400000000000027,
+            0.05400000000000027,
+            0.2999999999999998
+          ]
+        },
+        {
+          "a": "bench-1-metal-leg-1-1",
+          "b": "wood-bench-1-seat",
+          "overlap": [
+            0.05400000000000027,
+            0.037000000000000366,
+            0.9500000000000002
+          ]
+        },
+        {
+          "a": "bench-1-metal-leg-1-1",
+          "b": "wood-bench-1-back",
+          "overlap": [
+            0.05400000000000027,
+            0.03699999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "speaker-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.31000000000000005,
+            0.28000000000000025,
+            0.0
+          ]
+        },
+        {
+          "a": "speaker-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.3099999999999996,
+            0.28000000000000025,
+            0.0
+          ]
+        },
+        {
+          "a": "mic-foot-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.13424906635712763,
+            0.022499999999999964,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-foot-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.08448557158515002,
+            0.1241659879883712,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-foot-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.08448557158515002,
+            0.12416598798837108,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-0",
+          "overlap": [
+            0.010562033178563857,
+            0.016875000000000195,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-1",
+          "overlap": [
+            0.016874999999999973,
+            0.014228842748197135,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-2",
+          "overlap": [
+            0.016874999999999973,
+            0.014228842748197135,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "microphone",
+          "b": "mic-pole",
+          "overlap": [
+            0.016874999999999973,
+            0.016875000000000195,
+            0.7487870959032961
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-stage",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-step-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-step-1",
+          "edges": 12
+        },
+        {
+          "name": "curtain",
+          "edges": 516
+        },
+        {
+          "name": "wood-curtain-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-curtain-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-curtain-rail",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-0-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-0-back",
+          "edges": 12
+        },
+        {
+          "name": "bench-0-metal-leg-0-0",
+          "edges": 12
+        },
+        {
+          "name": "bench-0-metal-leg-0-1",
+          "edges": 12
+        },
+        {
+          "name": "bench-0-metal-leg-1-0",
+          "edges": 12
+        },
+        {
+          "name": "bench-0-metal-leg-1-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-1-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-1-back",
+          "edges": 12
+        },
+        {
+          "name": "bench-1-metal-leg-0-0",
+          "edges": 12
+        },
+        {
+          "name": "bench-1-metal-leg-0-1",
+          "edges": 12
+        },
+        {
+          "name": "bench-1-metal-leg-1-0",
+          "edges": 12
+        },
+        {
+          "name": "bench-1-metal-leg-1-1",
+          "edges": 12
+        },
+        {
+          "name": "speaker-0",
+          "edges": 12
+        },
+        {
+          "name": "speaker-1",
+          "edges": 12
+        },
+        {
+          "name": "mic-foot-0",
+          "edges": 60
+        },
+        {
+          "name": "mic-foot-1",
+          "edges": 60
+        },
+        {
+          "name": "mic-foot-2",
+          "edges": 60
+        },
+        {
+          "name": "mic-pole",
+          "edges": 60
+        },
+        {
+          "name": "microphone",
+          "edges": 60
+        }
+      ],
+      "rotation_edge_error": 6.106226635438361e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            47062
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 55,
+              "slope": -0.4989898989898999,
+              "expected_slope": -0.5,
+              "rms": 0.554537174967168,
+              "outline_adjusted_residual": 0.49164743971474845,
+              "visible_fraction": 0.34545454545454546,
+              "combined": {
+                "samples": 19,
+                "slope": -0.5006538066677487,
+                "rms": 0.5454949959100366,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 110,
+              "slope": 0.4998760228118034,
+              "expected_slope": 0.49999999999999983,
+              "rms": 0.5589292068083189,
+              "outline_adjusted_residual": 0.4976474397147471,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            46217
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 110,
+              "slope": -0.5001194689268085,
+              "expected_slope": -0.49999999999999994,
+              "rms": 0.5549235576899514,
+              "outline_adjusted_residual": 0.4954545454545455,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 55,
+              "slope": 0.5010101010101006,
+              "expected_slope": 0.49999999999999967,
+              "rms": 0.5628211765451591,
+              "outline_adjusted_residual": 0.5007383488056565,
+              "visible_fraction": 0.34545454545454546,
+              "combined": {
+                "samples": 19,
+                "slope": 0.5036449240861244,
+                "rms": 0.5643829452394715,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            36980
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 55,
+              "slope": -0.4989898989898967,
+              "expected_slope": -0.5000000000000001,
+              "rms": 0.5545371749671707,
+              "outline_adjusted_residual": 0.49926165119434346,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 110,
+              "slope": 0.500119468926808,
+              "expected_slope": 0.5,
+              "rms": 0.5549235576899493,
+              "outline_adjusted_residual": 0.4954545454545455,
+              "visible_fraction": 0.09090909090909091,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            37701
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 110,
+              "slope": -0.49987602281180243,
+              "expected_slope": -0.5000000000000001,
+              "rms": 0.5589292068083174,
+              "outline_adjusted_residual": 0.5045343784670706,
+              "visible_fraction": 0.09090909090909091,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 55,
+              "slope": 0.4989898989898986,
+              "expected_slope": 0.49999999999999967,
+              "rms": 0.5545371749671703,
+              "outline_adjusted_residual": 0.49164743971474745,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "bench-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 3987
+        },
+        {
+          "name": "bench-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 4007
+        },
+        {
+          "name": "deck",
+          "d": 0,
+          "connected": true,
+          "pixels": 18704
+        },
+        {
+          "name": "bench-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 4004
+        },
+        {
+          "name": "bench-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 4014
+        },
+        {
+          "name": "deck",
+          "d": 1,
+          "connected": true,
+          "pixels": 18704
+        },
+        {
+          "name": "bench-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 5712
+        },
+        {
+          "name": "bench-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 5827
+        },
+        {
+          "name": "deck",
+          "d": 2,
+          "connected": true,
+          "pixels": 18544
+        },
+        {
+          "name": "bench-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 5708
+        },
+        {
+          "name": "bench-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 5794
+        },
+        {
+          "name": "deck",
+          "d": 3,
+          "connected": true,
+          "pixels": 18544
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "bench-0",
+          "b": "bench-1",
+          "axis_gaps": [
+            -1.7899999999999998,
+            0.20999999999999996,
+            -9.1
+          ]
+        },
+        {
+          "a": "bench-0",
+          "b": "deck",
+          "axis_gaps": [
+            -2.15,
+            0.3500000000000001,
+            -4.6
+          ]
+        },
+        {
+          "a": "bench-1",
+          "b": "deck",
+          "axis_gaps": [
+            -2.15,
+            0.8799999999999999,
+            -4.6
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_stage_river_lv1_0.fix-6f693b97b3b0.webp",
+          "sha256": "6f693b97b3b023548ebee6a7b05eac539d3ef417fe816359102d62e513f9307a"
+        },
+        {
+          "d": 1,
+          "file": "fac_stage_river_lv1_1.fix-91faf215e100.webp",
+          "sha256": "91faf215e100d5fcf39a71260123a91c7374fd547cfd6cf4e9c8fabe7f568751"
+        },
+        {
+          "d": 2,
+          "file": "fac_stage_river_lv1_2.webp",
+          "sha256": "d3a936dea7ef20a035c7adfbb5ce1a0f983c01aa0260eec786236739a3c7329c"
+        },
+        {
+          "d": 3,
+          "file": "fac_stage_river_lv1_3.webp",
+          "sha256": "12892086798f214c4387ce479192a385f73d06a216e448f364077c02fcba0c3b"
+        }
+      ],
+      "limits": [
+        "Facing-dependent source seat counts and stairs are standardized into one common layout.",
+        "Speaker cones are painted on the fixed audience-facing surfaces; the rear remains a cabinet back.",
+        "Canopy has authored shallow cloth sag, not a fabric simulation. All furniture remains fixed under rotation.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "stage_river_lv2",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "stage-teal-apron",
+          "b": "wood-stage",
+          "overlap": [
+            3.5500000000000003,
+            0.020000000000000018,
+            1.6999999999999997
+          ]
+        },
+        {
+          "a": "wood-stage-leg-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.08800000000000008,
+            0.08799999999999997,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.08799999999999919,
+            0.08799999999999997,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.08800000000000008,
+            0.08800000000000008,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-3",
+          "b": "wood-stage",
+          "overlap": [
+            0.08799999999999919,
+            0.08800000000000008,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-step-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.5100000000000002,
+            0.020000000000000018,
+            0.3080000000000003
+          ]
+        },
+        {
+          "a": "wood-step-0",
+          "b": "wood-step-1",
+          "overlap": [
+            0.5100000000000002,
+            0.040000000000000036,
+            1.904
+          ]
+        },
+        {
+          "a": "canopy-post-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999999,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "canopy-post-0",
+          "b": "canopy",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999999,
+            0.8278283949540608
+          ]
+        },
+        {
+          "a": "canopy-post-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999999,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "canopy-post-1",
+          "b": "canopy",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999999,
+            0.8278283949540608
+          ]
+        },
+        {
+          "a": "canopy-post-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999988,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "canopy-post-2",
+          "b": "canopy",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999988,
+            0.8278283949540608
+          ]
+        },
+        {
+          "a": "canopy-post-3",
+          "b": "wood-stage",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999988,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "canopy-post-3",
+          "b": "canopy",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999988,
+            0.8278283949540608
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-leg-0",
+          "b": "wood-chair-0-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-leg-1",
+          "b": "wood-chair-0-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-leg-2",
+          "b": "wood-chair-0-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-leg-3",
+          "b": "wood-chair-0-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-back",
+          "b": "wood-chair-0-0-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-back",
+          "b": "wood-chair-0-0-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-leg-0",
+          "b": "wood-chair-0-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-leg-1",
+          "b": "wood-chair-0-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-leg-2",
+          "b": "wood-chair-0-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-leg-3",
+          "b": "wood-chair-0-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-back",
+          "b": "wood-chair-0-1-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-back",
+          "b": "wood-chair-0-1-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-leg-0",
+          "b": "wood-chair-0-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-leg-1",
+          "b": "wood-chair-0-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-leg-2",
+          "b": "wood-chair-0-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-leg-3",
+          "b": "wood-chair-0-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-back",
+          "b": "wood-chair-0-2-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-back",
+          "b": "wood-chair-0-2-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-leg-0",
+          "b": "wood-chair-0-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-leg-1",
+          "b": "wood-chair-0-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-leg-2",
+          "b": "wood-chair-0-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-leg-3",
+          "b": "wood-chair-0-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-back",
+          "b": "wood-chair-0-3-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-back",
+          "b": "wood-chair-0-3-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-leg-0",
+          "b": "wood-chair-1-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-leg-1",
+          "b": "wood-chair-1-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-leg-2",
+          "b": "wood-chair-1-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-leg-3",
+          "b": "wood-chair-1-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-back",
+          "b": "wood-chair-1-0-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-back",
+          "b": "wood-chair-1-0-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-leg-0",
+          "b": "wood-chair-1-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-leg-1",
+          "b": "wood-chair-1-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-leg-2",
+          "b": "wood-chair-1-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-leg-3",
+          "b": "wood-chair-1-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-back",
+          "b": "wood-chair-1-1-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-back",
+          "b": "wood-chair-1-1-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-leg-0",
+          "b": "wood-chair-1-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-leg-1",
+          "b": "wood-chair-1-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-leg-2",
+          "b": "wood-chair-1-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-leg-3",
+          "b": "wood-chair-1-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-back",
+          "b": "wood-chair-1-2-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-back",
+          "b": "wood-chair-1-2-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-leg-0",
+          "b": "wood-chair-1-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-leg-1",
+          "b": "wood-chair-1-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-leg-2",
+          "b": "wood-chair-1-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-leg-3",
+          "b": "wood-chair-1-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-back",
+          "b": "wood-chair-1-3-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-back",
+          "b": "wood-chair-1-3-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "speaker-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.3799999999999999,
+            0.28000000000000025,
+            0.0
+          ]
+        },
+        {
+          "a": "speaker-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.3799999999999999,
+            0.28000000000000025,
+            0.0
+          ]
+        },
+        {
+          "a": "mic-foot-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.1342490663571274,
+            0.022499999999999964,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-foot-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.08448557158515024,
+            0.1241659879883712,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-foot-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.08448557158515024,
+            0.12416598798837097,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-0",
+          "overlap": [
+            0.010562033178563635,
+            0.016875000000000195,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-1",
+          "overlap": [
+            0.01687499999999975,
+            0.014228842748197135,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-2",
+          "overlap": [
+            0.01687499999999975,
+            0.014228842748197135,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "microphone",
+          "b": "mic-pole",
+          "overlap": [
+            0.01687499999999975,
+            0.016875000000000195,
+            0.7487870959032961
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-stage",
+          "edges": 12
+        },
+        {
+          "name": "stage-teal-apron",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-step-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-step-1",
+          "edges": 12
+        },
+        {
+          "name": "canopy",
+          "edges": 100
+        },
+        {
+          "name": "canopy-post-0",
+          "edges": 12
+        },
+        {
+          "name": "canopy-post-1",
+          "edges": 12
+        },
+        {
+          "name": "canopy-post-2",
+          "edges": 12
+        },
+        {
+          "name": "canopy-post-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-back",
+          "edges": 12
+        },
+        {
+          "name": "speaker-0",
+          "edges": 12
+        },
+        {
+          "name": "speaker-1",
+          "edges": 12
+        },
+        {
+          "name": "mic-foot-0",
+          "edges": 60
+        },
+        {
+          "name": "mic-foot-1",
+          "edges": 60
+        },
+        {
+          "name": "mic-foot-2",
+          "edges": 60
+        },
+        {
+          "name": "mic-pole",
+          "edges": 60
+        },
+        {
+          "name": "microphone",
+          "edges": 60
+        }
+      ],
+      "rotation_edge_error": 8.881784197001252e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            57444,
+            7369,
+            7369
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 54,
+              "slope": -0.5005526967791134,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5671728613034156,
+              "outline_adjusted_residual": 0.5092592592592593,
+              "visible_fraction": 0.12962962962962962,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 145,
+              "slope": 0.49985829003306526,
+              "expected_slope": 0.4999999999999996,
+              "rms": 0.560501740320566,
+              "outline_adjusted_residual": 0.5780465373373137,
+              "visible_fraction": 0.8482758620689655,
+              "combined": {
+                "samples": 123,
+                "slope": 0.49958760469264735,
+                "rms": 0.5605548654981333,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            64677,
+            7384
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 146,
+              "slope": -0.5000723010035382,
+              "expected_slope": -0.5,
+              "rms": 0.562063494903047,
+              "outline_adjusted_residual": 0.5820283474630094,
+              "visible_fraction": 0.8424657534246576,
+              "combined": {
+                "samples": 123,
+                "slope": -0.5004434291011441,
+                "rms": 0.5605078240373821,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 53,
+              "slope": 0.49895178197065077,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5628140206590472,
+              "outline_adjusted_residual": 0.6695239696645876,
+              "visible_fraction": 0.1320754716981132,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            61404,
+            4246,
+            2111
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 53,
+              "slope": -0.50104821802935,
+              "expected_slope": -0.5000000000000007,
+              "rms": 0.55453012440647,
+              "outline_adjusted_residual": 0.6736519249736036,
+              "visible_fraction": 0.9622641509433962,
+              "combined": {
+                "samples": 51,
+                "slope": -0.4988235294117649,
+                "rms": 0.5541497014166524,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 146,
+              "slope": 0.49992962702322324,
+              "expected_slope": 0.5,
+              "rms": 0.5589671638486431,
+              "outline_adjusted_residual": 0.5842117832943639,
+              "visible_fraction": 0.2671232876712329,
+              "combined": {
+                "samples": 39,
+                "slope": 0.49913457289228574,
+                "rms": 0.2728906896764327,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            61723,
+            4304,
+            2187
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 145,
+              "slope": -0.5001417099669343,
+              "expected_slope": -0.5000000000000002,
+              "rms": 0.5574385223978991,
+              "outline_adjusted_residual": 0.5767967554847465,
+              "visible_fraction": 0.35172413793103446,
+              "combined": {
+                "samples": 51,
+                "slope": -0.500648871210892,
+                "rms": 0.2676105604631996,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 54,
+              "slope": 0.4994854202401337,
+              "expected_slope": 0.4999999999999986,
+              "rms": 0.5586526129911945,
+              "outline_adjusted_residual": 0.507755215395887,
+              "visible_fraction": 0.9259259259259259,
+              "combined": {
+                "samples": 50,
+                "slope": 0.4993997599039602,
+                "rms": 0.5585919530283194,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "chair-0-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 1812
+        },
+        {
+          "name": "chair-0-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 1849
+        },
+        {
+          "name": "chair-0-2",
+          "d": 0,
+          "connected": true,
+          "pixels": 1846
+        },
+        {
+          "name": "chair-0-3",
+          "d": 0,
+          "connected": true,
+          "pixels": 1862
+        },
+        {
+          "name": "chair-1-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 1812
+        },
+        {
+          "name": "chair-1-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 1849
+        },
+        {
+          "name": "chair-1-2",
+          "d": 0,
+          "connected": true,
+          "pixels": 1846
+        },
+        {
+          "name": "chair-1-3",
+          "d": 0,
+          "connected": true,
+          "pixels": 1862
+        },
+        {
+          "name": "deck",
+          "d": 0,
+          "connected": true,
+          "pixels": 23544
+        },
+        {
+          "name": "chair-0-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 1841
+        },
+        {
+          "name": "chair-0-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 1841
+        },
+        {
+          "name": "chair-0-2",
+          "d": 1,
+          "connected": true,
+          "pixels": 1831
+        },
+        {
+          "name": "chair-0-3",
+          "d": 1,
+          "connected": true,
+          "pixels": 1871
+        },
+        {
+          "name": "chair-1-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 1841
+        },
+        {
+          "name": "chair-1-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 1841
+        },
+        {
+          "name": "chair-1-2",
+          "d": 1,
+          "connected": true,
+          "pixels": 1831
+        },
+        {
+          "name": "chair-1-3",
+          "d": 1,
+          "connected": true,
+          "pixels": 1871
+        },
+        {
+          "name": "deck",
+          "d": 1,
+          "connected": true,
+          "pixels": 23452
+        },
+        {
+          "name": "chair-0-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 2111
+        },
+        {
+          "name": "chair-0-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 2178
+        },
+        {
+          "name": "chair-0-2",
+          "d": 2,
+          "connected": true,
+          "pixels": 2152
+        },
+        {
+          "name": "chair-0-3",
+          "d": 2,
+          "connected": true,
+          "pixels": 2207
+        },
+        {
+          "name": "chair-1-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 2111
+        },
+        {
+          "name": "chair-1-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 2178
+        },
+        {
+          "name": "chair-1-2",
+          "d": 2,
+          "connected": true,
+          "pixels": 2152
+        },
+        {
+          "name": "chair-1-3",
+          "d": 2,
+          "connected": true,
+          "pixels": 2207
+        },
+        {
+          "name": "deck",
+          "d": 2,
+          "connected": true,
+          "pixels": 23452
+        },
+        {
+          "name": "chair-0-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 2181
+        },
+        {
+          "name": "chair-0-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 2143
+        },
+        {
+          "name": "chair-0-2",
+          "d": 3,
+          "connected": true,
+          "pixels": 2167
+        },
+        {
+          "name": "chair-0-3",
+          "d": 3,
+          "connected": true,
+          "pixels": 2187
+        },
+        {
+          "name": "chair-1-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 2181
+        },
+        {
+          "name": "chair-1-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 2143
+        },
+        {
+          "name": "chair-1-2",
+          "d": 3,
+          "connected": true,
+          "pixels": 2167
+        },
+        {
+          "name": "chair-1-3",
+          "d": 3,
+          "connected": true,
+          "pixels": 2187
+        },
+        {
+          "name": "deck",
+          "d": 3,
+          "connected": true,
+          "pixels": 23544
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "chair-0-0",
+          "b": "chair-0-1",
+          "axis_gaps": [
+            0.41666666666666674,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-0-2",
+          "axis_gaps": [
+            1.2333333333333334,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-0-3",
+          "axis_gaps": [
+            2.05,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            -0.3999999999999999,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            0.41666666666666674,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            1.2333333333333334,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            2.05,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "deck",
+          "axis_gaps": [
+            -0.7499999999999999,
+            0.8700000000000001,
+            -5.6
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-0-2",
+          "axis_gaps": [
+            0.4166666666666665,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-0-3",
+          "axis_gaps": [
+            1.233333333333333,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            0.41666666666666674,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            -0.40000000000000013,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            0.4166666666666665,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            1.233333333333333,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "deck",
+          "axis_gaps": [
+            -1.5666666666666669,
+            0.8700000000000001,
+            -5.6
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-0-3",
+          "axis_gaps": [
+            0.4166666666666661,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            1.2333333333333334,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            0.4166666666666665,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            -0.40000000000000036,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            0.4166666666666661,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "deck",
+          "axis_gaps": [
+            -1.5666666666666669,
+            0.8700000000000001,
+            -5.6
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            2.05,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            1.233333333333333,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            0.4166666666666661,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            -0.40000000000000036,
+            0.6349999999999998,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "deck",
+          "axis_gaps": [
+            -0.7500000000000004,
+            0.8700000000000001,
+            -5.6
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            0.41666666666666674,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            1.2333333333333334,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            2.05,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "deck",
+          "axis_gaps": [
+            -0.7499999999999999,
+            1.87,
+            -5.6
+          ]
+        },
+        {
+          "a": "chair-1-1",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            0.4166666666666665,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-1",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            1.233333333333333,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-1",
+          "b": "deck",
+          "axis_gaps": [
+            -1.5666666666666669,
+            1.87,
+            -5.6
+          ]
+        },
+        {
+          "a": "chair-1-2",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            0.4166666666666661,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-2",
+          "b": "deck",
+          "axis_gaps": [
+            -1.5666666666666669,
+            1.87,
+            -5.6
+          ]
+        },
+        {
+          "a": "chair-1-3",
+          "b": "deck",
+          "axis_gaps": [
+            -0.7500000000000004,
+            1.87,
+            -5.6
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_stage_river_lv2_0.webp",
+          "sha256": "5ab5003fd3830d6a808ad13dfa8eeee54767133259877fa3a53851a3e7382b38"
+        },
+        {
+          "d": 1,
+          "file": "fac_stage_river_lv2_1.webp",
+          "sha256": "d30f760f45ca94b60957397ba0db3e50d48f917005b5c1d4de7c1a99e55b4709"
+        },
+        {
+          "d": 2,
+          "file": "fac_stage_river_lv2_2.fix-49c1f4f598dc.webp",
+          "sha256": "49c1f4f598dc25ec058c172aa13f9aa447bb12ed58bf05e106811e760ec26fe7"
+        },
+        {
+          "d": 3,
+          "file": "fac_stage_river_lv2_3.webp",
+          "sha256": "1401e9c2a1a11c1ea0298d0610b398bc69122eec1b3c58c1ff6e007edb487c5a"
+        }
+      ],
+      "limits": [
+        "Facing-dependent source seat counts and stairs are standardized into one common layout.",
+        "Speaker cones are painted on the fixed audience-facing surfaces; the rear remains a cabinet back.",
+        "Canopy has authored shallow cloth sag, not a fabric simulation. All furniture remains fixed under rotation.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "stage_river_lv3",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "wood-stage-leg-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.08800000000000008,
+            0.08799999999999997,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.08799999999999919,
+            0.08799999999999997,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.08800000000000008,
+            0.08800000000000008,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-stage-leg-3",
+          "b": "wood-stage",
+          "overlap": [
+            0.08799999999999919,
+            0.08800000000000008,
+            2.0000000000000004
+          ]
+        },
+        {
+          "a": "wood-step-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.5099999999999998,
+            0.020000000000000018,
+            0.18000000000000016
+          ]
+        },
+        {
+          "a": "wood-step-0",
+          "b": "wood-step-1",
+          "overlap": [
+            0.5099999999999998,
+            0.040000000000000036,
+            2.04
+          ]
+        },
+        {
+          "a": "canopy-post-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999999,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "canopy-post-0",
+          "b": "canopy",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999999,
+            0.8487499896100346
+          ]
+        },
+        {
+          "a": "canopy-postfoot-0",
+          "b": "canopy-post-0",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999999,
+            1.2300000000000004
+          ]
+        },
+        {
+          "a": "canopy-postfoot-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.14500000000000002,
+            0.14500000000000002,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "canopy-post-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999999,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "canopy-post-1",
+          "b": "canopy",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999999,
+            0.8487499896100346
+          ]
+        },
+        {
+          "a": "canopy-postfoot-1",
+          "b": "canopy-post-1",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999999,
+            1.2300000000000004
+          ]
+        },
+        {
+          "a": "canopy-postfoot-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.14499999999999957,
+            0.14500000000000002,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "canopy-post-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999988,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "canopy-post-2",
+          "b": "canopy",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999988,
+            0.8487499896100346
+          ]
+        },
+        {
+          "a": "canopy-postfoot-2",
+          "b": "canopy-post-2",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999988,
+            1.2300000000000004
+          ]
+        },
+        {
+          "a": "canopy-postfoot-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.14500000000000002,
+            0.14500000000000002,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "canopy-post-3",
+          "b": "wood-stage",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999988,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "canopy-post-3",
+          "b": "canopy",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999988,
+            0.8487499896100346
+          ]
+        },
+        {
+          "a": "canopy-postfoot-3",
+          "b": "canopy-post-3",
+          "overlap": [
+            0.10999999999999943,
+            0.10999999999999988,
+            1.2300000000000004
+          ]
+        },
+        {
+          "a": "canopy-postfoot-3",
+          "b": "wood-stage",
+          "overlap": [
+            0.14499999999999957,
+            0.14500000000000002,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-leg-0",
+          "b": "wood-chair-0-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-leg-1",
+          "b": "wood-chair-0-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-leg-2",
+          "b": "wood-chair-0-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-leg-3",
+          "b": "wood-chair-0-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-back",
+          "b": "wood-chair-0-0-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-0-back",
+          "b": "wood-chair-0-0-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-leg-0",
+          "b": "wood-chair-0-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-leg-1",
+          "b": "wood-chair-0-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-leg-2",
+          "b": "wood-chair-0-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-leg-3",
+          "b": "wood-chair-0-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-back",
+          "b": "wood-chair-0-1-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-1-back",
+          "b": "wood-chair-0-1-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-leg-0",
+          "b": "wood-chair-0-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-leg-1",
+          "b": "wood-chair-0-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-leg-2",
+          "b": "wood-chair-0-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-leg-3",
+          "b": "wood-chair-0-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-back",
+          "b": "wood-chair-0-2-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-2-back",
+          "b": "wood-chair-0-2-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-leg-0",
+          "b": "wood-chair-0-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-leg-1",
+          "b": "wood-chair-0-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-leg-2",
+          "b": "wood-chair-0-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-leg-3",
+          "b": "wood-chair-0-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-back",
+          "b": "wood-chair-0-3-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-3-back",
+          "b": "wood-chair-0-3-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-4-leg-0",
+          "b": "wood-chair-0-4-seat",
+          "overlap": [
+            0.05000000000000071,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-4-leg-1",
+          "b": "wood-chair-0-4-seat",
+          "overlap": [
+            0.05000000000000071,
+            0.04999999999999982,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-0-4-leg-2",
+          "b": "wood-chair-0-4-seat",
+          "overlap": [
+            0.05000000000000071,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-4-leg-3",
+          "b": "wood-chair-0-4-seat",
+          "overlap": [
+            0.05000000000000071,
+            0.04999999999999982,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-4-back",
+          "b": "wood-chair-0-4-leg-2",
+          "overlap": [
+            0.05000000000000071,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-0-4-back",
+          "b": "wood-chair-0-4-leg-3",
+          "overlap": [
+            0.05000000000000071,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-leg-0",
+          "b": "wood-chair-1-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-leg-1",
+          "b": "wood-chair-1-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-leg-2",
+          "b": "wood-chair-1-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-leg-3",
+          "b": "wood-chair-1-0-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-back",
+          "b": "wood-chair-1-0-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-0-back",
+          "b": "wood-chair-1-0-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-leg-0",
+          "b": "wood-chair-1-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-leg-1",
+          "b": "wood-chair-1-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-leg-2",
+          "b": "wood-chair-1-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-leg-3",
+          "b": "wood-chair-1-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-back",
+          "b": "wood-chair-1-1-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-1-back",
+          "b": "wood-chair-1-1-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-leg-0",
+          "b": "wood-chair-1-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-leg-1",
+          "b": "wood-chair-1-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-leg-2",
+          "b": "wood-chair-1-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-leg-3",
+          "b": "wood-chair-1-2-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-back",
+          "b": "wood-chair-1-2-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-2-back",
+          "b": "wood-chair-1-2-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-leg-0",
+          "b": "wood-chair-1-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-leg-1",
+          "b": "wood-chair-1-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-leg-2",
+          "b": "wood-chair-1-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-leg-3",
+          "b": "wood-chair-1-3-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-back",
+          "b": "wood-chair-1-3-leg-2",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-3-back",
+          "b": "wood-chair-1-3-leg-3",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-4-leg-0",
+          "b": "wood-chair-1-4-seat",
+          "overlap": [
+            0.05000000000000071,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-4-leg-1",
+          "b": "wood-chair-1-4-seat",
+          "overlap": [
+            0.05000000000000071,
+            0.05000000000000071,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-chair-1-4-leg-2",
+          "b": "wood-chair-1-4-seat",
+          "overlap": [
+            0.05000000000000071,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-4-leg-3",
+          "b": "wood-chair-1-4-seat",
+          "overlap": [
+            0.05000000000000071,
+            0.05000000000000071,
+            0.8999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-4-back",
+          "b": "wood-chair-1-4-leg-2",
+          "overlap": [
+            0.05000000000000071,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "wood-chair-1-4-back",
+          "b": "wood-chair-1-4-leg-3",
+          "overlap": [
+            0.05000000000000071,
+            0.040000000000000036,
+            3.3999999999999995
+          ]
+        },
+        {
+          "a": "speaker-base-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.45999999999999996,
+            0.41999999999999993,
+            0.019999999999999574
+          ]
+        },
+        {
+          "a": "speaker-pole-0",
+          "b": "speaker-base-0",
+          "overlap": [
+            0.04062499999999991,
+            0.04062499999999991,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "speaker-0",
+          "b": "speaker-pole-0",
+          "overlap": [
+            0.04062499999999991,
+            0.04062499999999991,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "monitor-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.45999999999999996,
+            0.32999999999999985,
+            0.0
+          ]
+        },
+        {
+          "a": "speaker-base-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.46000000000000085,
+            0.41999999999999993,
+            0.019999999999999574
+          ]
+        },
+        {
+          "a": "speaker-pole-1",
+          "b": "speaker-base-1",
+          "overlap": [
+            0.040625000000000355,
+            0.04062499999999991,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "speaker-1",
+          "b": "speaker-pole-1",
+          "overlap": [
+            0.040625000000000355,
+            0.04062499999999991,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "monitor-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.45999999999999996,
+            0.32999999999999985,
+            0.0
+          ]
+        },
+        {
+          "a": "mic-foot-0",
+          "b": "wood-stage",
+          "overlap": [
+            0.1342490663571274,
+            0.022499999999999964,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-foot-1",
+          "b": "wood-stage",
+          "overlap": [
+            0.08448557158515024,
+            0.1241659879883712,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-foot-2",
+          "b": "wood-stage",
+          "overlap": [
+            0.08448557158515024,
+            0.12416598798837097,
+            0.053522320913033106
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-0",
+          "overlap": [
+            0.010562033178563635,
+            0.016875000000000195,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-1",
+          "overlap": [
+            0.01687499999999975,
+            0.014228842748197135,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-foot-2",
+          "overlap": [
+            0.01687499999999975,
+            0.014228842748197135,
+            0.7535223209130324
+          ]
+        },
+        {
+          "a": "microphone",
+          "b": "mic-pole",
+          "overlap": [
+            0.01687499999999975,
+            0.016875000000000195,
+            0.7487870959032996
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-stage",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-stage-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-step-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-step-1",
+          "edges": 12
+        },
+        {
+          "name": "canopy",
+          "edges": 100
+        },
+        {
+          "name": "canopy-post-0",
+          "edges": 12
+        },
+        {
+          "name": "canopy-postfoot-0",
+          "edges": 12
+        },
+        {
+          "name": "canopy-post-1",
+          "edges": 12
+        },
+        {
+          "name": "canopy-postfoot-1",
+          "edges": 12
+        },
+        {
+          "name": "canopy-post-2",
+          "edges": 12
+        },
+        {
+          "name": "canopy-postfoot-2",
+          "edges": 12
+        },
+        {
+          "name": "canopy-post-3",
+          "edges": 12
+        },
+        {
+          "name": "canopy-postfoot-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-0-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-1-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-2-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-3-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-4-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-4-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-4-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-4-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-4-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-4-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-0-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-1-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-2-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-3-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-4-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-4-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-4-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-4-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-4-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-4-back",
+          "edges": 12
+        },
+        {
+          "name": "speaker-base-0",
+          "edges": 12
+        },
+        {
+          "name": "speaker-pole-0",
+          "edges": 60
+        },
+        {
+          "name": "speaker-0",
+          "edges": 12
+        },
+        {
+          "name": "monitor-0",
+          "edges": 12
+        },
+        {
+          "name": "speaker-base-1",
+          "edges": 12
+        },
+        {
+          "name": "speaker-pole-1",
+          "edges": 60
+        },
+        {
+          "name": "speaker-1",
+          "edges": 12
+        },
+        {
+          "name": "monitor-1",
+          "edges": 12
+        },
+        {
+          "name": "mic-foot-0",
+          "edges": 60
+        },
+        {
+          "name": "mic-foot-1",
+          "edges": 60
+        },
+        {
+          "name": "mic-foot-2",
+          "edges": 60
+        },
+        {
+          "name": "mic-pole",
+          "edges": 60
+        },
+        {
+          "name": "microphone",
+          "edges": 60
+        }
+      ],
+      "rotation_edge_error": 8.881784197001252e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            81758,
+            7318,
+            1807,
+            1807,
+            5459,
+            1769
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 66,
+              "slope": -0.5003235570399756,
+              "expected_slope": -0.5000000000000002,
+              "rms": 0.5521650559243548,
+              "outline_adjusted_residual": 0.677564965657915,
+              "visible_fraction": 0.3939393939393939,
+              "combined": {
+                "samples": 26,
+                "slope": -0.49957347633755494,
+                "rms": 0.5414335566682402,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 182,
+              "slope": 0.5000462810443786,
+              "expected_slope": 0.5000000000000003,
+              "rms": 0.5614635700301297,
+              "outline_adjusted_residual": 0.5815668868791165,
+              "visible_fraction": 0.9120879120879121,
+              "combined": {
+                "samples": 166,
+                "slope": 0.5000447044796904,
+                "rms": 0.5616994974902174,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            81933,
+            7318,
+            1807,
+            1807,
+            5459,
+            1769
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 182,
+              "slope": -0.5000462810443784,
+              "expected_slope": -0.5000000000000001,
+              "rms": 0.5614635700301287,
+              "outline_adjusted_residual": 0.5815668868791165,
+              "visible_fraction": 0.9065934065934066,
+              "combined": {
+                "samples": 165,
+                "slope": -0.5001311192432031,
+                "rms": 0.5603084450750323,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 65,
+              "slope": 0.49930069930070065,
+              "expected_slope": 0.5,
+              "rms": 0.56217513480652,
+              "outline_adjusted_residual": 0.5037016797586322,
+              "visible_fraction": 0.35384615384615387,
+              "combined": {
+                "samples": 23,
+                "slope": 0.4996294987402951,
+                "rms": 0.5684719591241697,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            89242,
+            2150,
+            2207,
+            2201
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 66,
+              "slope": -0.5003653063354543,
+              "expected_slope": -0.49999999999999944,
+              "rms": 0.565709578150823,
+              "outline_adjusted_residual": 0.5075757575757576,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 66,
+                "slope": -0.5003653063354543,
+                "rms": 0.565709578150823,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 182,
+              "slope": 0.5000462810443784,
+              "expected_slope": 0.4999999999999998,
+              "rms": 0.5614635700301306,
+              "outline_adjusted_residual": 0.8093908156888574,
+              "visible_fraction": 0.3131868131868132,
+              "combined": {
+                "samples": 57,
+                "slope": 0.4980307548264315,
+                "rms": 0.5512464507530201,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            89164,
+            2150,
+            2207,
+            2201
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 182,
+              "slope": -0.4999547142468978,
+              "expected_slope": -0.5000000000000004,
+              "rms": 0.558984927963388,
+              "outline_adjusted_residual": 0.814885321183406,
+              "visible_fraction": 0.3516483516483517,
+              "combined": {
+                "samples": 64,
+                "slope": -0.5007184674776318,
+                "rms": 0.5583237432266986,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "deck",
+              "mode": "top",
+              "samples": 65,
+              "slope": 0.4993006993007007,
+              "expected_slope": 0.5,
+              "rms": 0.5621751348065219,
+              "outline_adjusted_residual": 0.6901522602728392,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 65,
+                "slope": 0.4993006993007007,
+                "rms": 0.5621751348065219,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "chair-0-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 1821
+        },
+        {
+          "name": "chair-0-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 1857
+        },
+        {
+          "name": "chair-0-2",
+          "d": 0,
+          "connected": true,
+          "pixels": 1819
+        },
+        {
+          "name": "chair-0-3",
+          "d": 0,
+          "connected": true,
+          "pixels": 1821
+        },
+        {
+          "name": "chair-0-4",
+          "d": 0,
+          "connected": true,
+          "pixels": 1769
+        },
+        {
+          "name": "chair-1-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 1807
+        },
+        {
+          "name": "chair-1-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 1807
+        },
+        {
+          "name": "chair-1-2",
+          "d": 0,
+          "connected": true,
+          "pixels": 1783
+        },
+        {
+          "name": "chair-1-3",
+          "d": 0,
+          "connected": true,
+          "pixels": 1857
+        },
+        {
+          "name": "chair-1-4",
+          "d": 0,
+          "connected": true,
+          "pixels": 1819
+        },
+        {
+          "name": "deck",
+          "d": 0,
+          "connected": true,
+          "pixels": 34836
+        },
+        {
+          "name": "chair-0-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 1769
+        },
+        {
+          "name": "chair-0-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 1821
+        },
+        {
+          "name": "chair-0-2",
+          "d": 1,
+          "connected": true,
+          "pixels": 1819
+        },
+        {
+          "name": "chair-0-3",
+          "d": 1,
+          "connected": true,
+          "pixels": 1857
+        },
+        {
+          "name": "chair-0-4",
+          "d": 1,
+          "connected": true,
+          "pixels": 1821
+        },
+        {
+          "name": "chair-1-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 1819
+        },
+        {
+          "name": "chair-1-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 1857
+        },
+        {
+          "name": "chair-1-2",
+          "d": 1,
+          "connected": true,
+          "pixels": 1783
+        },
+        {
+          "name": "chair-1-3",
+          "d": 1,
+          "connected": true,
+          "pixels": 1807
+        },
+        {
+          "name": "chair-1-4",
+          "d": 1,
+          "connected": true,
+          "pixels": 1807
+        },
+        {
+          "name": "deck",
+          "d": 1,
+          "connected": true,
+          "pixels": 34940
+        },
+        {
+          "name": "chair-0-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 2201
+        },
+        {
+          "name": "chair-0-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 2202
+        },
+        {
+          "name": "chair-0-2",
+          "d": 2,
+          "connected": true,
+          "pixels": 2209
+        },
+        {
+          "name": "chair-0-3",
+          "d": 2,
+          "connected": true,
+          "pixels": 2227
+        },
+        {
+          "name": "chair-0-4",
+          "d": 2,
+          "connected": true,
+          "pixels": 2138
+        },
+        {
+          "name": "chair-1-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 2207
+        },
+        {
+          "name": "chair-1-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 2150
+        },
+        {
+          "name": "chair-1-2",
+          "d": 2,
+          "connected": true,
+          "pixels": 2165
+        },
+        {
+          "name": "chair-1-3",
+          "d": 2,
+          "connected": true,
+          "pixels": 2220
+        },
+        {
+          "name": "chair-1-4",
+          "d": 2,
+          "connected": true,
+          "pixels": 2205
+        },
+        {
+          "name": "deck",
+          "d": 2,
+          "connected": true,
+          "pixels": 34640
+        },
+        {
+          "name": "chair-0-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 2138
+        },
+        {
+          "name": "chair-0-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 2227
+        },
+        {
+          "name": "chair-0-2",
+          "d": 3,
+          "connected": true,
+          "pixels": 2209
+        },
+        {
+          "name": "chair-0-3",
+          "d": 3,
+          "connected": true,
+          "pixels": 2202
+        },
+        {
+          "name": "chair-0-4",
+          "d": 3,
+          "connected": true,
+          "pixels": 2201
+        },
+        {
+          "name": "chair-1-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 2205
+        },
+        {
+          "name": "chair-1-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 2220
+        },
+        {
+          "name": "chair-1-2",
+          "d": 3,
+          "connected": true,
+          "pixels": 2165
+        },
+        {
+          "name": "chair-1-3",
+          "d": 3,
+          "connected": true,
+          "pixels": 2150
+        },
+        {
+          "name": "chair-1-4",
+          "d": 3,
+          "connected": true,
+          "pixels": 2207
+        },
+        {
+          "name": "deck",
+          "d": 3,
+          "connected": true,
+          "pixels": 34552
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "chair-0-0",
+          "b": "chair-0-1",
+          "axis_gaps": [
+            0.4374999999999998,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-0-2",
+          "axis_gaps": [
+            1.275,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-0-3",
+          "axis_gaps": [
+            2.1124999999999994,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-0-4",
+          "axis_gaps": [
+            2.9499999999999997,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            -0.3999999999999999,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            0.4374999999999998,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            1.275,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            2.1124999999999994,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            2.9499999999999997,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-0",
+          "b": "deck",
+          "axis_gaps": [
+            -0.7,
+            1.0199999999999996,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-0-2",
+          "axis_gaps": [
+            0.4375,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-0-3",
+          "axis_gaps": [
+            1.2749999999999995,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-0-4",
+          "axis_gaps": [
+            2.1125,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            0.4374999999999998,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            -0.40000000000000013,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            0.4375,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            1.2749999999999995,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            2.1125,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-1",
+          "b": "deck",
+          "axis_gaps": [
+            -1.5374999999999999,
+            1.0199999999999996,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-0-3",
+          "axis_gaps": [
+            0.4374999999999991,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-0-4",
+          "axis_gaps": [
+            1.2749999999999995,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            1.275,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            0.4375,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            -0.40000000000000036,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            0.4374999999999991,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            1.2749999999999995,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-2",
+          "b": "deck",
+          "axis_gaps": [
+            -2.375,
+            1.0199999999999996,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-0-4",
+          "axis_gaps": [
+            0.4375,
+            -0.3650000000000002,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            2.1124999999999994,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            1.2749999999999995,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            0.4374999999999991,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            -0.40000000000000036,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            0.4375,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-3",
+          "b": "deck",
+          "axis_gaps": [
+            -1.637500000000001,
+            1.0199999999999996,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-0-4",
+          "b": "chair-1-0",
+          "axis_gaps": [
+            2.9499999999999997,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-4",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            2.1125,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-4",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            1.2749999999999995,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-4",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            0.4375,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-4",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            -0.40000000000000036,
+            0.9650000000000003,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-0-4",
+          "b": "deck",
+          "axis_gaps": [
+            -0.8000000000000007,
+            1.0199999999999996,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "chair-1-1",
+          "axis_gaps": [
+            0.4374999999999998,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            1.275,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            2.1124999999999994,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            2.9499999999999997,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-0",
+          "b": "deck",
+          "axis_gaps": [
+            -0.7,
+            2.35,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-1-1",
+          "b": "chair-1-2",
+          "axis_gaps": [
+            0.4375,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-1",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            1.2749999999999995,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-1",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            2.1125,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-1",
+          "b": "deck",
+          "axis_gaps": [
+            -1.5374999999999999,
+            2.35,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-1-2",
+          "b": "chair-1-3",
+          "axis_gaps": [
+            0.4374999999999991,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-2",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            1.2749999999999995,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-2",
+          "b": "deck",
+          "axis_gaps": [
+            -2.375,
+            2.35,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-1-3",
+          "b": "chair-1-4",
+          "axis_gaps": [
+            0.4375,
+            -0.3649999999999993,
+            -10.9
+          ]
+        },
+        {
+          "a": "chair-1-3",
+          "b": "deck",
+          "axis_gaps": [
+            -1.637500000000001,
+            2.35,
+            -6.0
+          ]
+        },
+        {
+          "a": "chair-1-4",
+          "b": "deck",
+          "axis_gaps": [
+            -0.8000000000000007,
+            2.35,
+            -6.0
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_stage_river_lv3_0.fix-f79ae5e1a3fd.webp",
+          "sha256": "f79ae5e1a3fde244ef01b32664f35ba3768ab6fe0f7cb44afbc1fe6d678d5563"
+        },
+        {
+          "d": 1,
+          "file": "fac_stage_river_lv3_1.webp",
+          "sha256": "bd431d45e38f1176b9f17527029a18fd1094c41f040551f091231b543bb28259"
+        },
+        {
+          "d": 2,
+          "file": "fac_stage_river_lv3_2.webp",
+          "sha256": "5132d4841e2e66c4394161b77093b7c3a4285516aa5c6b153c7c705fc984973b"
+        },
+        {
+          "d": 3,
+          "file": "fac_stage_river_lv3_3.webp",
+          "sha256": "4bffc6c513717e864996120fd94696a1b5b30f296b6ec2db60575031cfbaba6f"
+        }
+      ],
+      "limits": [
+        "Facing-dependent source seat counts and stairs are standardized into one common layout.",
+        "Speaker cones are painted on the fixed audience-facing surfaces; the rear remains a cabinet back.",
+        "Canopy has authored shallow cloth sag, not a fabric simulation. All furniture remains fixed under rotation.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    }
+  ]
+}

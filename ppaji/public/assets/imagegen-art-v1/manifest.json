@@ -1095,88 +1095,88 @@
       "bytes": 169014
     },
     "fac/stage_river_lv1/0": {
-      "file": "fac_stage_river_lv1_0.fix-6f693b97b3b0.webp",
+      "file": "fac_stage_river_lv1_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "6f693b97b3b023548ebee6a7b05eac539d3ef417fe816359102d62e513f9307a",
-      "bytes": 92670
+      "sha256": "57b5a00c4cf40bb62993305d4792dcb9a0b98299a162d42ff48ee09ceaaac320",
+      "bytes": 51706
     },
     "fac/stage_river_lv1/1": {
-      "file": "fac_stage_river_lv1_1.fix-91faf215e100.webp",
+      "file": "fac_stage_river_lv1_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "91faf215e100d5fcf39a71260123a91c7374fd547cfd6cf4e9c8fabe7f568751",
-      "bytes": 94268
+      "sha256": "a5503b422d3fe3abc728f02a8620381fb18fefd9c2e4f79ee7b16c6c843f1740",
+      "bytes": 50164
     },
     "fac/stage_river_lv1/2": {
-      "file": "fac_stage_river_lv1_2.webp",
+      "file": "fac_stage_river_lv1_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "d3a936dea7ef20a035c7adfbb5ce1a0f983c01aa0260eec786236739a3c7329c",
-      "bytes": 67228
+      "sha256": "9a62973e5a3e53b9965f22ecbe2ad30412152b2b06461ea98e268c6ce30833c1",
+      "bytes": 37264
     },
     "fac/stage_river_lv1/3": {
-      "file": "fac_stage_river_lv1_3.webp",
+      "file": "fac_stage_river_lv1_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "12892086798f214c4387ce479192a385f73d06a216e448f364077c02fcba0c3b",
-      "bytes": 69976
+      "sha256": "9f127998a4b6f8425cdd896e7a951e3bb3622904ebacc0dc95736008fdeefac5",
+      "bytes": 37190
     },
     "fac/stage_river_lv2/0": {
-      "file": "fac_stage_river_lv2_0.webp",
+      "file": "fac_stage_river_lv2_0_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "5ab5003fd3830d6a808ad13dfa8eeee54767133259877fa3a53851a3e7382b38",
-      "bytes": 122762
+      "sha256": "f953c5f945033d2308b7b8510d425b98c7bd588a96704c8a8e9d68375587ced1",
+      "bytes": 66046
     },
     "fac/stage_river_lv2/1": {
-      "file": "fac_stage_river_lv2_1.webp",
+      "file": "fac_stage_river_lv2_1_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "d30f760f45ca94b60957397ba0db3e50d48f917005b5c1d4de7c1a99e55b4709",
-      "bytes": 134114
+      "sha256": "f96c5ad10f058d7efd91fa7bcbf77ba4d35bffa39ba8dd8c721699a1a0c72ba9",
+      "bytes": 64810
     },
     "fac/stage_river_lv2/2": {
-      "file": "fac_stage_river_lv2_2.fix-49c1f4f598dc.webp",
+      "file": "fac_stage_river_lv2_2_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "49c1f4f598dc25ec058c172aa13f9aa447bb12ed58bf05e106811e760ec26fe7",
-      "bytes": 137380
+      "sha256": "2e7ea1e8689461ad589d9b0b08da2450294b3794df2b78a7365ebfde69eee639",
+      "bytes": 59542
     },
     "fac/stage_river_lv2/3": {
-      "file": "fac_stage_river_lv2_3.webp",
+      "file": "fac_stage_river_lv2_3_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "1401e9c2a1a11c1ea0298d0610b398bc69122eec1b3c58c1ff6e007edb487c5a",
-      "bytes": 116888
+      "sha256": "ccb98000935cd7627acf5e31320ab322c6a12da1c6f52b709d80213c50e858f1",
+      "bytes": 61176
     },
     "fac/stage_river_lv3/0": {
-      "file": "fac_stage_river_lv3_0.fix-f79ae5e1a3fd.webp",
+      "file": "fac_stage_river_lv3_0_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "f79ae5e1a3fde244ef01b32664f35ba3768ab6fe0f7cb44afbc1fe6d678d5563",
-      "bytes": 222222
+      "sha256": "ffc95d7c13171995061fee6afdbc07f6bf60b0f159b0116390048b29de748032",
+      "bytes": 91226
     },
     "fac/stage_river_lv3/1": {
-      "file": "fac_stage_river_lv3_1.webp",
+      "file": "fac_stage_river_lv3_1_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "bd431d45e38f1176b9f17527029a18fd1094c41f040551f091231b543bb28259",
-      "bytes": 168680
+      "sha256": "cb396b7929118c05837960b75277d0645a1bfddfcce43e037b886c4c07ccd192",
+      "bytes": 90078
     },
     "fac/stage_river_lv3/2": {
-      "file": "fac_stage_river_lv3_2.webp",
+      "file": "fac_stage_river_lv3_2_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "5132d4841e2e66c4394161b77093b7c3a4285516aa5c6b153c7c705fc984973b",
-      "bytes": 166656
+      "sha256": "d9ae848d268cb7a27facad73406955e473260d287d4e9b0cde450788a16d7d29",
+      "bytes": 80342
     },
     "fac/stage_river_lv3/3": {
-      "file": "fac_stage_river_lv3_3.webp",
+      "file": "fac_stage_river_lv3_3_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "4bffc6c513717e864996120fd94696a1b5b30f296b6ec2db60575031cfbaba6f",
-      "bytes": 166606
+      "sha256": "04b840630631ca580d5c065625b77fa9674a61dfcd99387070a24336dda6480a",
+      "bytes": 81868
     },
     "fac/playground/0": {
       "file": "fac_playground_0.webp",

@@ -1,0 +1,218 @@
+[
+  {
+    "id": "stage_river_lv1",
+    "d": 0,
+    "source_bbox": [
+      247,
+      320,
+      561,
+      588
+    ],
+    "candidate_bbox": [
+      244,
+      318,
+      560,
+      586
+    ],
+    "width_ratio": 1.0063694267515924,
+    "height_ratio": 1.0
+  },
+  {
+    "id": "stage_river_lv1",
+    "d": 1,
+    "source_bbox": [
+      211,
+      300,
+      517,
+      588
+    ],
+    "candidate_bbox": [
+      208,
+      318,
+      512,
+      592
+    ],
+    "width_ratio": 0.9934640522875817,
+    "height_ratio": 0.9513888888888888
+  },
+  {
+    "id": "stage_river_lv1",
+    "d": 2,
+    "source_bbox": [
+      223,
+      384,
+      505,
+      612
+    ],
+    "candidate_bbox": [
+      208,
+      400,
+      524,
+      612
+    ],
+    "width_ratio": 1.1205673758865249,
+    "height_ratio": 0.9298245614035088
+  },
+  {
+    "id": "stage_river_lv1",
+    "d": 3,
+    "source_bbox": [
+      254,
+      384,
+      554,
+      608
+    ],
+    "candidate_bbox": [
+      256,
+      400,
+      560,
+      612
+    ],
+    "width_ratio": 1.0133333333333334,
+    "height_ratio": 0.9464285714285714
+  },
+  {
+    "id": "stage_river_lv2",
+    "d": 0,
+    "source_bbox": [
+      314,
+      368,
+      730,
+      756
+    ],
+    "candidate_bbox": [
+      294,
+      366,
+      738,
+      756
+    ],
+    "width_ratio": 1.0673076923076923,
+    "height_ratio": 1.0051546391752577
+  },
+  {
+    "id": "stage_river_lv2",
+    "d": 1,
+    "source_bbox": [
+      282,
+      368,
+      722,
+      756
+    ],
+    "candidate_bbox": [
+      278,
+      372,
+      722,
+      761
+    ],
+    "width_ratio": 1.009090909090909,
+    "height_ratio": 1.0025773195876289
+  },
+  {
+    "id": "stage_river_lv2",
+    "d": 2,
+    "source_bbox": [
+      284,
+      447,
+      723,
+      769
+    ],
+    "candidate_bbox": [
+      286,
+      436,
+      730,
+      765
+    ],
+    "width_ratio": 1.0113895216400912,
+    "height_ratio": 1.0217391304347827
+  },
+  {
+    "id": "stage_river_lv2",
+    "d": 3,
+    "source_bbox": [
+      300,
+      448,
+      744,
+      764
+    ],
+    "candidate_bbox": [
+      302,
+      430,
+      746,
+      760
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0443037974683544
+  },
+  {
+    "id": "stage_river_lv3",
+    "d": 0,
+    "source_bbox": [
+      274,
+      312,
+      797,
+      778
+    ],
+    "candidate_bbox": [
+      250,
+      316,
+      804,
+      775
+    ],
+    "width_ratio": 1.0592734225621414,
+    "height_ratio": 0.9849785407725322
+  },
+  {
+    "id": "stage_river_lv3",
+    "d": 1,
+    "source_bbox": [
+      247,
+      312,
+      729,
+      776
+    ],
+    "candidate_bbox": [
+      210,
+      320,
+      758,
+      783
+    ],
+    "width_ratio": 1.1369294605809128,
+    "height_ratio": 0.9978448275862069
+  },
+  {
+    "id": "stage_river_lv3",
+    "d": 2,
+    "source_bbox": [
+      231,
+      428,
+      745,
+      800
+    ],
+    "candidate_bbox": [
+      220,
+      412,
+      774,
+      799
+    ],
+    "width_ratio": 1.0778210116731517,
+    "height_ratio": 1.0403225806451613
+  },
+  {
+    "id": "stage_river_lv3",
+    "d": 3,
+    "source_bbox": [
+      272,
+      428,
+      799,
+      788
+    ],
+    "candidate_bbox": [
+      266,
+      408,
+      814,
+      794
+    ],
+    "width_ratio": 1.0398481973434535,
+    "height_ratio": 1.0722222222222222
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "id": "stage_river_lv2",
+  "d": 2,
+  "seat": "chair-0-3",
+  "raw_slope": 0.4475524475524459,
+  "expected": 0.5,
+  "visible_x": [
+    468,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474,
+    475,
+    476,
+    477,
+    478,
+    479
+  ],
+  "visible_y": [
+    581,
+    581,
+    581,
+    581,
+    583,
+    583,
+    583,
+    583,
+    585,
+    585,
+    585,
+    585
+  ],
+  "finding": "Three exact 4-horizontal/2-vertical pixel runs. OLS over every pixel of this short cropped staircase underestimates slope. Measure transition centers for the combined short digital line, retain raw OLS and full-pixel residual evidence; use unchanged .04 slope and 1.5px residual limits."
+}

@@ -1,0 +1,8 @@
+{
+  "id": "stage_river_lv2",
+  "d": 0,
+  "seat": "chair-0-0",
+  "column": 365,
+  "failure": "seat underside has no silhouette exit at one sampled column",
+  "finding": "The attached rear leg crosses the projected underside. Keep full-chair connectivity checks, measure the saved seat alone, and separately count only actually exposed underside samples in full-chair and combined images."
+}

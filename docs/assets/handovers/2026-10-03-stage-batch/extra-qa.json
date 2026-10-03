@@ -1,0 +1,1962 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "stage_river_lv1",
+      "ground_contacts": [
+        {
+          "name": "bench-0-metal-leg-0-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "bench-0-metal-leg-0-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "bench-0-metal-leg-1-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "bench-0-metal-leg-1-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "bench-1-metal-leg-0-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "bench-1-metal-leg-0-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "bench-1-metal-leg-1-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "bench-1-metal-leg-1-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-step-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-step-1",
+          "minimum_z": 0.0
+        }
+      ],
+      "canopy_contacts": [],
+      "speaker_fronts": [
+        "speaker-0/front",
+        "speaker-1/front"
+      ]
+    },
+    {
+      "id": "stage_river_lv2",
+      "ground_contacts": [
+        {
+          "name": "wood-chair-0-0-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-0-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-0-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-0-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-1-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-1-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-1-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-1-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-2-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-2-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-2-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-2-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-3-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-3-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-3-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-3-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-0-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-0-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-0-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-0-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-1-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-1-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-1-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-1-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-2-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-2-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-2-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-2-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-3-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-3-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-3-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-3-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-step-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-step-1",
+          "minimum_z": 0.0
+        }
+      ],
+      "canopy_contacts": [
+        {
+          "post": 0,
+          "height_error": 1.4432899320127035e-15,
+          "cloth_underside_overlap": 0.2
+        },
+        {
+          "post": 1,
+          "height_error": 1.4432899320127035e-15,
+          "cloth_underside_overlap": 0.2
+        },
+        {
+          "post": 2,
+          "height_error": 1.4432899320127035e-15,
+          "cloth_underside_overlap": 0.2
+        },
+        {
+          "post": 3,
+          "height_error": 1.4432899320127035e-15,
+          "cloth_underside_overlap": 0.2
+        }
+      ],
+      "speaker_fronts": [
+        "speaker-0/front",
+        "speaker-1/front"
+      ]
+    },
+    {
+      "id": "stage_river_lv3",
+      "ground_contacts": [
+        {
+          "name": "wood-chair-0-0-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-0-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-0-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-0-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-1-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-1-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-1-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-1-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-2-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-2-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-2-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-2-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-3-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-3-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-3-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-3-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-4-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-4-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-4-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-0-4-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-0-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-0-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-0-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-0-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-1-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-1-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-1-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-1-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-2-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-2-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-2-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-2-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-3-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-3-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-3-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-3-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-4-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-4-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-4-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-chair-1-4-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-1",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-2",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-stage-leg-3",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-step-0",
+          "minimum_z": 0.0
+        },
+        {
+          "name": "wood-step-1",
+          "minimum_z": 0.0
+        }
+      ],
+      "canopy_contacts": [
+        {
+          "post": 0,
+          "height_error": 1.4432899320127035e-15,
+          "cloth_underside_overlap": 0.2
+        },
+        {
+          "post": 1,
+          "height_error": 1.4432899320127035e-15,
+          "cloth_underside_overlap": 0.2
+        },
+        {
+          "post": 2,
+          "height_error": 1.4432899320127035e-15,
+          "cloth_underside_overlap": 0.2
+        },
+        {
+          "post": 3,
+          "height_error": 1.4432899320127035e-15,
+          "cloth_underside_overlap": 0.2
+        }
+      ],
+      "speaker_fronts": [
+        "speaker-0/front",
+        "speaker-1/front"
+      ]
+    }
+  ],
+  "seat_lines": [
+    {
+      "id": "stage_river_lv1",
+      "d": 0,
+      "seat": "bench-0",
+      "samples": 73,
+      "slope": 0.4994446501295813,
+      "expected_slope": 0.4999999999999998,
+      "rms": 0.5618560024033902,
+      "outline_adjusted_residual": 0.6441276911080357,
+      "visible_in_full_chair_samples": 73,
+      "combined": {
+        "samples": 73,
+        "transition_samples": 18,
+        "slope": 0.5000000000000004,
+        "rms": 2.7711054231178e-14,
+        "full_pixel_ideal_rms": 0.5619778492264664,
+        "outline_adjusted_residual": 0.6441276911080357,
+        "raw_pixel_ols_slope": 0.4994446501295813,
+        "raw_pixel_ols_rms": 0.5618560024033902,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv1",
+      "d": 0,
+      "seat": "bench-1",
+      "samples": 73,
+      "slope": 0.5005553498704174,
+      "expected_slope": 0.4999999999999998,
+      "rms": 0.5558117294570574,
+      "outline_adjusted_residual": 0.6118156139659078,
+      "visible_in_full_chair_samples": 72,
+      "combined": {
+        "samples": 72,
+        "transition_samples": 18,
+        "slope": 0.49999999999999806,
+        "rms": 4.329987177951355e-14,
+        "full_pixel_ideal_rms": 0.5590169943749485,
+        "outline_adjusted_residual": 0.6103045921555577,
+        "raw_pixel_ols_slope": 0.5002894076789516,
+        "raw_pixel_ols_rms": 0.5589846366762968,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv1",
+      "d": 1,
+      "seat": "bench-0",
+      "samples": 73,
+      "slope": -0.49944465012958195,
+      "expected_slope": -0.4999999999999998,
+      "rms": 0.5618560024033916,
+      "outline_adjusted_residual": 0.6592128742398996,
+      "visible_in_full_chair_samples": 72,
+      "combined": {
+        "samples": 72,
+        "transition_samples": 17,
+        "slope": -0.5000000000000039,
+        "rms": 7.325746530771567e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.6503045921555781,
+        "raw_pixel_ols_slope": -0.49855296160524587,
+        "raw_pixel_ols_rms": 0.5582074892038651,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv1",
+      "d": 1,
+      "seat": "bench-1",
+      "samples": 74,
+      "slope": -0.5002591632728627,
+      "expected_slope": -0.4999999999999998,
+      "rms": 0.5529128312286937,
+      "outline_adjusted_residual": 0.6065290405921944,
+      "visible_in_full_chair_samples": 72,
+      "combined": {
+        "samples": 72,
+        "transition_samples": 18,
+        "slope": -0.5000000000000014,
+        "rms": 3.572832617093746e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.6103045921555577,
+        "raw_pixel_ols_slope": -0.5002894076789517,
+        "raw_pixel_ols_rms": 0.5589846366763032,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv1",
+      "d": 2,
+      "seat": "bench-0",
+      "samples": 73,
+      "slope": 0.5005553498704179,
+      "expected_slope": 0.5,
+      "rms": 0.5558117294570517,
+      "outline_adjusted_residual": 0.9540338418453801,
+      "visible_in_full_chair_samples": 73,
+      "combined": {
+        "samples": 23,
+        "transition_samples": 4,
+        "slope": 0.4999999999999909,
+        "rms": 4.9227844771419234e-14,
+        "full_pixel_ideal_rms": 0.5482400092573257,
+        "outline_adjusted_residual": 0.9180004886589596,
+        "raw_pixel_ols_slope": 0.5026537136472258,
+        "raw_pixel_ols_rms": 0.5466730964231153,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv1",
+      "d": 2,
+      "seat": "bench-1",
+      "samples": 73,
+      "slope": 0.5005553498704192,
+      "expected_slope": 0.4999999999999998,
+      "rms": 0.55581172945705,
+      "outline_adjusted_residual": 0.4969946463604263,
+      "visible_in_full_chair_samples": 73,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv1",
+      "d": 3,
+      "seat": "bench-0",
+      "samples": 73,
+      "slope": -0.5005553498704186,
+      "expected_slope": -0.5,
+      "rms": 0.5558117294570513,
+      "outline_adjusted_residual": 0.9471845267768869,
+      "visible_in_full_chair_samples": 73,
+      "combined": {
+        "samples": 20,
+        "transition_samples": 4,
+        "slope": -0.49999999999998634,
+        "rms": 8.038873388460929e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.9506091843111335,
+        "raw_pixel_ols_slope": -0.4812030075188052,
+        "raw_pixel_ols_rms": 0.5484084971070939,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv1",
+      "d": 3,
+      "seat": "bench-1",
+      "samples": 73,
+      "slope": -0.5005553498704174,
+      "expected_slope": -0.5000000000000002,
+      "rms": 0.5558117294570458,
+      "outline_adjusted_residual": 0.4961560385710806,
+      "visible_in_full_chair_samples": 73,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 0,
+      "seat": "chair-0-0",
+      "samples": 16,
+      "slope": 0.5058823529411727,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5583589400039664,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.5000000000000032,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749453,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5104895104894989,
+        "raw_pixel_ols_rms": 0.5578429986912237,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 0,
+      "seat": "chair-0-1",
+      "samples": 16,
+      "slope": 0.505882352941183,
+      "expected_slope": 0.4999999999999989,
+      "rms": 0.5583589400039687,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999997974,
+        "rms": 7.089619935667582e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5104895104895156,
+        "raw_pixel_ols_rms": 0.5578429986912221,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 0,
+      "seat": "chair-0-2",
+      "samples": 17,
+      "slope": 0.5098039215686284,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5433884886490576,
+      "outline_adjusted_residual": 0.5026754505176662,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.4999999999999879,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749559,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5314685314685283,
+        "raw_pixel_ols_rms": 0.548360557206033,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 0,
+      "seat": "chair-0-3",
+      "samples": 16,
+      "slope": 0.5176470588235345,
+      "expected_slope": 0.5,
+      "rms": 0.55306631875497,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.4999999999999831,
+        "rms": 4.641245714809236e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5314685314685369,
+        "raw_pixel_ols_rms": 0.5483605572060252,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 0,
+      "seat": "chair-1-0",
+      "samples": 16,
+      "slope": 0.5058823529411842,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5583589400039642,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999998623,
+        "rms": 5.359248925640619e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5104895104895171,
+        "raw_pixel_ols_rms": 0.5578429986912227,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 0,
+      "seat": "chair-1-1",
+      "samples": 16,
+      "slope": 0.5058823529411759,
+      "expected_slope": 0.4999999999999989,
+      "rms": 0.5583589400039687,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999998557,
+        "rms": 5.359248925640619e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5104895104895198,
+        "raw_pixel_ols_rms": 0.5578429986912289,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 0,
+      "seat": "chair-1-2",
+      "samples": 17,
+      "slope": 0.5098039215686321,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5433884886490614,
+      "outline_adjusted_residual": 0.5026754505176662,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.4999999999999686,
+        "rms": 9.282491429618472e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5314685314685202,
+        "raw_pixel_ols_rms": 0.5483605572060247,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 0,
+      "seat": "chair-1-3",
+      "samples": 16,
+      "slope": 0.5176470588235379,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.553066318754979,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.5000000000000129,
+        "rms": 4.641245714809236e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5314685314685388,
+        "raw_pixel_ols_rms": 0.5483605572060142,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 1,
+      "seat": "chair-0-0",
+      "samples": 17,
+      "slope": -0.5098039215686199,
+      "expected_slope": -0.5000000000000033,
+      "rms": 0.5433884886490595,
+      "outline_adjusted_residual": 0.5320872152235485,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": -0.4999999999999679,
+        "rms": 1.0718497851281238e-13,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": -0.5104895104894941,
+        "raw_pixel_ols_rms": 0.557842998691194,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 1,
+      "seat": "chair-0-1",
+      "samples": 16,
+      "slope": -0.517647058823528,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5530663187549772,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 1,
+      "seat": "chair-0-2",
+      "samples": 16,
+      "slope": -0.5176470588235479,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5530663187549734,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 1,
+      "seat": "chair-0-3",
+      "samples": 17,
+      "slope": -0.5098039215686367,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5433884886490682,
+      "outline_adjusted_residual": 0.5026754505176662,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 1,
+      "seat": "chair-1-0",
+      "samples": 17,
+      "slope": -0.5098039215686302,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.543388488649061,
+      "outline_adjusted_residual": 0.5320872152235485,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": -0.4999999999999984,
+        "rms": 0.0,
+        "full_pixel_ideal_rms": 0.5590169943749517,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": -0.5104895104895274,
+        "raw_pixel_ols_rms": 0.557842998691217,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 1,
+      "seat": "chair-1-1",
+      "samples": 16,
+      "slope": -0.5176470588235411,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.553066318754977,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 1,
+      "seat": "chair-1-2",
+      "samples": 16,
+      "slope": -0.5176470588235155,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5530663187549721,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 1,
+      "seat": "chair-1-3",
+      "samples": 17,
+      "slope": -0.5098039215686249,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.543388488649062,
+      "outline_adjusted_residual": 0.5026754505176662,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 2,
+      "seat": "chair-0-0",
+      "samples": 16,
+      "slope": 0.5058823529411759,
+      "expected_slope": 0.5,
+      "rms": 0.5583589400039672,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999999556,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.5104895104895096,
+        "raw_pixel_ols_rms": 0.5578429986912187,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 2,
+      "seat": "chair-0-1",
+      "samples": 16,
+      "slope": 0.505882352941172,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5583589400039664,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.5000000000000063,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749538,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.5104895104895039,
+        "raw_pixel_ols_rms": 0.5578429986912234,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 2,
+      "seat": "chair-0-2",
+      "samples": 17,
+      "slope": 0.49019607843136326,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5682892841642936,
+      "outline_adjusted_residual": 0.6896626053045807,
+      "visible_in_full_chair_samples": 13,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 2,
+      "seat": "chair-0-3",
+      "samples": 16,
+      "slope": 0.4705882352941088,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5423261445466482,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 2,
+        "slope": 0.49999999999998407,
+        "rms": 5.684341886080802e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.4475524475524459,
+        "raw_pixel_ols_rms": 0.5288858853479486,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 2,
+      "seat": "chair-1-0",
+      "samples": 16,
+      "slope": 0.5058823529411779,
+      "expected_slope": 0.5,
+      "rms": 0.5583589400039628,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999999395,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.5104895104895029,
+        "raw_pixel_ols_rms": 0.557842998691215,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 2,
+      "seat": "chair-1-1",
+      "samples": 16,
+      "slope": 0.5058823529411802,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.558358940003967,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999996053,
+        "rms": 1.3923737144427707e-13,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.510489510489501,
+        "raw_pixel_ols_rms": 0.5578429986912229,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 2,
+      "seat": "chair-1-2",
+      "samples": 17,
+      "slope": 0.4901960784313628,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5682892841642937,
+      "outline_adjusted_residual": 0.6896626053045807,
+      "visible_in_full_chair_samples": 13,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 2,
+      "seat": "chair-1-3",
+      "samples": 16,
+      "slope": 0.4705882352941216,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5423261445466462,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 3,
+      "seat": "chair-0-0",
+      "samples": 17,
+      "slope": -0.5098039215686205,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5433884886490595,
+      "outline_adjusted_residual": 0.714440156400007,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 3,
+      "seat": "chair-0-1",
+      "samples": 16,
+      "slope": -0.5176470588235339,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5530663187549667,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 3,
+      "seat": "chair-0-2",
+      "samples": 16,
+      "slope": -0.5176470588235202,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5530663187549625,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 3,
+      "seat": "chair-0-3",
+      "samples": 17,
+      "slope": -0.5098039215686356,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5433884886490552,
+      "outline_adjusted_residual": 0.7438519211058894,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": -0.4999999999999969,
+        "rms": 0.0,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": -0.5104895104894924,
+        "raw_pixel_ols_rms": 0.5578429986912189,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 3,
+      "seat": "chair-1-0",
+      "samples": 17,
+      "slope": -0.5098039215686275,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5433884886490653,
+      "outline_adjusted_residual": 0.714440156400007,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 3,
+      "seat": "chair-1-1",
+      "samples": 16,
+      "slope": -0.5176470588235349,
+      "expected_slope": -0.4999999999999989,
+      "rms": 0.5530663187549676,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 3,
+      "seat": "chair-1-2",
+      "samples": 16,
+      "slope": -0.5176470588235368,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5530663187549776,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv2",
+      "d": 3,
+      "seat": "chair-1-3",
+      "samples": 17,
+      "slope": -0.5098039215686273,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.543388488649061,
+      "outline_adjusted_residual": 0.7438519211058894,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": -0.49999999999998435,
+        "rms": 5.359248925640619e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": -0.5104895104895206,
+        "raw_pixel_ols_rms": 0.5578429986912125,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-0-0",
+      "samples": 17,
+      "slope": 0.5098039215686138,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5433884886490632,
+      "outline_adjusted_residual": 0.7438519211058894,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999998657,
+        "rms": 4.641245714809236e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.5104895104895019,
+        "raw_pixel_ols_rms": 0.5578429986912155,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-0-1",
+      "samples": 16,
+      "slope": 0.4705882352941257,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5423261445466335,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 2,
+        "slope": 0.5000000000000245,
+        "rms": 5.684341886080802e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.4475524475524495,
+        "raw_pixel_ols_rms": 0.5288858853479567,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-0-2",
+      "samples": 16,
+      "slope": 0.5176470588235328,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5530663187549696,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.5000000000000276,
+        "rms": 9.282491429618472e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.5314685314685338,
+        "raw_pixel_ols_rms": 0.5483605572060236,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-0-3",
+      "samples": 17,
+      "slope": 0.4901960784313733,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5682892841642909,
+      "outline_adjusted_residual": 0.7732636858117717,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.4999999999999792,
+        "rms": 7.089619935667582e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.5104895104895083,
+        "raw_pixel_ols_rms": 0.5578429986912268,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-0-4",
+      "samples": 16,
+      "slope": 0.5058823529411715,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5583589400039664,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.4999999999999941,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": 0.5104895104895079,
+        "raw_pixel_ols_rms": 0.5578429986912096,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-1-0",
+      "samples": 17,
+      "slope": 0.49019607843136304,
+      "expected_slope": 0.4999999999999989,
+      "rms": 0.5682892841642876,
+      "outline_adjusted_residual": 0.8747268313699524,
+      "visible_in_full_chair_samples": 13,
+      "combined": {
+        "samples": 13,
+        "transition_samples": 3,
+        "slope": 0.49999999999999606,
+        "rms": 0.0,
+        "full_pixel_ideal_rms": 0.5730640163750357,
+        "outline_adjusted_residual": 0.8883014920034367,
+        "raw_pixel_ols_slope": 0.4835164835164742,
+        "raw_pixel_ols_rms": 0.5697354460138677,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-1-1",
+      "samples": 16,
+      "slope": 0.5058823529411755,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5583589400039669,
+      "outline_adjusted_residual": 0.830609184311129,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.4999999999999684,
+        "rms": 1.1680212240073193e-13,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.830609184311129,
+        "raw_pixel_ols_slope": 0.5104895104894991,
+        "raw_pixel_ols_rms": 0.5578429986912214,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-1-2",
+      "samples": 17,
+      "slope": 0.5098039215686329,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5433884886490571,
+      "outline_adjusted_residual": 0.8453150666640701,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.4999999999999962,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749347,
+        "outline_adjusted_residual": 0.830609184311129,
+        "raw_pixel_ols_slope": 0.5104895104895067,
+        "raw_pixel_ols_rms": 0.5578429986912177,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-1-3",
+      "samples": 16,
+      "slope": 0.4705882352941215,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5423261445466343,
+      "outline_adjusted_residual": 0.8306091843110721,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 2,
+        "slope": 0.5000000000000262,
+        "rms": 5.684341886080802e-14,
+        "full_pixel_ideal_rms": 0.5590169943749601,
+        "outline_adjusted_residual": 0.8306091843110911,
+        "raw_pixel_ols_slope": 0.4475524475524409,
+        "raw_pixel_ols_rms": 0.5288858853479503,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 0,
+      "seat": "chair-1-4",
+      "samples": 16,
+      "slope": 0.5176470588235281,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5530663187549671,
+      "outline_adjusted_residual": 0.830609184311065,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999997663,
+        "rms": 9.282491429618472e-14,
+        "full_pixel_ideal_rms": 0.5590169943749601,
+        "outline_adjusted_residual": 0.8306091843110437,
+        "raw_pixel_ols_slope": 0.5314685314685238,
+        "raw_pixel_ols_rms": 0.54836055720602,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-0-0",
+      "samples": 16,
+      "slope": -0.4705882352941077,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5423261445466451,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-0-1",
+      "samples": 17,
+      "slope": -0.5098039215686403,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5433884886490692,
+      "outline_adjusted_residual": 0.7438519211058894,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": -0.49999999999999356,
+        "rms": 0.0,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.7303045921555622,
+        "raw_pixel_ols_slope": -0.5104895104895246,
+        "raw_pixel_ols_rms": 0.5578429986912304,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-0-2",
+      "samples": 16,
+      "slope": -0.505882352941184,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5583589400039753,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-0-3",
+      "samples": 16,
+      "slope": -0.5058823529411616,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5583589400039689,
+      "outline_adjusted_residual": 0.7303045921555622,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-0-4",
+      "samples": 17,
+      "slope": -0.5098039215686283,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5433884886490572,
+      "outline_adjusted_residual": 0.714440156400007,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-1-0",
+      "samples": 16,
+      "slope": -0.5058823529411643,
+      "expected_slope": -0.49999999999999556,
+      "rms": 0.5583589400039628,
+      "outline_adjusted_residual": 0.8306091843110721,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-1-1",
+      "samples": 16,
+      "slope": -0.5058823529411726,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5583589400039664,
+      "outline_adjusted_residual": 0.830609184311129,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-1-2",
+      "samples": 17,
+      "slope": -0.5098039215686201,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5433884886490712,
+      "outline_adjusted_residual": 0.8159033019581878,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-1-3",
+      "samples": 16,
+      "slope": -0.47058823529411,
+      "expected_slope": -0.49999999999999556,
+      "rms": 0.5423261445466382,
+      "outline_adjusted_residual": 0.8306091843110721,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 1,
+      "seat": "chair-1-4",
+      "samples": 17,
+      "slope": -0.5098039215686355,
+      "expected_slope": -0.5,
+      "rms": 0.5433884886490644,
+      "outline_adjusted_residual": 0.8453150666640701,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": -0.5000000000000103,
+        "rms": 5.359248925640619e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.830609184311129,
+        "raw_pixel_ols_slope": -0.5104895104895151,
+        "raw_pixel_ols_rms": 0.5578429986912156,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-0-0",
+      "samples": 17,
+      "slope": 0.490196078431371,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.568289284164287,
+      "outline_adjusted_residual": 0.5614989799294309,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.5000000000000092,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.5104895104895131,
+        "raw_pixel_ols_rms": 0.5578429986912214,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-0-1",
+      "samples": 16,
+      "slope": 0.5176470588235302,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5530663187549772,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-0-2",
+      "samples": 16,
+      "slope": 0.47058823529411264,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5423261445466323,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 2,
+        "slope": 0.4999999999999977,
+        "rms": 0.0,
+        "full_pixel_ideal_rms": 0.5590169943749559,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": 0.4475524475524674,
+        "raw_pixel_ols_rms": 0.5288858853479501,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-0-3",
+      "samples": 17,
+      "slope": 0.5098039215686261,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5433884886490574,
+      "outline_adjusted_residual": 0.5320872152235485,
+      "visible_in_full_chair_samples": 12,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-0-4",
+      "samples": 16,
+      "slope": 0.505882352941172,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5583589400039624,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 12,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-1-0",
+      "samples": 17,
+      "slope": 0.5098039215686356,
+      "expected_slope": 0.5000000000000044,
+      "rms": 0.5433884886490618,
+      "outline_adjusted_residual": 0.4965064226065378,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.4999999999999936,
+        "rms": 2.6796244628203094e-14,
+        "full_pixel_ideal_rms": 0.5590169943749496,
+        "outline_adjusted_residual": 0.5000000000000094,
+        "raw_pixel_ols_slope": 0.5104895104895066,
+        "raw_pixel_ols_rms": 0.5578429986912098,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-1-1",
+      "samples": 16,
+      "slope": 0.5058823529411799,
+      "expected_slope": 0.5000000000000022,
+      "rms": 0.5583589400039652,
+      "outline_adjusted_residual": 0.5,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999998385,
+        "rms": 4.641245714809236e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5,
+        "raw_pixel_ols_slope": 0.5104895104895025,
+        "raw_pixel_ols_rms": 0.557842998691223,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-1-2",
+      "samples": 16,
+      "slope": 0.5058823529411732,
+      "expected_slope": 0.4999999999999978,
+      "rms": 0.5583589400039672,
+      "outline_adjusted_residual": 0.5,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": 0.49999999999998435,
+        "rms": 7.089619935667582e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5,
+        "raw_pixel_ols_slope": 0.5104895104895011,
+        "raw_pixel_ols_rms": 0.5578429986912141,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-1-3",
+      "samples": 16,
+      "slope": 0.5176470588235248,
+      "expected_slope": 0.5,
+      "rms": 0.5530663187549699,
+      "outline_adjusted_residual": 0.5,
+      "visible_in_full_chair_samples": 12,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 2,
+      "seat": "chair-1-4",
+      "samples": 16,
+      "slope": 0.47058823529412136,
+      "expected_slope": 0.49999999999999667,
+      "rms": 0.5423261445466385,
+      "outline_adjusted_residual": 0.5,
+      "visible_in_full_chair_samples": 12,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-0-0",
+      "samples": 16,
+      "slope": -0.4705882352941127,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5423261445466451,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-0-1",
+      "samples": 17,
+      "slope": -0.5098039215686329,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5433884886490692,
+      "outline_adjusted_residual": 0.5026754505176662,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-0-2",
+      "samples": 16,
+      "slope": -0.5058823529411715,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5583589400039664,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-0-3",
+      "samples": 16,
+      "slope": -0.5058823529411656,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5583589400039618,
+      "outline_adjusted_residual": 0.5303045921555736,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-0-4",
+      "samples": 17,
+      "slope": -0.5098039215686329,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5433884886490581,
+      "outline_adjusted_residual": 0.5320872152235485,
+      "visible_in_full_chair_samples": 12,
+      "combined": {
+        "samples": 12,
+        "transition_samples": 3,
+        "slope": -0.49999999999999317,
+        "rms": 5.359248925640619e-14,
+        "full_pixel_ideal_rms": 0.5590169943749475,
+        "outline_adjusted_residual": 0.5303045921555736,
+        "raw_pixel_ols_slope": -0.5104895104895094,
+        "raw_pixel_ols_rms": 0.5578429986912099,
+        "method": "fit digital stair transition centers; retain all-pixel residuals",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-1-0",
+      "samples": 16,
+      "slope": -0.5058823529411796,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5583589400039589,
+      "outline_adjusted_residual": 0.5,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-1-1",
+      "samples": 16,
+      "slope": -0.5058823529411856,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5583589400039641,
+      "outline_adjusted_residual": 0.5,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-1-2",
+      "samples": 16,
+      "slope": -0.5176470588235339,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5530663187549676,
+      "outline_adjusted_residual": 0.5,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-1-3",
+      "samples": 16,
+      "slope": -0.4705882352941047,
+      "expected_slope": -0.4999999999999978,
+      "rms": 0.5423261445466265,
+      "outline_adjusted_residual": 0.4999999999999929,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    },
+    {
+      "id": "stage_river_lv3",
+      "d": 3,
+      "seat": "chair-1-4",
+      "samples": 17,
+      "slope": -0.5098039215686153,
+      "expected_slope": -0.5000000000000022,
+      "rms": 0.5433884886490566,
+      "outline_adjusted_residual": 0.47408181268758653,
+      "visible_in_full_chair_samples": 11,
+      "combined": null,
+      "passed": true
+    }
+  ]
+}

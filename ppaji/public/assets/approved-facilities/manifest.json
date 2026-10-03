@@ -9978,28 +9978,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "stage_river_lv1/native-d0.png",
+          "file": "stage_river_lv1/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "beb2ffa888eedf683ed70b54b9e30a8df5ce8b6bee8af302efa422e6d30816cf"
+          "sha256": "698260153c6aab1069f63a7f88ada6964d2f539970dad780e82905db5ac59e8d"
         },
         "d1": {
-          "file": "stage_river_lv1/native-d1.png",
+          "file": "stage_river_lv1/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "4f6bfbff851b04a8a3ea47abe3b8b1bef89f0d14bbe434fd7a557947f16a9097"
+          "sha256": "5066ba87f0f00fb4081fc48ca5108436cec7a0d5e0b4f78a90041b1215f4bc36"
         },
         "d2": {
-          "file": "stage_river_lv1/native-d2.png",
+          "file": "stage_river_lv1/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "f6f33daac304019cfbc85a788b827330a36ddbee36c606e58a75a0f70faee72d"
+          "sha256": "6f2356e2838b251df5a847a9e061b5cd43c47c7b1f8027340f55640aacd68073"
         },
         "d3": {
-          "file": "stage_river_lv1/native-d3.png",
+          "file": "stage_river_lv1/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "c6e6b8aa326dfbca1e60dc71f6b69473321d916cff791738af92994a584cd80a"
+          "sha256": "1f74cd7cb1a6335b21948288541b17996d8bbdc5f53a6a33b3546d0b82c1e5ae"
         }
       },
       "note": "User accepted 2026-09-20. Art/catalog adoption only. Authored NPC interactions and stage upgrade rules remain separate handover; preserve legacy stage_river3x2."
@@ -10454,28 +10454,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "stage_river_lv2/native-d0.png",
+          "file": "stage_river_lv2/accepted-20261003-d0.png",
           "w": 256,
           "h": 256,
-          "sha256": "d01eddaf6cec22cea0b8a5d99553ab83f2b7eccbc2fe00a9d6d95bc280a4171d"
+          "sha256": "76a4126b077a6ae11d7de31767034af10b1b6dafa159f4eb3f53631e581b5cd5"
         },
         "d1": {
-          "file": "stage_river_lv2/native-d1.png",
+          "file": "stage_river_lv2/accepted-20261003-d1.png",
           "w": 256,
           "h": 256,
-          "sha256": "704635a201bc0337f35878cc46159d810d68426cc54dfd2072e3c5778a52b01a"
+          "sha256": "c4908ae598593934854b290366d5f91c9ced9af47ae2e8b3c6f1b80bd7fac3a7"
         },
         "d2": {
-          "file": "stage_river_lv2/native-d2.png",
+          "file": "stage_river_lv2/accepted-20261003-d2.png",
           "w": 256,
           "h": 256,
-          "sha256": "ce7aa07126db21525c67f0503016fb62aac4e6b809316f75de9da46569ac9ec1"
+          "sha256": "9378d0e1200c27f462c7203417f98fc38bcf5920f0ede62efa0a716fbc1c9fae"
         },
         "d3": {
-          "file": "stage_river_lv2/native-d3.png",
+          "file": "stage_river_lv2/accepted-20261003-d3.png",
           "w": 256,
           "h": 256,
-          "sha256": "ea2e494ba3fe37c9e6179a2924f31d115d6c7ffeec5210234529bdd21a70cba9"
+          "sha256": "51ee0dabddaa2bd7dd708bb71f4696fccd17080dc6f9a3c0384801abad4150c8"
         }
       },
       "note": "User accepted 2026-09-20. Art/catalog adoption only. Authored NPC interactions and stage upgrade rules remain separate handover; preserve legacy stage_river3x2."
@@ -10661,28 +10661,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "stage_river_lv3/native-d0.png",
+          "file": "stage_river_lv3/accepted-20261003-d0.png",
           "w": 256,
           "h": 256,
-          "sha256": "ddd8f69d327763e0a4c65bea0bc6272e0c86e8d8ee9782af94e21a50d8231f2c"
+          "sha256": "10f1c4b55ba90a34fa0355fd32ec7140df9a4097538708e9dbaee43bf55b41ad"
         },
         "d1": {
-          "file": "stage_river_lv3/native-d1.png",
+          "file": "stage_river_lv3/accepted-20261003-d1.png",
           "w": 256,
           "h": 256,
-          "sha256": "75d1e143e21564bdd88f5950892a9819d2ef9433f1e391dc566c3356621f2558"
+          "sha256": "73e56c3809c21d1bec17ca105e03d8add9e310a41493ba031c96049528c2acfa"
         },
         "d2": {
-          "file": "stage_river_lv3/native-d2.png",
+          "file": "stage_river_lv3/accepted-20261003-d2.png",
           "w": 256,
           "h": 256,
-          "sha256": "894bd63172f0cbab44091487ed1c4c374dd583ee16b7b9a0052a516d8a2b78b0"
+          "sha256": "55f0a59a492dca0e1e2e72815300bd784638e4450b1cbede93a153dee303d129"
         },
         "d3": {
-          "file": "stage_river_lv3/native-d3.png",
+          "file": "stage_river_lv3/accepted-20261003-d3.png",
           "w": 256,
           "h": 256,
-          "sha256": "e95af3bd0d8d7b2e8b83d82d58bfa747dff20164b50e88158ad5c7885b1ff099"
+          "sha256": "15d601d29367c5f56b5e2ec7887bb26f5f276e040bf76e59ca080b71141bf33e"
         }
       },
       "note": "User accepted 2026-09-20. Art/catalog adoption only. Authored NPC interactions and stage upgrade rules remain separate handover; preserve legacy stage_river3x2."
