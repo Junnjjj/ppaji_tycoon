@@ -479,11 +479,11 @@
       "bytes": 17022
     },
     "fac/bungeoppang/0": {
-      "file": "fac_bungeoppang_0.webp",
+      "file": "fac_bungeoppang_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "243d088dd5ce97636acad8fd64875299fbb36d82e16c96893035f1065b80b28e",
-      "bytes": 42996
+      "sha256": "1a2e435c55266b72fa5cbfc7940ba0d927c40b3fee4044aad431a39f2aa789c2",
+      "bytes": 26030
     },
     "fac/bungeoppang/1": {
       "file": "fac_bungeoppang_1.webp",
@@ -493,18 +493,18 @@
       "bytes": 39090
     },
     "fac/bungeoppang/2": {
-      "file": "fac_bungeoppang_2.webp",
+      "file": "fac_bungeoppang_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "a1fb13243cecf8cda66e81c12cc16dfe7c623d158636bd5b02ee23121fc60798",
-      "bytes": 41996
+      "sha256": "f2701145e75f10d7c9f336b45c7108b6055cb541b8ab04ef5ed7a628d43c1617",
+      "bytes": 26278
     },
     "fac/bungeoppang/3": {
-      "file": "fac_bungeoppang_3.webp",
+      "file": "fac_bungeoppang_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "382694f0c442f59e286bc9fce657c131e5754e910d64265d3525dfe172d9ec28",
-      "bytes": 37110
+      "sha256": "35993c6fdb15f5628dc3eb1a655a9c4f63e6de98903f1d60553ff6e99cc7345c",
+      "bytes": 26110
     },
     "fac/cafe/0": {
       "file": "fac_cafe_0.webp",

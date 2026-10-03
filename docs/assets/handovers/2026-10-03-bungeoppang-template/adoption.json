@@ -1,0 +1,110 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체 (붕어빵 d1 원본 선호 유지)",
+  "scope": {
+    "bungeoppang": "bungeoppang-template-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "bungeoppang",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bungeoppang-template-20261003/candidates/bungeoppang/d0.png",
+      "source_sha256": "9642bdf7d57351cb43bbf073e1d93ce3001c23d7e6a7990c517a67001d020778",
+      "old": {
+        "file": "fac_bungeoppang_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "243d088dd5ce97636acad8fd64875299fbb36d82e16c96893035f1065b80b28e",
+        "bytes": 42996
+      },
+      "new": {
+        "file": "fac_bungeoppang_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "1a2e435c55266b72fa5cbfc7940ba0d927c40b3fee4044aad431a39f2aa789c2",
+        "bytes": 26030
+      },
+      "old_native": {
+        "file": "bungeoppang/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "77aecc49e31555309adec83f830140c4ffe344b42915281401ca615f90625eef"
+      },
+      "new_native": {
+        "file": "bungeoppang/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "90f28ac9db005f7e4b8f61d856ffd153085a277c6e96b78044b2b3e86b726c99"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungeoppang",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bungeoppang-template-20261003/candidates/bungeoppang/d2.png",
+      "source_sha256": "64bbb75959cc5ea7566b8de2ecbd78cae9efd87e6c2a9e98c33c1e570afcb5fe",
+      "old": {
+        "file": "fac_bungeoppang_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a1fb13243cecf8cda66e81c12cc16dfe7c623d158636bd5b02ee23121fc60798",
+        "bytes": 41996
+      },
+      "new": {
+        "file": "fac_bungeoppang_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f2701145e75f10d7c9f336b45c7108b6055cb541b8ab04ef5ed7a628d43c1617",
+        "bytes": 26278
+      },
+      "old_native": {
+        "file": "bungeoppang/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "7af8a255918b22534d069e32dc5a3d2b917fc1d6a1835f12450fb415e2c28498"
+      },
+      "new_native": {
+        "file": "bungeoppang/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4136eab3340357185357bee4ea69c7cfc9038afea5b4a41f52fec93ca90193d9"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungeoppang",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bungeoppang-template-20261003/candidates/bungeoppang/d3.png",
+      "source_sha256": "427483b603eeffc69fb866999ebeacf05978dc0b450d8090c4aec96099117be5",
+      "old": {
+        "file": "fac_bungeoppang_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "382694f0c442f59e286bc9fce657c131e5754e910d64265d3525dfe172d9ec28",
+        "bytes": 37110
+      },
+      "new": {
+        "file": "fac_bungeoppang_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "35993c6fdb15f5628dc3eb1a655a9c4f63e6de98903f1d60553ff6e99cc7345c",
+        "bytes": 26110
+      },
+      "old_native": {
+        "file": "bungeoppang/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e6db5cc72faec09eee1b585e1ea3a6b69a677e6fd6f60b99688d1956b7a09489"
+      },
+      "new_native": {
+        "file": "bungeoppang/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "46d9a27e801ad07025cf55cca1ae3d74e3eed037f411f7a897b13eb9b7790b52"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

@@ -9400,10 +9400,10 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "bungeoppang/native-d0.png",
+          "file": "bungeoppang/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "77aecc49e31555309adec83f830140c4ffe344b42915281401ca615f90625eef"
+          "sha256": "90f28ac9db005f7e4b8f61d856ffd153085a277c6e96b78044b2b3e86b726c99"
         },
         "d1": {
           "file": "bungeoppang/native-d1.png",
@@ -9412,16 +9412,16 @@
           "sha256": "1fd3f7d0fe6ba7d9c59d7411e7d60c4d751c02d96111d3414a7d64f189865e9a"
         },
         "d2": {
-          "file": "bungeoppang/native-d2.png",
+          "file": "bungeoppang/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "7af8a255918b22534d069e32dc5a3d2b917fc1d6a1835f12450fb415e2c28498"
+          "sha256": "4136eab3340357185357bee4ea69c7cfc9038afea5b4a41f52fec93ca90193d9"
         },
         "d3": {
-          "file": "bungeoppang/native-d3.png",
+          "file": "bungeoppang/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "e6db5cc72faec09eee1b585e1ea3a6b69a677e6fd6f60b99688d1956b7a09489"
+          "sha256": "46d9a27e801ad07025cf55cca1ae3d74e3eed037f411f7a897b13eb9b7790b52"
         }
       },
       "note": "User accepted 2026-09-20. Authored same-scale art; portal behavior comes from canonical facility-portals.json and GuestStore, never static ride routes."
