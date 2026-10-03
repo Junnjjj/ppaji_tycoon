@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "caravan": "camping-batch-20261003",
+    "bungalow": "camping-batch-20261003",
+    "glamping": "camping-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "caravan",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/caravan/d0.png",
+      "source_sha256": "9127b056c91e96c85ccffb3abec6afbdcd100bf24ee19d262a834cf7415490ab",
+      "old": {
+        "file": "fac_caravan_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "aafd2dd4a0dc1fe2e90c560c5418d9f848f5c7209e00454f57055d0a57ea0c11",
+        "bytes": 69674
+      },
+      "new": {
+        "file": "fac_caravan_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9b5738af85032f4ab731d75da923bff82fb222ef5f0f06e35d8d0a4aa746cbf6",
+        "bytes": 14960
+      },
+      "old_native": {
+        "file": "caravan/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d15b2567e62fa7e6d1b00ac765ab0e43b0ae00371699f52c9c2253881a126950"
+      },
+      "new_native": {
+        "file": "caravan/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "fcbebad2bbccac9348cf7d76f7743bc231f211996bc17154cf3ec30f03a33e2a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "caravan",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/caravan/d1.png",
+      "source_sha256": "8f8e21ab61f3856ccea2661173565f696fd39bad017855fe0c268297c0df8d9f",
+      "old": {
+        "file": "fac_caravan_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "91448bd93bed0d8ff6ca2af1f3f4e77d122165d6d5a26997e2e91e33c0e20a6f",
+        "bytes": 70836
+      },
+      "new": {
+        "file": "fac_caravan_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a0c17e2c12ad4d7ebfccbff4669611c48720605b2c2c7a66210b63e1abca7294",
+        "bytes": 14516
+      },
+      "old_native": {
+        "file": "caravan/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "cb665851ce672c033e51645fd19308ff87e7e0feb20787eae2197655f6ce41f7"
+      },
+      "new_native": {
+        "file": "caravan/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "35f83540f132b852b2041629c94fbe688fb41eac7c0133ca74fefd2685841e9e"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "caravan",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/caravan/d2.png",
+      "source_sha256": "ba60739b2180256e4fca41d4cf384ee44dfd98aa8e80d323dc21df26a0447007",
+      "old": {
+        "file": "fac_caravan_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "003e65bf5f5ae3399cec03a2bc098e89b06eb5d8448659d428e63b21b6b81553",
+        "bytes": 58780
+      },
+      "new": {
+        "file": "fac_caravan_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8cd6b6f62d511e1db35bab89adbec0bd7846ba7cf423ce891d320d33d4916d83",
+        "bytes": 8194
+      },
+      "old_native": {
+        "file": "caravan/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0386e5aed2d5facf134d73cc31e98dff6e853deda3b133368f85dee33dd1a08a"
+      },
+      "new_native": {
+        "file": "caravan/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f7d15830171ac7a0bc818f059dc7e49e0215b0ba24e9f18291c1a28148ce7047"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "caravan",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/caravan/d3.png",
+      "source_sha256": "aacfae3aeccc2249aa6c05381e47029b61f15fafb4888f05ea1ca1131ff95c50",
+      "old": {
+        "file": "fac_caravan_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "ced9f2393fdf206c69334155129b5fba329807a168fb6365010296454d2e1c3d",
+        "bytes": 55884
+      },
+      "new": {
+        "file": "fac_caravan_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "767a5e0e3beba9694d5e6aeda17e8c6175430a45998dcdd683d68ced3919ca20",
+        "bytes": 8144
+      },
+      "old_native": {
+        "file": "caravan/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d2470b4289d336326d0b6b93928e90233734dc8c9a68d798389399a59d0c6cfe"
+      },
+      "new_native": {
+        "file": "caravan/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a20ae1082422d4b0fd88ad64ba073e77e2e63d75eda9d4412de27efb20f70f8c"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungalow",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/bungalow/d0.png",
+      "source_sha256": "42756e85cd170ca382300a97d837d5eb57a5a84e2ece4036ba3547481146c3e3",
+      "old": {
+        "file": "fac_bungalow_0.fix-6ee633d5b54f.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "6ee633d5b54f127334e50dd39e7843a428d0e11db0c683bad11b64aac10529aa",
+        "bytes": 153114
+      },
+      "new": {
+        "file": "fac_bungalow_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f62820860fb3a7bc24feea92c39466af4ce31a133fe320eb21277802ced08eac",
+        "bytes": 83930
+      },
+      "old_native": {
+        "file": "bungalow/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "2de344283dc52b1da92adbbe83b06a3477a6cf938470d77d6b2251b59811896b"
+      },
+      "new_native": {
+        "file": "bungalow/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3e086f6284d62c72ff6a3a125b0cf8978ee49d739a476f136777125d36a145e1"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungalow",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/bungalow/d1.png",
+      "source_sha256": "be6358f4feecc8277291d8c893903efa2d571e17201bbe3a3201ea0fe6447cdd",
+      "old": {
+        "file": "fac_bungalow_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9e2fabe69b28198084cbfbe008916ad4f6d95a551a250af61f45b77b2d7f6391",
+        "bytes": 121160
+      },
+      "new": {
+        "file": "fac_bungalow_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "da42aee80e49fb0ccebd88ecbb6183d2a22177168d74cda26a3a897da4e03163",
+        "bytes": 72202
+      },
+      "old_native": {
+        "file": "bungalow/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f1a196db6120995d3b00c36bfa3df1b15d004552b563860f09ec2bf4634fcebe"
+      },
+      "new_native": {
+        "file": "bungalow/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "1b9c72969bd25f9bef4308864922fae46a380d36cc7a25cd206bb34fbc9f0eae"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungalow",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/bungalow/d2.png",
+      "source_sha256": "7780b46ab7a1e0ac38aff986a0d50faf29236a0cf01f51b5fcc74e418be60a23",
+      "old": {
+        "file": "fac_bungalow_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "96c4b66ce38388f0486ef78bcfa9bef43eeec42e666103ecb88645116f421c5d",
+        "bytes": 107728
+      },
+      "new": {
+        "file": "fac_bungalow_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "afd7f189231fa0c34437d52fcb4366d01b883eedac4922a4d5efa4bebeaf9702",
+        "bytes": 58958
+      },
+      "old_native": {
+        "file": "bungalow/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "87d4334fc0149efb29e5d285a2b3b585be20f38dcc0121f412ec0d1e33ca3364"
+      },
+      "new_native": {
+        "file": "bungalow/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d1d3f410a7b331232b6728c48837310b4d8ac9280e22f464fd940717d38db4e5"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungalow",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/bungalow/d3.png",
+      "source_sha256": "8498b04c8b54fc6e683dd2337459ee4a106797598f18e92b9c9aa1dbbfb7bdde",
+      "old": {
+        "file": "fac_bungalow_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3a1be7db74a71fb406cbb2a0a29c1b3cb2eee2455850f0bdcd040edec0a9a21b",
+        "bytes": 117896
+      },
+      "new": {
+        "file": "fac_bungalow_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "19a7c2ed486002472ecbfff39d97b77f485a327539169cd9ccb72b2c7fb59a16",
+        "bytes": 63474
+      },
+      "old_native": {
+        "file": "bungalow/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "1c403aea4b7ce5f6e1f88f0ff0b2cf17929329041c49db3fdcc24d434f08a7d4"
+      },
+      "new_native": {
+        "file": "bungalow/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4abb729a099d4f08b540433d8dfbc26f1c9dbe54a33b51582013e47903b15e73"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "glamping",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/glamping/d0.png",
+      "source_sha256": "5a8106ac0749c8869d3c7efaf32305ef9e32972f44c916e238f59a7128b8f8bb",
+      "old": {
+        "file": "fac_glamping_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "eb254b44e9b1e25f14f02efbecb14020a2727d294a78cbf335b60d211e51c3a3",
+        "bytes": 100960
+      },
+      "new": {
+        "file": "fac_glamping_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9225d01ba44655b94ab70b2473e5b067871e8cc0f34f7acf083910208af66217",
+        "bytes": 59432
+      },
+      "old_native": {
+        "file": "glamping/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a346482bca1585e6d394a107b26253a7ccc690df870d9494577ef5f5e40e1d46"
+      },
+      "new_native": {
+        "file": "glamping/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d1d03fb96647e0d07fdabf9de3f414e107b657fe5493205d7765519ff03ad62f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "glamping",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/glamping/d1.png",
+      "source_sha256": "01980f32249b5680c678e8757b1b13c9f9ed02e2af4278fb1142fd67f4f4f904",
+      "old": {
+        "file": "fac_glamping_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4b1cd1e0c8fbdc27eeb4e6989b7d9a1520cb9587af44e825003edf83aa2f64be",
+        "bytes": 97922
+      },
+      "new": {
+        "file": "fac_glamping_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "7e1664095c393159c4a6d41340da56c91ee64261bf112a380c54adc2f2a11027",
+        "bytes": 58890
+      },
+      "old_native": {
+        "file": "glamping/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e2b4f029cf0e6ec7d21fd84c40f308d716842d6bc38867a20389fad288be886c"
+      },
+      "new_native": {
+        "file": "glamping/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "73c1fc4ffc117e585f0aa9536116f95246a038e068b83b5dfaa18aa0e9f80617"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "glamping",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/glamping/d2.png",
+      "source_sha256": "63a2c3b15f2048bb41559028e7bd9c071e9f9bd167b9f714b6f70977daff1920",
+      "old": {
+        "file": "fac_glamping_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "c1148bb99f6edd4a4957048217f3b24498950ba2296f5a015a0456c9debe2877",
+        "bytes": 94474
+      },
+      "new": {
+        "file": "fac_glamping_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f9f3baea8261eee4742289e8e667b7d86979bf646b422bd78c214d25a0aeb067",
+        "bytes": 58652
+      },
+      "old_native": {
+        "file": "glamping/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "7e8d0da31175b334e73b3ecc2606647f441182580f3bab43e29bfae73a4812fa"
+      },
+      "new_native": {
+        "file": "glamping/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a2545978a7afe671e52af07c0ccb7c73b35b6b6b86747514eca72a02cc8f700b"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "glamping",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/camping-batch-20261003/candidates/glamping/d3.png",
+      "source_sha256": "6e3474ea0ee64b53fb17286c34651ad6d230ef67c044414d806c7e426462c7bf",
+      "old": {
+        "file": "fac_glamping_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "cf32799492f099b893755ab7f9f96bcf8d4a9f4cd8a3be329ba03c9d2c3cacad",
+        "bytes": 91774
+      },
+      "new": {
+        "file": "fac_glamping_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4a856dcb412666351ebc2c21cd320549afcbe3f46242f19abe0db07064a8fa2f",
+        "bytes": 56162
+      },
+      "old_native": {
+        "file": "glamping/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e73897dfdd5f505acbdc30f3b00693059da285d0a5b0e1c2741dc490591ea00c"
+      },
+      "new_native": {
+        "file": "glamping/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "ea214c31ff940d7ca165bb05818ee0cb06303e8cc8296ad986ba3610c39122fb"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

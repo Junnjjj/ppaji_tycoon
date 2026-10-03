@@ -1,0 +1,2278 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "caravan",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "chassis",
+          "b": "caravan-body",
+          "overlap": [
+            3.146000000000001,
+            1.1880000000000002,
+            0.2500000000000009
+          ]
+        },
+        {
+          "a": "axle-0",
+          "b": "chassis",
+          "overlap": [
+            0.054999999999999716,
+            1.1880000000000002,
+            0.040000000000000036
+          ]
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "axle-0",
+          "overlap": [
+            0.054999999999999716,
+            0.0824999999999999,
+            1.5999999999999996
+          ]
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "caravan-body",
+          "overlap": [
+            0.32999999999999985,
+            0.03574999999999995,
+            2.4800000000000013
+          ]
+        },
+        {
+          "a": "hub-0-0",
+          "b": "wheel-0-0",
+          "overlap": [
+            0.10340000000000016,
+            0.0036437499999999456,
+            2.4063999999999997
+          ]
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "axle-0",
+          "overlap": [
+            0.054999999999999716,
+            0.08250000000000002,
+            1.5999999999999996
+          ]
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "caravan-body",
+          "overlap": [
+            0.32999999999999985,
+            0.03574999999999995,
+            2.4799999999999986
+          ]
+        },
+        {
+          "a": "hub-0-1",
+          "b": "wheel-0-1",
+          "overlap": [
+            0.10340000000000016,
+            0.0036437499999999456,
+            2.406399999999996
+          ]
+        },
+        {
+          "a": "axle-1",
+          "b": "chassis",
+          "overlap": [
+            0.054999999999999716,
+            1.1880000000000002,
+            0.040000000000000036
+          ]
+        },
+        {
+          "a": "wheel-1-0",
+          "b": "axle-1",
+          "overlap": [
+            0.054999999999999716,
+            0.0824999999999999,
+            1.5999999999999996
+          ]
+        },
+        {
+          "a": "wheel-1-0",
+          "b": "caravan-body",
+          "overlap": [
+            0.33000000000000007,
+            0.03574999999999995,
+            2.4800000000000013
+          ]
+        },
+        {
+          "a": "hub-1-0",
+          "b": "wheel-1-0",
+          "overlap": [
+            0.1034000000000006,
+            0.0036437499999999456,
+            2.4063999999999997
+          ]
+        },
+        {
+          "a": "wheel-1-1",
+          "b": "axle-1",
+          "overlap": [
+            0.054999999999999716,
+            0.08250000000000002,
+            1.5999999999999996
+          ]
+        },
+        {
+          "a": "wheel-1-1",
+          "b": "caravan-body",
+          "overlap": [
+            0.33000000000000007,
+            0.03574999999999995,
+            2.4799999999999986
+          ]
+        },
+        {
+          "a": "hub-1-1",
+          "b": "wheel-1-1",
+          "overlap": [
+            0.1034000000000006,
+            0.0036437499999999456,
+            2.406399999999996
+          ]
+        },
+        {
+          "a": "caravan-door-jamb-0",
+          "b": "caravan-door-pane",
+          "overlap": [
+            0.002200000000000202,
+            0.04289999999999994,
+            21.5
+          ]
+        },
+        {
+          "a": "caravan-door-jamb-1",
+          "b": "caravan-door-pane",
+          "overlap": [
+            0.0021999999999997577,
+            0.04289999999999994,
+            21.5
+          ]
+        },
+        {
+          "a": "caravan-door-rail-0",
+          "b": "caravan-door-jamb-0",
+          "overlap": [
+            0.05940000000000012,
+            0.09349999999999992,
+            0.5892
+          ]
+        },
+        {
+          "a": "caravan-door-rail-0",
+          "b": "caravan-door-jamb-1",
+          "overlap": [
+            0.059399999999999675,
+            0.09349999999999992,
+            0.5892
+          ]
+        },
+        {
+          "a": "caravan-door-rail-1",
+          "b": "caravan-door-jamb-0",
+          "overlap": [
+            0.05940000000000012,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-door-rail-1",
+          "b": "caravan-door-jamb-1",
+          "overlap": [
+            0.059399999999999675,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-door-pane",
+          "b": "caravan-body",
+          "overlap": [
+            0.6160000000000001,
+            0.017599999999999838,
+            21.5
+          ]
+        },
+        {
+          "a": "caravan-handle",
+          "b": "caravan-door-pane",
+          "overlap": [
+            0.04620000000000002,
+            0.0033000000000000806,
+            1.4619999999999997
+          ]
+        },
+        {
+          "a": "caravan-window-0-jamb-0",
+          "b": "caravan-window-0-pane",
+          "overlap": [
+            0.002200000000000202,
+            0.04289999999999994,
+            6.192
+          ]
+        },
+        {
+          "a": "caravan-window-0-jamb-1",
+          "b": "caravan-window-0-pane",
+          "overlap": [
+            0.002200000000000202,
+            0.04289999999999994,
+            6.192
+          ]
+        },
+        {
+          "a": "caravan-window-0-rail-0",
+          "b": "caravan-window-0-jamb-0",
+          "overlap": [
+            0.05940000000000012,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-window-0-rail-0",
+          "b": "caravan-window-0-jamb-1",
+          "overlap": [
+            0.05940000000000012,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-window-0-rail-1",
+          "b": "caravan-window-0-jamb-0",
+          "overlap": [
+            0.05940000000000012,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-window-0-rail-1",
+          "b": "caravan-window-0-jamb-1",
+          "overlap": [
+            0.05940000000000012,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-window-0-pane",
+          "b": "caravan-body",
+          "overlap": [
+            0.4179999999999997,
+            0.017599999999999838,
+            6.192
+          ]
+        },
+        {
+          "a": "caravan-window-1-jamb-0",
+          "b": "caravan-window-1-pane",
+          "overlap": [
+            0.002200000000000202,
+            0.04289999999999994,
+            6.192
+          ]
+        },
+        {
+          "a": "caravan-window-1-jamb-1",
+          "b": "caravan-window-1-pane",
+          "overlap": [
+            0.002200000000000202,
+            0.04289999999999994,
+            6.192
+          ]
+        },
+        {
+          "a": "caravan-window-1-rail-0",
+          "b": "caravan-window-1-jamb-0",
+          "overlap": [
+            0.05940000000000012,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-window-1-rail-0",
+          "b": "caravan-window-1-jamb-1",
+          "overlap": [
+            0.05940000000000056,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-window-1-rail-1",
+          "b": "caravan-window-1-jamb-0",
+          "overlap": [
+            0.05940000000000012,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-window-1-rail-1",
+          "b": "caravan-window-1-jamb-1",
+          "overlap": [
+            0.05940000000000056,
+            0.09349999999999992,
+            0.5332000000000008
+          ]
+        },
+        {
+          "a": "caravan-window-1-pane",
+          "b": "caravan-body",
+          "overlap": [
+            0.4179999999999997,
+            0.017599999999999838,
+            6.192
+          ]
+        },
+        {
+          "a": "caravan-rear-window",
+          "b": "caravan-body",
+          "overlap": [
+            0.6489999999999996,
+            0.00990000000000002,
+            6.449999999999999
+          ]
+        },
+        {
+          "a": "step-low",
+          "b": "step-high",
+          "overlap": [
+            0.8140000000000001,
+            0.19800000000000018,
+            0.1499999999999999
+          ]
+        },
+        {
+          "a": "step-high",
+          "b": "caravan-body",
+          "overlap": [
+            0.8140000000000001,
+            0.021999999999999797,
+            0.1720000000000006
+          ]
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "ground plane",
+          "minimum_z": 0.0
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "ground plane",
+          "minimum_z": 1.7763568394002505e-15
+        },
+        {
+          "a": "wheel-1-0",
+          "b": "ground plane",
+          "minimum_z": 0.0
+        },
+        {
+          "a": "wheel-1-1",
+          "b": "ground plane",
+          "minimum_z": 1.7763568394002505e-15
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "caravan-body",
+          "edges": 288
+        },
+        {
+          "name": "chassis",
+          "edges": 12
+        },
+        {
+          "name": "axle-0",
+          "edges": 60
+        },
+        {
+          "name": "wheel-0-0",
+          "edges": 260
+        },
+        {
+          "name": "hub-0-0",
+          "edges": 260
+        },
+        {
+          "name": "wheel-0-1",
+          "edges": 260
+        },
+        {
+          "name": "hub-0-1",
+          "edges": 260
+        },
+        {
+          "name": "axle-1",
+          "edges": 60
+        },
+        {
+          "name": "wheel-1-0",
+          "edges": 260
+        },
+        {
+          "name": "hub-1-0",
+          "edges": 260
+        },
+        {
+          "name": "wheel-1-1",
+          "edges": 260
+        },
+        {
+          "name": "hub-1-1",
+          "edges": 260
+        },
+        {
+          "name": "caravan-door-pane",
+          "edges": 12
+        },
+        {
+          "name": "caravan-door-jamb-0",
+          "edges": 12
+        },
+        {
+          "name": "caravan-door-jamb-1",
+          "edges": 12
+        },
+        {
+          "name": "caravan-door-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "caravan-door-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "caravan-handle",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-0-pane",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-0-jamb-0",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-0-jamb-1",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-0-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-0-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-1-pane",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-1-jamb-0",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-1-jamb-1",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-1-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "caravan-window-1-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "caravan-rear-window",
+          "edges": 12
+        },
+        {
+          "name": "step-low",
+          "edges": 12
+        },
+        {
+          "name": "step-high",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 2.42861286636753e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            64488
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "body",
+              "mode": "top",
+              "samples": 144,
+              "slope": 0.5000723414516516,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.559008906296262,
+              "outline_adjusted_residual": 0.5709359873417887,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 144,
+                "slope": 0.5000723414516516,
+                "rms": 0.559008906296262,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            64476
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "body",
+              "mode": "top",
+              "samples": 144,
+              "slope": -0.5002170243549554,
+              "expected_slope": -0.49999999999999994,
+              "rms": 0.5589441974534598,
+              "outline_adjusted_residual": 0.5709359873417839,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 144,
+                "slope": -0.5002170243549554,
+                "rms": 0.5589441974534598,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            61676
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "body",
+              "mode": "top",
+              "samples": 144,
+              "slope": 0.5000723414516516,
+              "expected_slope": 0.5,
+              "rms": 0.559008906296262,
+              "outline_adjusted_residual": 0.5709359873417839,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 144,
+                "slope": 0.5000723414516516,
+                "rms": 0.559008906296262,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            61696
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "body",
+              "mode": "top",
+              "samples": 144,
+              "slope": -0.5002170243549554,
+              "expected_slope": -0.5000000000000001,
+              "rms": 0.5589441974534598,
+              "outline_adjusted_residual": 0.570935987341789,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 144,
+                "slope": -0.5002170243549554,
+                "rms": 0.5589441974534598,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "body",
+          "d": 0,
+          "connected": true,
+          "pixels": 60304
+        },
+        {
+          "name": "body",
+          "d": 1,
+          "connected": true,
+          "pixels": 60304
+        },
+        {
+          "name": "body",
+          "d": 2,
+          "connected": true,
+          "pixels": 60304
+        },
+        {
+          "name": "body",
+          "d": 3,
+          "connected": true,
+          "pixels": 60304
+        }
+      ],
+      "assembly_gaps": [],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_caravan_0.webp",
+          "sha256": "aafd2dd4a0dc1fe2e90c560c5418d9f848f5c7209e00454f57055d0a57ea0c11"
+        },
+        {
+          "d": 1,
+          "file": "fac_caravan_1.webp",
+          "sha256": "91448bd93bed0d8ff6ca2af1f3f4e77d122165d6d5a26997e2e91e33c0e20a6f"
+        },
+        {
+          "d": 2,
+          "file": "fac_caravan_2.webp",
+          "sha256": "003e65bf5f5ae3399cec03a2bc098e89b06eb5d8448659d428e63b21b6b81553"
+        },
+        {
+          "d": 3,
+          "file": "fac_caravan_3.webp",
+          "sha256": "ced9f2393fdf206c69334155129b5fba329807a168fb6365010296454d2e1c3d"
+        }
+      ],
+      "limits": [
+        "Four wheels on two fixed axles; source views disagree on wheel placement/count.",
+        "Rear keeps one fixed small window and no navy side stripe. No unobserved tow hitch is added.",
+        "Opaque window reflections; hidden caravan interior is not reconstructed.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "bungalow",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "cabin-wall-back",
+          "b": "wood-foundation",
+          "overlap": [
+            2.66,
+            0.09,
+            0.09999999999999987
+          ]
+        },
+        {
+          "a": "cabin-wall-front",
+          "b": "wood-foundation",
+          "overlap": [
+            2.66,
+            0.08999999999999986,
+            0.09999999999999987
+          ]
+        },
+        {
+          "a": "wood-wainscot-front",
+          "b": "cabin-wall-front",
+          "overlap": [
+            2.66,
+            0.08999999999999986,
+            4.7
+          ]
+        },
+        {
+          "a": "cabin-wall-left",
+          "b": "wood-foundation",
+          "overlap": [
+            0.09,
+            2.66,
+            0.09999999999999987
+          ]
+        },
+        {
+          "a": "cabin-wall-right",
+          "b": "wood-foundation",
+          "overlap": [
+            0.08999999999999986,
+            2.66,
+            0.09999999999999987
+          ]
+        },
+        {
+          "a": "wood-wainscot-right",
+          "b": "cabin-wall-right",
+          "overlap": [
+            0.08999999999999986,
+            2.66,
+            4.7
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.08200000000000002,
+            0.08200000000000002,
+            0.1499999999999999
+          ]
+        },
+        {
+          "a": "wood-foot-0",
+          "b": "wood-post-0",
+          "overlap": [
+            0.08200000000000002,
+            0.08200000000000002,
+            1.5499999999999998
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "roof-base",
+          "overlap": [
+            0.08200000000000002,
+            0.08200000000000002,
+            4.948466666666661
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.08199999999999985,
+            0.08200000000000002,
+            0.1499999999999999
+          ]
+        },
+        {
+          "a": "wood-foot-1",
+          "b": "wood-post-1",
+          "overlap": [
+            0.08199999999999985,
+            0.08200000000000002,
+            1.5499999999999998
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "roof-base",
+          "overlap": [
+            0.08199999999999985,
+            0.08200000000000002,
+            4.948466666666661
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "wood-foundation",
+          "overlap": [
+            0.08200000000000002,
+            0.08199999999999985,
+            0.1499999999999999
+          ]
+        },
+        {
+          "a": "wood-foot-2",
+          "b": "wood-post-2",
+          "overlap": [
+            0.08200000000000002,
+            0.08199999999999985,
+            1.5499999999999998
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "roof-base",
+          "overlap": [
+            0.08200000000000002,
+            0.08199999999999985,
+            0.6037999999999997
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "wood-foundation",
+          "overlap": [
+            0.08199999999999985,
+            0.08199999999999985,
+            0.1499999999999999
+          ]
+        },
+        {
+          "a": "wood-foot-3",
+          "b": "wood-post-3",
+          "overlap": [
+            0.08199999999999985,
+            0.08199999999999985,
+            1.5499999999999998
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "roof-base",
+          "overlap": [
+            0.08199999999999985,
+            0.08199999999999985,
+            0.6037999999999997
+          ]
+        },
+        {
+          "a": "roof-tile-0",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333338,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-1",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333335,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-2",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333346,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-3",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333313,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-4",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333335,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-5",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333357,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-6",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333313,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-7",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333335,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-8",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333313,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-9",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333357,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-10",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333357,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "roof-tile-11",
+          "b": "roof-base",
+          "overlap": [
+            0.24583333333333313,
+            2.95,
+            4.886500000000005
+          ]
+        },
+        {
+          "a": "cabin-door-jamb-0",
+          "b": "cabin-door-pane",
+          "overlap": [
+            0.0020000000000000018,
+            0.039000000000000146,
+            25.5
+          ]
+        },
+        {
+          "a": "cabin-door-jamb-1",
+          "b": "cabin-door-pane",
+          "overlap": [
+            0.0020000000000000018,
+            0.039000000000000146,
+            25.5
+          ]
+        },
+        {
+          "a": "cabin-door-rail-0",
+          "b": "cabin-door-jamb-0",
+          "overlap": [
+            0.05399999999999999,
+            0.08499999999999996,
+            0.6200000000000001
+          ]
+        },
+        {
+          "a": "cabin-door-rail-0",
+          "b": "cabin-door-jamb-1",
+          "overlap": [
+            0.053999999999999826,
+            0.08499999999999996,
+            0.6200000000000001
+          ]
+        },
+        {
+          "a": "cabin-door-rail-1",
+          "b": "cabin-door-jamb-0",
+          "overlap": [
+            0.05399999999999999,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "cabin-door-rail-1",
+          "b": "cabin-door-jamb-1",
+          "overlap": [
+            0.053999999999999826,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "cabin-door-pane",
+          "b": "cabin-wall-front",
+          "overlap": [
+            0.5900000000000001,
+            0.015000000000000124,
+            25.5
+          ]
+        },
+        {
+          "a": "cabin-handle",
+          "b": "cabin-door-pane",
+          "overlap": [
+            0.04499999999999993,
+            0.004999999999999893,
+            1.3000000000000007
+          ]
+        },
+        {
+          "a": "cabin-window-front-jamb-0",
+          "b": "cabin-window-front-pane",
+          "overlap": [
+            0.0020000000000000018,
+            0.039000000000000146,
+            12.4
+          ]
+        },
+        {
+          "a": "cabin-window-front-jamb-1",
+          "b": "cabin-window-front-pane",
+          "overlap": [
+            0.002000000000000224,
+            0.039000000000000146,
+            12.4
+          ]
+        },
+        {
+          "a": "cabin-window-front-rail-0",
+          "b": "cabin-window-front-jamb-0",
+          "overlap": [
+            0.053999999999999826,
+            0.08499999999999996,
+            0.6199999999999992
+          ]
+        },
+        {
+          "a": "cabin-window-front-rail-0",
+          "b": "cabin-window-front-jamb-1",
+          "overlap": [
+            0.05400000000000027,
+            0.08499999999999996,
+            0.6199999999999992
+          ]
+        },
+        {
+          "a": "cabin-window-front-rail-1",
+          "b": "cabin-window-front-jamb-0",
+          "overlap": [
+            0.053999999999999826,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "cabin-window-front-rail-1",
+          "b": "cabin-window-front-jamb-1",
+          "overlap": [
+            0.05400000000000027,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "cabin-window-front-pane",
+          "b": "cabin-wall-front",
+          "overlap": [
+            0.6900000000000002,
+            0.015000000000000124,
+            12.4
+          ]
+        },
+        {
+          "a": "cabin-window-side",
+          "b": "cabin-wall-right",
+          "overlap": [
+            0.006000000000000227,
+            0.6699999999999999,
+            10.2
+          ]
+        },
+        {
+          "a": "wood-sidewindow-post-0",
+          "b": "cabin-wall-right",
+          "overlap": [
+            0.018000000000000238,
+            0.053999999999999826,
+            11.499999999999998
+          ]
+        },
+        {
+          "a": "wood-sidewindow-post-1",
+          "b": "cabin-wall-right",
+          "overlap": [
+            0.018000000000000238,
+            0.05400000000000005,
+            11.499999999999998
+          ]
+        },
+        {
+          "a": "wood-sidewindow-rail-0",
+          "b": "wood-sidewindow-post-0",
+          "overlap": [
+            0.08800000000000008,
+            0.053999999999999826,
+            0.6500000000000004
+          ]
+        },
+        {
+          "a": "wood-sidewindow-rail-0",
+          "b": "wood-sidewindow-post-1",
+          "overlap": [
+            0.08800000000000008,
+            0.05400000000000005,
+            0.6500000000000004
+          ]
+        },
+        {
+          "a": "wood-sidewindow-rail-1",
+          "b": "wood-sidewindow-post-0",
+          "overlap": [
+            0.08800000000000008,
+            0.053999999999999826,
+            0.5999999999999979
+          ]
+        },
+        {
+          "a": "wood-sidewindow-rail-1",
+          "b": "wood-sidewindow-post-1",
+          "overlap": [
+            0.08800000000000008,
+            0.05400000000000005,
+            0.5999999999999979
+          ]
+        },
+        {
+          "a": "wood-flowerbox",
+          "b": "cabin-wall-front",
+          "overlap": [
+            0.8699999999999999,
+            0.020000000000000018,
+            3.5500000000000007
+          ]
+        },
+        {
+          "a": "flowerbox-soil",
+          "b": "wood-flowerbox",
+          "overlap": [
+            0.77,
+            0.14400000000000013,
+            0.07000000000000028
+          ]
+        },
+        {
+          "a": "plant-0",
+          "b": "flowerbox-soil",
+          "overlap": [
+            0.09499999999999975,
+            0.11000000000000032,
+            0.120000000000001
+          ]
+        },
+        {
+          "a": "plant-1",
+          "b": "flowerbox-soil",
+          "overlap": [
+            0.10999999999999988,
+            0.11000000000000032,
+            0.120000000000001
+          ]
+        },
+        {
+          "a": "plant-2",
+          "b": "flowerbox-soil",
+          "overlap": [
+            0.10999999999999988,
+            0.11000000000000032,
+            0.120000000000001
+          ]
+        },
+        {
+          "a": "plant-3",
+          "b": "flowerbox-soil",
+          "overlap": [
+            0.1100000000000001,
+            0.11000000000000032,
+            0.120000000000001
+          ]
+        },
+        {
+          "a": "plant-4",
+          "b": "flowerbox-soil",
+          "overlap": [
+            0.11000000000000032,
+            0.11000000000000032,
+            0.120000000000001
+          ]
+        },
+        {
+          "a": "plant-5",
+          "b": "flowerbox-soil",
+          "overlap": [
+            0.11000000000000032,
+            0.11000000000000032,
+            0.120000000000001
+          ]
+        },
+        {
+          "a": "plant-6",
+          "b": "flowerbox-soil",
+          "overlap": [
+            0.0950000000000002,
+            0.11000000000000032,
+            0.120000000000001
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "actual shed roof underside",
+          "overlap_logical": 0.3
+        },
+        {
+          "a": "wood-post-1",
+          "b": "actual shed roof underside",
+          "overlap_logical": 0.3
+        },
+        {
+          "a": "wood-post-2",
+          "b": "actual shed roof underside",
+          "overlap_logical": 0.3
+        },
+        {
+          "a": "wood-post-3",
+          "b": "actual shed roof underside",
+          "overlap_logical": 0.3
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-foundation",
+          "edges": 12
+        },
+        {
+          "name": "cabin-wall-back",
+          "edges": 12
+        },
+        {
+          "name": "cabin-wall-front",
+          "edges": 12
+        },
+        {
+          "name": "wood-wainscot-front",
+          "edges": 12
+        },
+        {
+          "name": "cabin-wall-left",
+          "edges": 12
+        },
+        {
+          "name": "cabin-wall-right",
+          "edges": 12
+        },
+        {
+          "name": "wood-wainscot-right",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-foot-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-foot-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-foot-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-foot-3",
+          "edges": 12
+        },
+        {
+          "name": "roof-base",
+          "edges": 12
+        },
+        {
+          "name": "roof-tile-0",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-2",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-3",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-4",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-5",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-6",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-7",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-8",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-9",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-10",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-11",
+          "edges": 52
+        },
+        {
+          "name": "cabin-door-pane",
+          "edges": 12
+        },
+        {
+          "name": "cabin-door-jamb-0",
+          "edges": 12
+        },
+        {
+          "name": "cabin-door-jamb-1",
+          "edges": 12
+        },
+        {
+          "name": "cabin-door-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "cabin-door-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "cabin-handle",
+          "edges": 12
+        },
+        {
+          "name": "cabin-window-front-pane",
+          "edges": 12
+        },
+        {
+          "name": "cabin-window-front-jamb-0",
+          "edges": 12
+        },
+        {
+          "name": "cabin-window-front-jamb-1",
+          "edges": 12
+        },
+        {
+          "name": "cabin-window-front-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "cabin-window-front-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "cabin-window-side",
+          "edges": 12
+        },
+        {
+          "name": "wood-sidewindow-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-sidewindow-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-sidewindow-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-sidewindow-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-flowerbox",
+          "edges": 12
+        },
+        {
+          "name": "flowerbox-soil",
+          "edges": 12
+        },
+        {
+          "name": "plant-0",
+          "edges": 304
+        },
+        {
+          "name": "plant-1",
+          "edges": 304
+        },
+        {
+          "name": "plant-2",
+          "edges": 304
+        },
+        {
+          "name": "plant-3",
+          "edges": 304
+        },
+        {
+          "name": "plant-4",
+          "edges": 304
+        },
+        {
+          "name": "plant-5",
+          "edges": 304
+        },
+        {
+          "name": "plant-6",
+          "edges": 304
+        }
+      ],
+      "rotation_edge_error": 2.7755575615628914e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            95480
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 121,
+              "slope": -0.4997967755046745,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5607827653887953,
+              "outline_adjusted_residual": 0.9364014085444654,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 121,
+                "slope": -0.4997967755046745,
+                "rms": 0.5607827653887953,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 121,
+              "slope": 0.4997967755046739,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5607827653887945,
+              "outline_adjusted_residual": 0.9240047143296171,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 121,
+                "slope": 0.4997967755046739,
+                "rms": 0.5607827653887945,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            95480
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 121,
+              "slope": -0.4997967755046745,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5607827653887953,
+              "outline_adjusted_residual": 0.9364014085444654,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 121,
+                "slope": -0.4997967755046745,
+                "rms": 0.5607827653887953,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 121,
+              "slope": 0.4997967755046739,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5607827653887945,
+              "outline_adjusted_residual": 0.9240047143296171,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 121,
+                "slope": 0.4997967755046739,
+                "rms": 0.5607827653887945,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            91760
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 121,
+              "slope": -0.4997967755046745,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5607827653887953,
+              "outline_adjusted_residual": 0.9364014085444654,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 121,
+                "slope": -0.4997967755046745,
+                "rms": 0.5607827653887953,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 121,
+              "slope": 0.4997967755046739,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5607827653887945,
+              "outline_adjusted_residual": 0.9240047143296171,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 121,
+                "slope": 0.4997967755046739,
+                "rms": 0.5607827653887945,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            91760
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 121,
+              "slope": -0.4997967755046745,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5607827653887953,
+              "outline_adjusted_residual": 0.9364014085444654,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 121,
+                "slope": -0.4997967755046745,
+                "rms": 0.5607827653887953,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 121,
+              "slope": 0.4997967755046739,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5607827653887945,
+              "outline_adjusted_residual": 0.9240047143296171,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 121,
+                "slope": 0.4997967755046739,
+                "rms": 0.5607827653887945,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [],
+      "assembly_gaps": [],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_bungalow_0.fix-6ee633d5b54f.webp",
+          "sha256": "6ee633d5b54f127334e50dd39e7843a428d0e11db0c683bad11b64aac10529aa"
+        },
+        {
+          "d": 1,
+          "file": "fac_bungalow_1.webp",
+          "sha256": "9e2fabe69b28198084cbfbe008916ad4f6d95a551a250af61f45b77b2d7f6391"
+        },
+        {
+          "d": 2,
+          "file": "fac_bungalow_2.webp",
+          "sha256": "96c4b66ce38388f0486ef78bcfa9bef43eeec42e666103ecb88645116f421c5d"
+        },
+        {
+          "d": 3,
+          "file": "fac_bungalow_3.webp",
+          "sha256": "3a1be7db74a71fb406cbb2a0a29c1b3cb2eee2455850f0bdcd040edec0a9a21b"
+        }
+      ],
+      "limits": [
+        "Shed roof slope is preserved; not converted into a gable roof.",
+        "Front/right golden siding and cream rear walls share one fixed paint layout. Original facing-specific siding differences are standardized.",
+        "Windows use opaque painted reflections; the flowerbox uses seven authored plant clusters.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "glamping",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "canvas-body",
+          "b": "wood-foundation",
+          "overlap": [
+            3.54,
+            2.5599999999999996,
+            0.04999999999999982
+          ]
+        },
+        {
+          "a": "canvas-seam-0",
+          "b": "canvas-body",
+          "overlap": [
+            3.54,
+            0.022999999999999993,
+            37.6
+          ]
+        },
+        {
+          "a": "canvas-seam-0",
+          "b": "wood-foundation",
+          "overlap": [
+            3.558,
+            0.045999999999999985,
+            0.04999999999999982
+          ]
+        },
+        {
+          "a": "canvas-seam-1",
+          "b": "canvas-body",
+          "overlap": [
+            3.54,
+            0.04599999999999982,
+            37.6
+          ]
+        },
+        {
+          "a": "canvas-seam-1",
+          "b": "wood-foundation",
+          "overlap": [
+            3.558,
+            0.04599999999999982,
+            0.04999999999999982
+          ]
+        },
+        {
+          "a": "canvas-seam-2",
+          "b": "canvas-body",
+          "overlap": [
+            3.54,
+            0.02300000000000013,
+            37.6
+          ]
+        },
+        {
+          "a": "canvas-seam-2",
+          "b": "wood-foundation",
+          "overlap": [
+            3.558,
+            0.04600000000000026,
+            0.04999999999999982
+          ]
+        },
+        {
+          "a": "tent-door-jamb-0",
+          "b": "tent-door-pane",
+          "overlap": [
+            0.0020000000000000018,
+            0.039000000000000146,
+            26.7
+          ]
+        },
+        {
+          "a": "tent-door-jamb-1",
+          "b": "tent-door-pane",
+          "overlap": [
+            0.002000000000000224,
+            0.039000000000000146,
+            26.7
+          ]
+        },
+        {
+          "a": "tent-door-rail-0",
+          "b": "tent-door-jamb-0",
+          "overlap": [
+            0.053999999999999826,
+            0.08499999999999996,
+            0.6199999999999999
+          ]
+        },
+        {
+          "a": "tent-door-rail-0",
+          "b": "tent-door-jamb-1",
+          "overlap": [
+            0.05400000000000027,
+            0.08499999999999996,
+            0.6199999999999999
+          ]
+        },
+        {
+          "a": "tent-door-rail-1",
+          "b": "tent-door-jamb-0",
+          "overlap": [
+            0.053999999999999826,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-door-rail-1",
+          "b": "tent-door-jamb-1",
+          "overlap": [
+            0.05400000000000027,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-door-pane",
+          "b": "canvas-body",
+          "overlap": [
+            0.7000000000000002,
+            0.01100000000000012,
+            26.7
+          ]
+        },
+        {
+          "a": "tent-handle",
+          "b": "tent-door-pane",
+          "overlap": [
+            0.04999999999999982,
+            0.004999999999999893,
+            1.3000000000000007
+          ]
+        },
+        {
+          "a": "tent-window-0-jamb-0",
+          "b": "tent-window-0-pane",
+          "overlap": [
+            0.0020000000000000018,
+            0.039000000000000146,
+            7.399999999999999
+          ]
+        },
+        {
+          "a": "tent-window-0-jamb-1",
+          "b": "tent-window-0-pane",
+          "overlap": [
+            0.0020000000000000018,
+            0.039000000000000146,
+            7.399999999999999
+          ]
+        },
+        {
+          "a": "tent-window-0-rail-0",
+          "b": "tent-window-0-jamb-0",
+          "overlap": [
+            0.05400000000000005,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-window-0-rail-0",
+          "b": "tent-window-0-jamb-1",
+          "overlap": [
+            0.053999999999999826,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-window-0-rail-1",
+          "b": "tent-window-0-jamb-0",
+          "overlap": [
+            0.05400000000000005,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-window-0-rail-1",
+          "b": "tent-window-0-jamb-1",
+          "overlap": [
+            0.053999999999999826,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-window-0-pane",
+          "b": "canvas-body",
+          "overlap": [
+            0.35,
+            0.01200000000000001,
+            7.399999999999999
+          ]
+        },
+        {
+          "a": "tent-window-mullion-0",
+          "b": "tent-window-0-pane",
+          "overlap": [
+            0.030000000000000027,
+            0.0019999999999997797,
+            7.399999999999999
+          ]
+        },
+        {
+          "a": "tent-window-1-jamb-0",
+          "b": "tent-window-1-pane",
+          "overlap": [
+            0.002000000000000224,
+            0.039000000000000146,
+            7.399999999999999
+          ]
+        },
+        {
+          "a": "tent-window-1-jamb-1",
+          "b": "tent-window-1-pane",
+          "overlap": [
+            0.002000000000000224,
+            0.039000000000000146,
+            7.399999999999999
+          ]
+        },
+        {
+          "a": "tent-window-1-rail-0",
+          "b": "tent-window-1-jamb-0",
+          "overlap": [
+            0.05400000000000027,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-window-1-rail-0",
+          "b": "tent-window-1-jamb-1",
+          "overlap": [
+            0.05400000000000027,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-window-1-rail-1",
+          "b": "tent-window-1-jamb-0",
+          "overlap": [
+            0.05400000000000027,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-window-1-rail-1",
+          "b": "tent-window-1-jamb-1",
+          "overlap": [
+            0.05400000000000027,
+            0.08499999999999996,
+            0.620000000000001
+          ]
+        },
+        {
+          "a": "tent-window-1-pane",
+          "b": "canvas-body",
+          "overlap": [
+            0.3500000000000001,
+            0.01200000000000001,
+            7.399999999999999
+          ]
+        },
+        {
+          "a": "tent-window-mullion-1",
+          "b": "tent-window-1-pane",
+          "overlap": [
+            0.03000000000000025,
+            0.0019999999999997797,
+            7.399999999999999
+          ]
+        },
+        {
+          "a": "canvas-seam-0",
+          "b": "actual elliptical cloth section",
+          "outer_radial_overlap": true,
+          "same_arch_vertices": true
+        },
+        {
+          "a": "canvas-seam-1",
+          "b": "actual elliptical cloth section",
+          "outer_radial_overlap": true,
+          "same_arch_vertices": true
+        },
+        {
+          "a": "canvas-seam-2",
+          "b": "actual elliptical cloth section",
+          "outer_radial_overlap": true,
+          "same_arch_vertices": true
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-foundation",
+          "edges": 12
+        },
+        {
+          "name": "canvas-body",
+          "edges": 164
+        },
+        {
+          "name": "canvas-seam-0",
+          "edges": 260
+        },
+        {
+          "name": "canvas-seam-1",
+          "edges": 260
+        },
+        {
+          "name": "canvas-seam-2",
+          "edges": 260
+        },
+        {
+          "name": "tent-door-pane",
+          "edges": 12
+        },
+        {
+          "name": "tent-door-jamb-0",
+          "edges": 12
+        },
+        {
+          "name": "tent-door-jamb-1",
+          "edges": 12
+        },
+        {
+          "name": "tent-door-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "tent-door-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "tent-handle",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-0-pane",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-0-jamb-0",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-0-jamb-1",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-0-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-0-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-mullion-0",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-1-pane",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-1-jamb-0",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-1-jamb-1",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-1-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-1-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "tent-window-mullion-1",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 8.881784197001252e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            88228
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": -0.4994791304951736,
+              "expected_slope": -0.5,
+              "rms": 0.5587257435983116,
+              "outline_adjusted_residual": 0.5201252746581986,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": -0.4994791304951736,
+                "rms": 0.5587257435983116,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 161,
+              "slope": 0.49988497814584887,
+              "expected_slope": 0.5,
+              "rms": 0.5603592754842247,
+              "outline_adjusted_residual": 0.519750269540344,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 161,
+                "slope": 0.49988497814584887,
+                "rms": 0.5603592754842247,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            88228
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 161,
+              "slope": -0.49988497814584776,
+              "expected_slope": -0.5,
+              "rms": 0.5603592754842251,
+              "outline_adjusted_residual": 0.523355866426262,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 161,
+                "slope": -0.49988497814584776,
+                "rms": 0.5603592754842251,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": 0.5001041739009654,
+              "expected_slope": 0.5,
+              "rms": 0.559005347257414,
+              "outline_adjusted_residual": 0.5201252746581986,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": 0.5001041739009654,
+                "rms": 0.559005347257414,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            88228
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": -0.4994791304951736,
+              "expected_slope": -0.5,
+              "rms": 0.5587257435983116,
+              "outline_adjusted_residual": 0.5201252746581986,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": -0.4994791304951736,
+                "rms": 0.5587257435983116,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 161,
+              "slope": 0.49988497814584887,
+              "expected_slope": 0.5,
+              "rms": 0.5603592754842247,
+              "outline_adjusted_residual": 0.519750269540344,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 161,
+                "slope": 0.49988497814584887,
+                "rms": 0.5603592754842247,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            88228
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 161,
+              "slope": -0.49988497814584776,
+              "expected_slope": -0.5,
+              "rms": 0.5603592754842251,
+              "outline_adjusted_residual": 0.523355866426262,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 161,
+                "slope": -0.49988497814584776,
+                "rms": 0.5603592754842251,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": 0.5001041739009654,
+              "expected_slope": 0.5,
+              "rms": 0.559005347257414,
+              "outline_adjusted_residual": 0.5201252746581986,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": 0.5001041739009654,
+                "rms": 0.559005347257414,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [],
+      "assembly_gaps": [],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_glamping_0.webp",
+          "sha256": "eb254b44e9b1e25f14f02efbecb14020a2727d294a78cbf335b60d211e51c3a3"
+        },
+        {
+          "d": 1,
+          "file": "fac_glamping_1.webp",
+          "sha256": "4b1cd1e0c8fbdc27eeb4e6989b7d9a1520cb9587af44e825003edf83aa2f64be"
+        },
+        {
+          "d": 2,
+          "file": "fac_glamping_2.webp",
+          "sha256": "c1148bb99f6edd4a4957048217f3b24498950ba2296f5a015a0456c9debe2877"
+        },
+        {
+          "d": 3,
+          "file": "fac_glamping_3.webp",
+          "sha256": "cf32799492f099b893755ab7f9f96bcf8d4a9f4cd8a3be329ba03c9d2c3cacad"
+        }
+      ],
+      "limits": [
+        "Curved tent is authored geometry, not a warped rectangle or a recovered fabric simulation.",
+        "Opaque cream end panels and teal front door/windows; hidden tent interior is not reconstructed.",
+        "All three transverse seams follow the same arch and remain attached through rotation.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    }
+  ]
+}

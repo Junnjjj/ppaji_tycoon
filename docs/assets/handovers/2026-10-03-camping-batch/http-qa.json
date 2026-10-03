@@ -1,0 +1,86 @@
+[
+  {
+    "id": "caravan",
+    "d": 0,
+    "sha256": "9b5738af85032f4ab731d75da923bff82fb222ef5f0f06e35d8d0a4aa746cbf6",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "caravan",
+    "d": 1,
+    "sha256": "a0c17e2c12ad4d7ebfccbff4669611c48720605b2c2c7a66210b63e1abca7294",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "caravan",
+    "d": 2,
+    "sha256": "8cd6b6f62d511e1db35bab89adbec0bd7846ba7cf423ce891d320d33d4916d83",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "caravan",
+    "d": 3,
+    "sha256": "767a5e0e3beba9694d5e6aeda17e8c6175430a45998dcdd683d68ced3919ca20",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "bungalow",
+    "d": 0,
+    "sha256": "f62820860fb3a7bc24feea92c39466af4ce31a133fe320eb21277802ced08eac",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "bungalow",
+    "d": 1,
+    "sha256": "da42aee80e49fb0ccebd88ecbb6183d2a22177168d74cda26a3a897da4e03163",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "bungalow",
+    "d": 2,
+    "sha256": "afd7f189231fa0c34437d52fcb4366d01b883eedac4922a4d5efa4bebeaf9702",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "bungalow",
+    "d": 3,
+    "sha256": "19a7c2ed486002472ecbfff39d97b77f485a327539169cd9ccb72b2c7fb59a16",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "glamping",
+    "d": 0,
+    "sha256": "9225d01ba44655b94ab70b2473e5b067871e8cc0f34f7acf083910208af66217",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "glamping",
+    "d": 1,
+    "sha256": "7e1664095c393159c4a6d41340da56c91ee64261bf112a380c54adc2f2a11027",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "glamping",
+    "d": 2,
+    "sha256": "f9f3baea8261eee4742289e8e667b7d86979bf646b422bd78c214d25a0aeb067",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "glamping",
+    "d": 3,
+    "sha256": "4a856dcb412666351ebc2c21cd320549afcbe3f46242f19abe0db07064a8fa2f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

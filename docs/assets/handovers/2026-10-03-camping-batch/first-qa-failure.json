@@ -1,0 +1,6 @@
+{
+  "asset": "glamping",
+  "check": "declared window mullion to pane contact",
+  "failure": "mullion v starts2.808; pane ends2.807; gap0.001 tile",
+  "fix": "move mullion back surface to2.805 for overlap0.002; no threshold change"
+}

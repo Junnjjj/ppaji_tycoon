@@ -5753,28 +5753,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "bungalow/native-d0.png",
+          "file": "bungalow/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "2de344283dc52b1da92adbbe83b06a3477a6cf938470d77d6b2251b59811896b"
+          "sha256": "3e086f6284d62c72ff6a3a125b0cf8978ee49d739a476f136777125d36a145e1"
         },
         "d1": {
-          "file": "bungalow/native-d1.png",
+          "file": "bungalow/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "f1a196db6120995d3b00c36bfa3df1b15d004552b563860f09ec2bf4634fcebe"
+          "sha256": "1b9c72969bd25f9bef4308864922fae46a380d36cc7a25cd206bb34fbc9f0eae"
         },
         "d2": {
-          "file": "bungalow/native-d2.png",
+          "file": "bungalow/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "87d4334fc0149efb29e5d285a2b3b585be20f38dcc0121f412ec0d1e33ca3364"
+          "sha256": "d1d3f410a7b331232b6728c48837310b4d8ac9280e22f464fd940717d38db4e5"
         },
         "d3": {
-          "file": "bungalow/native-d3.png",
+          "file": "bungalow/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "1c403aea4b7ce5f6e1f88f0ff0b2cf17929329041c49db3fdcc24d434f08a7d4"
+          "sha256": "4abb729a099d4f08b540433d8dfbc26f1c9dbe54a33b51582013e47903b15e73"
         }
       },
       "note": "Selected building art only; existing simulation access and use behavior preserved."
@@ -6367,28 +6367,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "glamping/native-d0.png",
+          "file": "glamping/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "a346482bca1585e6d394a107b26253a7ccc690df870d9494577ef5f5e40e1d46"
+          "sha256": "d1d03fb96647e0d07fdabf9de3f414e107b657fe5493205d7765519ff03ad62f"
         },
         "d1": {
-          "file": "glamping/native-d1.png",
+          "file": "glamping/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "e2b4f029cf0e6ec7d21fd84c40f308d716842d6bc38867a20389fad288be886c"
+          "sha256": "73c1fc4ffc117e585f0aa9536116f95246a038e068b83b5dfaa18aa0e9f80617"
         },
         "d2": {
-          "file": "glamping/native-d2.png",
+          "file": "glamping/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "7e8d0da31175b334e73b3ecc2606647f441182580f3bab43e29bfae73a4812fa"
+          "sha256": "a2545978a7afe671e52af07c0ccb7c73b35b6b6b86747514eca72a02cc8f700b"
         },
         "d3": {
-          "file": "glamping/native-d3.png",
+          "file": "glamping/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "e73897dfdd5f505acbdc30f3b00693059da285d0a5b0e1c2741dc490591ea00c"
+          "sha256": "ea214c31ff940d7ca165bb05818ee0cb06303e8cc8296ad986ba3610c39122fb"
         }
       },
       "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
@@ -6473,28 +6473,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "caravan/native-d0.png",
+          "file": "caravan/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "d15b2567e62fa7e6d1b00ac765ab0e43b0ae00371699f52c9c2253881a126950"
+          "sha256": "fcbebad2bbccac9348cf7d76f7743bc231f211996bc17154cf3ec30f03a33e2a"
         },
         "d1": {
-          "file": "caravan/native-d1.png",
+          "file": "caravan/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "cb665851ce672c033e51645fd19308ff87e7e0feb20787eae2197655f6ce41f7"
+          "sha256": "35f83540f132b852b2041629c94fbe688fb41eac7c0133ca74fefd2685841e9e"
         },
         "d2": {
-          "file": "caravan/native-d2.png",
+          "file": "caravan/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "0386e5aed2d5facf134d73cc31e98dff6e853deda3b133368f85dee33dd1a08a"
+          "sha256": "f7d15830171ac7a0bc818f059dc7e49e0215b0ba24e9f18291c1a28148ce7047"
         },
         "d3": {
-          "file": "caravan/native-d3.png",
+          "file": "caravan/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "d2470b4289d336326d0b6b93928e90233734dc8c9a68d798389399a59d0c6cfe"
+          "sha256": "a20ae1082422d4b0fd88ad64ba073e77e2e63d75eda9d4412de27efb20f70f8c"
         }
       },
       "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."

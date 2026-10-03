@@ -927,88 +927,88 @@
       "bytes": 18510
     },
     "fac/caravan/0": {
-      "file": "fac_caravan_0.webp",
+      "file": "fac_caravan_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "aafd2dd4a0dc1fe2e90c560c5418d9f848f5c7209e00454f57055d0a57ea0c11",
-      "bytes": 69674
+      "sha256": "9b5738af85032f4ab731d75da923bff82fb222ef5f0f06e35d8d0a4aa746cbf6",
+      "bytes": 14960
     },
     "fac/caravan/1": {
-      "file": "fac_caravan_1.webp",
+      "file": "fac_caravan_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "91448bd93bed0d8ff6ca2af1f3f4e77d122165d6d5a26997e2e91e33c0e20a6f",
-      "bytes": 70836
+      "sha256": "a0c17e2c12ad4d7ebfccbff4669611c48720605b2c2c7a66210b63e1abca7294",
+      "bytes": 14516
     },
     "fac/caravan/2": {
-      "file": "fac_caravan_2.webp",
+      "file": "fac_caravan_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "003e65bf5f5ae3399cec03a2bc098e89b06eb5d8448659d428e63b21b6b81553",
-      "bytes": 58780
+      "sha256": "8cd6b6f62d511e1db35bab89adbec0bd7846ba7cf423ce891d320d33d4916d83",
+      "bytes": 8194
     },
     "fac/caravan/3": {
-      "file": "fac_caravan_3.webp",
+      "file": "fac_caravan_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "ced9f2393fdf206c69334155129b5fba329807a168fb6365010296454d2e1c3d",
-      "bytes": 55884
+      "sha256": "767a5e0e3beba9694d5e6aeda17e8c6175430a45998dcdd683d68ced3919ca20",
+      "bytes": 8144
     },
     "fac/bungalow/0": {
-      "file": "fac_bungalow_0.fix-6ee633d5b54f.webp",
+      "file": "fac_bungalow_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "6ee633d5b54f127334e50dd39e7843a428d0e11db0c683bad11b64aac10529aa",
-      "bytes": 153114
+      "sha256": "f62820860fb3a7bc24feea92c39466af4ce31a133fe320eb21277802ced08eac",
+      "bytes": 83930
     },
     "fac/bungalow/1": {
-      "file": "fac_bungalow_1.webp",
+      "file": "fac_bungalow_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "9e2fabe69b28198084cbfbe008916ad4f6d95a551a250af61f45b77b2d7f6391",
-      "bytes": 121160
+      "sha256": "da42aee80e49fb0ccebd88ecbb6183d2a22177168d74cda26a3a897da4e03163",
+      "bytes": 72202
     },
     "fac/bungalow/2": {
-      "file": "fac_bungalow_2.webp",
+      "file": "fac_bungalow_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "96c4b66ce38388f0486ef78bcfa9bef43eeec42e666103ecb88645116f421c5d",
-      "bytes": 107728
+      "sha256": "afd7f189231fa0c34437d52fcb4366d01b883eedac4922a4d5efa4bebeaf9702",
+      "bytes": 58958
     },
     "fac/bungalow/3": {
-      "file": "fac_bungalow_3.webp",
+      "file": "fac_bungalow_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "3a1be7db74a71fb406cbb2a0a29c1b3cb2eee2455850f0bdcd040edec0a9a21b",
-      "bytes": 117896
+      "sha256": "19a7c2ed486002472ecbfff39d97b77f485a327539169cd9ccb72b2c7fb59a16",
+      "bytes": 63474
     },
     "fac/glamping/0": {
-      "file": "fac_glamping_0.webp",
+      "file": "fac_glamping_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "eb254b44e9b1e25f14f02efbecb14020a2727d294a78cbf335b60d211e51c3a3",
-      "bytes": 100960
+      "sha256": "9225d01ba44655b94ab70b2473e5b067871e8cc0f34f7acf083910208af66217",
+      "bytes": 59432
     },
     "fac/glamping/1": {
-      "file": "fac_glamping_1.webp",
+      "file": "fac_glamping_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "4b1cd1e0c8fbdc27eeb4e6989b7d9a1520cb9587af44e825003edf83aa2f64be",
-      "bytes": 97922
+      "sha256": "7e1664095c393159c4a6d41340da56c91ee64261bf112a380c54adc2f2a11027",
+      "bytes": 58890
     },
     "fac/glamping/2": {
-      "file": "fac_glamping_2.webp",
+      "file": "fac_glamping_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "c1148bb99f6edd4a4957048217f3b24498950ba2296f5a015a0456c9debe2877",
-      "bytes": 94474
+      "sha256": "f9f3baea8261eee4742289e8e667b7d86979bf646b422bd78c214d25a0aeb067",
+      "bytes": 58652
     },
     "fac/glamping/3": {
-      "file": "fac_glamping_3.webp",
+      "file": "fac_glamping_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "cf32799492f099b893755ab7f9f96bcf8d4a9f4cd8a3be329ba03c9d2c3cacad",
-      "bytes": 91774
+      "sha256": "4a856dcb412666351ebc2c21cd320549afcbe3f46242f19abe0db07064a8fa2f",
+      "bytes": 56162
     },
     "fac/pension_1f/0": {
       "file": "fac_pension_1f_0.webp",

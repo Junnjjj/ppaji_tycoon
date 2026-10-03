@@ -1,0 +1,74 @@
+[
+  {
+    "id": "caravan",
+    "d": 0,
+    "file": "fac_caravan_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "caravan",
+    "d": 1,
+    "file": "fac_caravan_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "caravan",
+    "d": 2,
+    "file": "fac_caravan_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "caravan",
+    "d": 3,
+    "file": "fac_caravan_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "bungalow",
+    "d": 0,
+    "file": "fac_bungalow_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "bungalow",
+    "d": 1,
+    "file": "fac_bungalow_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "bungalow",
+    "d": 2,
+    "file": "fac_bungalow_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "bungalow",
+    "d": 3,
+    "file": "fac_bungalow_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "glamping",
+    "d": 0,
+    "file": "fac_glamping_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "glamping",
+    "d": 1,
+    "file": "fac_glamping_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "glamping",
+    "d": 2,
+    "file": "fac_glamping_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "glamping",
+    "d": 3,
+    "file": "fac_glamping_3_accepted_20261003.webp",
+    "exact": true
+  }
+]
