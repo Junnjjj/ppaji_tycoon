@@ -6104,28 +6104,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "indoor_shop/native-d0.png",
+          "file": "indoor_shop/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "37b23ab5fb08562370b1e48c02bbe19c5856ab869d683745e995aecd38689e21"
+          "sha256": "7eeb2bf67dafbda02d35965807abcbb8e23c5686915fb493f06e92a2c2045a26"
         },
         "d1": {
-          "file": "indoor_shop/native-d1.png",
+          "file": "indoor_shop/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "f62ce6791b3bce0033426c04c51acfbf3288aa1ce8cab8dd0c913c559b1956d5"
+          "sha256": "3b3bdd158e1a746915b681e1fff6da163219776ab821b800f48eb4071736258f"
         },
         "d2": {
-          "file": "indoor_shop/native-d2.png",
+          "file": "indoor_shop/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "21f40711e4090bfec7651b6ce360fec69ca741bcc37414fb4b2212f4576bf088"
+          "sha256": "c9dd20aed28c8ae3458361956936d350ac43e9f37ab3c9985ddac9ff5005e8e3"
         },
         "d3": {
-          "file": "indoor_shop/native-d3.png",
+          "file": "indoor_shop/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "0bdf642d25ed2de2d8041af19dcdc7622552840bfda60fa9569dd9f3f06fcfbb"
+          "sha256": "81073e81153a30e2d8d8649fa736bd51b4c332ab6d3cf4816f3ac907f78c3a2f"
         }
       },
       "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."
@@ -8887,28 +8887,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "cafe_lv2/native-d0.png",
+          "file": "cafe_lv2/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "cc3814b8efcc4a874cfafdedbb37ba987effef7c1a2eb243cfd16b464e821e08"
+          "sha256": "89c396350065f0bd6c77a55009a2f4379764f73987c6e01d3e8d371a1300285b"
         },
         "d1": {
-          "file": "cafe_lv2/native-d1.png",
+          "file": "cafe_lv2/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "78eb5e02655ca4b8dd1a2cc9aa64fc376788959c95a7f6a11f21b6219e9e648b"
+          "sha256": "3a34a828ed1737ab00bad5b9ee6a7d8ada1e1bd9dc2f4592a9a87315ef3c9d8c"
         },
         "d2": {
-          "file": "cafe_lv2/native-d2.png",
+          "file": "cafe_lv2/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "08b133777ae40e6e83185feccee27a94eb28c7f7bdd295df7e9258829ea1ddf5"
+          "sha256": "a19602fac7848bfd9695cd6ba164917e514f6d463d00aa7b999916554c4e5855"
         },
         "d3": {
-          "file": "cafe_lv2/native-d3.png",
+          "file": "cafe_lv2/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "fd69163ad6869923c1f49ac275ce823bd39edbfb542500d15ae3d13386b3cb08"
+          "sha256": "c73247ad894bbad5286068da8c20504163352cfc935a5603d192bf06d87fca7e"
         }
       },
       "note": "User accepted 2026-09-20. Authored same-scale art; portal behavior comes from canonical facility-portals.json and GuestStore, never static ride routes."

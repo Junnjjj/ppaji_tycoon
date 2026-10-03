@@ -1,0 +1,1016 @@
+{
+  "status": "PASS",
+  "joints": [
+    {
+      "a": "floor",
+      "b": "post-0",
+      "overlap": [
+        0.134,
+        0.134,
+        0.0
+      ]
+    },
+    {
+      "a": "post-0",
+      "b": "roof-body",
+      "overlap": [
+        0.134,
+        0.134,
+        0.14999999999999858
+      ]
+    },
+    {
+      "a": "floor",
+      "b": "post-0-foot",
+      "overlap": [
+        0.14600000000000002,
+        0.14600000000000002,
+        0.0
+      ]
+    },
+    {
+      "a": "floor",
+      "b": "post-1",
+      "overlap": [
+        0.1339999999999999,
+        0.134,
+        0.0
+      ]
+    },
+    {
+      "a": "post-1",
+      "b": "roof-body",
+      "overlap": [
+        0.1339999999999999,
+        0.134,
+        0.14999999999999858
+      ]
+    },
+    {
+      "a": "floor",
+      "b": "post-1-foot",
+      "overlap": [
+        0.1459999999999999,
+        0.14600000000000002,
+        0.0
+      ]
+    },
+    {
+      "a": "floor",
+      "b": "post-2",
+      "overlap": [
+        0.1339999999999999,
+        0.1339999999999999,
+        0.0
+      ]
+    },
+    {
+      "a": "post-2",
+      "b": "roof-body",
+      "overlap": [
+        0.1339999999999999,
+        0.1339999999999999,
+        0.14999999999999858
+      ]
+    },
+    {
+      "a": "floor",
+      "b": "post-2-foot",
+      "overlap": [
+        0.1459999999999999,
+        0.1459999999999999,
+        0.0
+      ]
+    },
+    {
+      "a": "floor",
+      "b": "post-3",
+      "overlap": [
+        0.134,
+        0.1339999999999999,
+        0.0
+      ]
+    },
+    {
+      "a": "post-3",
+      "b": "roof-body",
+      "overlap": [
+        0.134,
+        0.1339999999999999,
+        0.14999999999999858
+      ]
+    },
+    {
+      "a": "floor",
+      "b": "post-3-foot",
+      "overlap": [
+        0.14600000000000002,
+        0.1459999999999999,
+        0.0
+      ]
+    },
+    {
+      "a": "counter-base",
+      "b": "floor",
+      "overlap": [
+        1.3699999999999999,
+        0.3900000000000001,
+        0.050000000000000044
+      ]
+    },
+    {
+      "a": "counter-base",
+      "b": "base-panels",
+      "overlap": [
+        1.3499999999999999,
+        0.3700000000000001,
+        0.5000000000000001
+      ]
+    },
+    {
+      "a": "base-panels",
+      "b": "counter",
+      "overlap": [
+        1.3499999999999999,
+        0.3700000000000001,
+        0.15000000000000036
+      ]
+    },
+    {
+      "a": "counter",
+      "b": "register-foot",
+      "overlap": [
+        0.22999999999999998,
+        0.18999999999999995,
+        0.010000000000001563
+      ]
+    },
+    {
+      "a": "register-foot",
+      "b": "register-head",
+      "overlap": [
+        0.18999999999999995,
+        0.10999999999999988,
+        0.05000000000000071
+      ]
+    },
+    {
+      "a": "shelf-left",
+      "b": "floor",
+      "overlap": [
+        0.06999999999999995,
+        0.26,
+        0.050000000000000044
+      ]
+    },
+    {
+      "a": "shelf-right",
+      "b": "floor",
+      "overlap": [
+        0.06999999999999984,
+        0.26,
+        0.050000000000000044
+      ]
+    },
+    {
+      "a": "shelf-board-0",
+      "b": "shelf-left",
+      "overlap": [
+        0.06999999999999995,
+        0.26,
+        0.55
+      ]
+    },
+    {
+      "a": "shelf-board-0",
+      "b": "shelf-right",
+      "overlap": [
+        0.06999999999999984,
+        0.26,
+        0.55
+      ]
+    },
+    {
+      "a": "shelf-board-1",
+      "b": "shelf-left",
+      "overlap": [
+        0.06999999999999995,
+        0.26,
+        0.5499999999999998
+      ]
+    },
+    {
+      "a": "shelf-board-1",
+      "b": "shelf-right",
+      "overlap": [
+        0.06999999999999984,
+        0.26,
+        0.5499999999999998
+      ]
+    },
+    {
+      "a": "shelf-board-2",
+      "b": "shelf-left",
+      "overlap": [
+        0.06999999999999995,
+        0.26,
+        0.5500000000000007
+      ]
+    },
+    {
+      "a": "shelf-board-2",
+      "b": "shelf-right",
+      "overlap": [
+        0.06999999999999984,
+        0.26,
+        0.5500000000000007
+      ]
+    },
+    {
+      "a": "shelf-board-3",
+      "b": "shelf-left",
+      "overlap": [
+        0.06999999999999995,
+        0.26,
+        0.0
+      ]
+    },
+    {
+      "a": "shelf-board-3",
+      "b": "shelf-right",
+      "overlap": [
+        0.06999999999999984,
+        0.26,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-0-0",
+      "b": "shelf-board-0",
+      "overlap": [
+        0.132,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-0-1",
+      "b": "shelf-board-0",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-0-2",
+      "b": "shelf-board-0",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-0-3",
+      "b": "shelf-board-0",
+      "overlap": [
+        0.1319999999999999,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-0-4",
+      "b": "shelf-board-0",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-0-5",
+      "b": "shelf-board-0",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-0-6",
+      "b": "shelf-board-0",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-1-0",
+      "b": "shelf-board-1",
+      "overlap": [
+        0.132,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-1-1",
+      "b": "shelf-board-1",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-1-2",
+      "b": "shelf-board-1",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-1-3",
+      "b": "shelf-board-1",
+      "overlap": [
+        0.1319999999999999,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-1-4",
+      "b": "shelf-board-1",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-1-5",
+      "b": "shelf-board-1",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-1-6",
+      "b": "shelf-board-1",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        0.0
+      ]
+    },
+    {
+      "a": "goods-2-0",
+      "b": "shelf-board-2",
+      "overlap": [
+        0.132,
+        0.195,
+        1.7763568394002505e-15
+      ]
+    },
+    {
+      "a": "goods-2-1",
+      "b": "shelf-board-2",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        1.7763568394002505e-15
+      ]
+    },
+    {
+      "a": "goods-2-2",
+      "b": "shelf-board-2",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        1.7763568394002505e-15
+      ]
+    },
+    {
+      "a": "goods-2-3",
+      "b": "shelf-board-2",
+      "overlap": [
+        0.1319999999999999,
+        0.195,
+        1.7763568394002505e-15
+      ]
+    },
+    {
+      "a": "goods-2-4",
+      "b": "shelf-board-2",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        1.7763568394002505e-15
+      ]
+    },
+    {
+      "a": "goods-2-5",
+      "b": "shelf-board-2",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        1.7763568394002505e-15
+      ]
+    },
+    {
+      "a": "goods-2-6",
+      "b": "shelf-board-2",
+      "overlap": [
+        0.13200000000000012,
+        0.195,
+        1.7763568394002505e-15
+      ]
+    }
+  ],
+  "closed_meshes": [
+    {
+      "name": "floor",
+      "edges": 12
+    },
+    {
+      "name": "post-0",
+      "edges": 12
+    },
+    {
+      "name": "post-0-foot",
+      "edges": 12
+    },
+    {
+      "name": "post-1",
+      "edges": 12
+    },
+    {
+      "name": "post-1-foot",
+      "edges": 12
+    },
+    {
+      "name": "post-2",
+      "edges": 12
+    },
+    {
+      "name": "post-2-foot",
+      "edges": 12
+    },
+    {
+      "name": "post-3",
+      "edges": 12
+    },
+    {
+      "name": "post-3-foot",
+      "edges": 12
+    },
+    {
+      "name": "rear-header",
+      "edges": 12
+    },
+    {
+      "name": "front-header",
+      "edges": 12
+    },
+    {
+      "name": "roof-body",
+      "edges": 12
+    },
+    {
+      "name": "base-panels",
+      "edges": 12
+    },
+    {
+      "name": "counter",
+      "edges": 12
+    },
+    {
+      "name": "counter-base",
+      "edges": 12
+    },
+    {
+      "name": "register-foot",
+      "edges": 12
+    },
+    {
+      "name": "register-head",
+      "edges": 12
+    },
+    {
+      "name": "shelf-left",
+      "edges": 12
+    },
+    {
+      "name": "shelf-right",
+      "edges": 12
+    },
+    {
+      "name": "shelf-board-0",
+      "edges": 12
+    },
+    {
+      "name": "shelf-board-1",
+      "edges": 12
+    },
+    {
+      "name": "shelf-board-2",
+      "edges": 12
+    },
+    {
+      "name": "shelf-board-3",
+      "edges": 12
+    },
+    {
+      "name": "goods-0-0",
+      "edges": 12
+    },
+    {
+      "name": "goods-0-1",
+      "edges": 12
+    },
+    {
+      "name": "goods-0-2",
+      "edges": 12
+    },
+    {
+      "name": "goods-0-3",
+      "edges": 12
+    },
+    {
+      "name": "goods-0-4",
+      "edges": 12
+    },
+    {
+      "name": "goods-0-5",
+      "edges": 12
+    },
+    {
+      "name": "goods-0-6",
+      "edges": 12
+    },
+    {
+      "name": "goods-1-0",
+      "edges": 12
+    },
+    {
+      "name": "goods-1-1",
+      "edges": 12
+    },
+    {
+      "name": "goods-1-2",
+      "edges": 12
+    },
+    {
+      "name": "goods-1-3",
+      "edges": 12
+    },
+    {
+      "name": "goods-1-4",
+      "edges": 12
+    },
+    {
+      "name": "goods-1-5",
+      "edges": 12
+    },
+    {
+      "name": "goods-1-6",
+      "edges": 12
+    },
+    {
+      "name": "goods-2-0",
+      "edges": 12
+    },
+    {
+      "name": "goods-2-1",
+      "edges": 12
+    },
+    {
+      "name": "goods-2-2",
+      "edges": 12
+    },
+    {
+      "name": "goods-2-3",
+      "edges": 12
+    },
+    {
+      "name": "goods-2-4",
+      "edges": 12
+    },
+    {
+      "name": "goods-2-5",
+      "edges": 12
+    },
+    {
+      "name": "goods-2-6",
+      "edges": 12
+    }
+  ],
+  "rotation_edge_error": 2.220446049250313e-16,
+  "frames": [
+    {
+      "d": 0,
+      "connected": true,
+      "clipped": false,
+      "lines": [
+        {
+          "slope": -0.5004516711833803,
+          "rmse": 0.5561407470335543,
+          "passed": true,
+          "samples": 81
+        },
+        {
+          "slope": 0.5004516711833785,
+          "rmse": 0.5561407470335544,
+          "passed": true,
+          "samples": 81
+        }
+      ],
+      "roof_lines": [
+        {
+          "seam": 1,
+          "slope": -0.4979077575022176,
+          "expected_slope": -0.5,
+          "rms": 0.5916047560666119,
+          "mean_guide_offset": 0.5816666666666669,
+          "passed": true
+        },
+        {
+          "seam": 2,
+          "slope": -0.5023138699108877,
+          "expected_slope": -0.5,
+          "rms": 0.5956278494870817,
+          "mean_guide_offset": 0.4933333333333335,
+          "passed": true
+        },
+        {
+          "seam": 3,
+          "slope": -0.49872055569540696,
+          "expected_slope": -0.4999999999999997,
+          "rms": 0.5077136742964138,
+          "mean_guide_offset": 0.4016666666666668,
+          "passed": true
+        },
+        {
+          "seam": 4,
+          "slope": -0.49767927932135814,
+          "expected_slope": -0.4999999999999997,
+          "rms": 0.47523904219469354,
+          "mean_guide_offset": 0.45666666666666683,
+          "passed": true
+        },
+        {
+          "seam": 5,
+          "slope": -0.49891925380326496,
+          "expected_slope": -0.5,
+          "rms": 0.45418010895772165,
+          "mean_guide_offset": 0.3800000000000001,
+          "passed": true
+        },
+        {
+          "seam": 6,
+          "slope": -0.49690813205126827,
+          "expected_slope": -0.5,
+          "rms": 0.49891520756722035,
+          "mean_guide_offset": 0.35166666666666674,
+          "passed": true
+        },
+        {
+          "seam": 7,
+          "slope": -0.5001936589734147,
+          "expected_slope": -0.5,
+          "rms": 0.47606336422879014,
+          "mean_guide_offset": 0.531666666666667,
+          "passed": true
+        },
+        {
+          "seam": 8,
+          "slope": -0.4999176649788007,
+          "expected_slope": -0.5,
+          "rms": 0.5871258240111801,
+          "mean_guide_offset": 0.776666666666667,
+          "passed": true
+        },
+        {
+          "seam": 9,
+          "slope": -0.5016624880734544,
+          "expected_slope": -0.5,
+          "rms": 0.6405228295448356,
+          "mean_guide_offset": 0.8733333333333334,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "d": 1,
+      "connected": true,
+      "clipped": false,
+      "lines": [
+        {
+          "slope": -0.5004516711833803,
+          "rmse": 0.5561407470335543,
+          "passed": true,
+          "samples": 81
+        },
+        {
+          "slope": 0.5004516711833785,
+          "rmse": 0.5561407470335544,
+          "passed": true,
+          "samples": 81
+        }
+      ],
+      "roof_lines": [
+        {
+          "seam": 1,
+          "slope": 0.5001322330442112,
+          "expected_slope": 0.5,
+          "rms": 0.5587558656194811,
+          "mean_guide_offset": 0.21666666666666665,
+          "passed": true
+        },
+        {
+          "seam": 2,
+          "slope": 0.49854314910039804,
+          "expected_slope": 0.4999999999999997,
+          "rms": 0.49716012119249336,
+          "mean_guide_offset": 0.15499999999999994,
+          "passed": true
+        },
+        {
+          "seam": 3,
+          "slope": 0.49801995935895793,
+          "expected_slope": 0.5,
+          "rms": 0.5341998470201303,
+          "mean_guide_offset": 0.19666666666666674,
+          "passed": true
+        },
+        {
+          "seam": 4,
+          "slope": 0.4989133234400096,
+          "expected_slope": 0.5,
+          "rms": 0.5872030846213225,
+          "mean_guide_offset": 0.21833333333333335,
+          "passed": true
+        },
+        {
+          "seam": 5,
+          "slope": 0.5003717216218077,
+          "expected_slope": 0.5,
+          "rms": 0.6068128351038626,
+          "mean_guide_offset": 0.22333333333333336,
+          "passed": true
+        },
+        {
+          "seam": 6,
+          "slope": 0.49783279203217445,
+          "expected_slope": 0.5,
+          "rms": 0.5913905069408341,
+          "mean_guide_offset": 0.21499999999999997,
+          "passed": true
+        },
+        {
+          "seam": 7,
+          "slope": 0.4978878492604377,
+          "expected_slope": 0.5,
+          "rms": 0.6059909865830625,
+          "mean_guide_offset": 0.21166666666666664,
+          "passed": true
+        },
+        {
+          "seam": 8,
+          "slope": 0.5009185446892557,
+          "expected_slope": 0.5,
+          "rms": 0.5869646174024646,
+          "mean_guide_offset": 0.19666666666666668,
+          "passed": true
+        },
+        {
+          "seam": 9,
+          "slope": 0.49723073798499823,
+          "expected_slope": 0.5,
+          "rms": 0.5896436110564552,
+          "mean_guide_offset": 0.20999999999999996,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "d": 2,
+      "connected": true,
+      "clipped": false,
+      "lines": [
+        {
+          "slope": -0.5004516711833803,
+          "rmse": 0.5561407470335543,
+          "passed": true,
+          "samples": 81
+        },
+        {
+          "slope": 0.5004516711833785,
+          "rmse": 0.5561407470335544,
+          "passed": true,
+          "samples": 81
+        }
+      ],
+      "roof_lines": [
+        {
+          "seam": 1,
+          "slope": -0.5024343027801103,
+          "expected_slope": -0.5,
+          "rms": 0.4949211367499986,
+          "mean_guide_offset": 0.3349999999999999,
+          "passed": true
+        },
+        {
+          "seam": 2,
+          "slope": -0.5014630653456627,
+          "expected_slope": -0.5,
+          "rms": 0.5013265658566165,
+          "mean_guide_offset": 0.32166666666666655,
+          "passed": true
+        },
+        {
+          "seam": 3,
+          "slope": -0.501277763473313,
+          "expected_slope": -0.5,
+          "rms": 0.485700222470115,
+          "mean_guide_offset": 0.1733333333333333,
+          "passed": true
+        },
+        {
+          "seam": 4,
+          "slope": -0.4970592513509882,
+          "expected_slope": -0.5,
+          "rms": 0.5517124609846519,
+          "mean_guide_offset": 0.19999999999999998,
+          "passed": true
+        },
+        {
+          "seam": 5,
+          "slope": -0.5014087444365185,
+          "expected_slope": -0.5,
+          "rms": 0.611687852641524,
+          "mean_guide_offset": 0.23499999999999993,
+          "passed": true
+        },
+        {
+          "seam": 6,
+          "slope": -0.4999950139934856,
+          "expected_slope": -0.5,
+          "rms": 0.580887713308718,
+          "mean_guide_offset": 0.24999999999999994,
+          "passed": true
+        },
+        {
+          "seam": 7,
+          "slope": -0.5012278094725361,
+          "expected_slope": -0.5,
+          "rms": 0.5638679300958815,
+          "mean_guide_offset": 0.23333333333333323,
+          "passed": true
+        },
+        {
+          "seam": 8,
+          "slope": -0.5023626741884857,
+          "expected_slope": -0.5,
+          "rms": 0.5697303908446792,
+          "mean_guide_offset": 0.31833333333333325,
+          "passed": true
+        },
+        {
+          "seam": 9,
+          "slope": -0.5010543670555833,
+          "expected_slope": -0.5,
+          "rms": 0.591492792023019,
+          "mean_guide_offset": 0.31333333333333324,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "d": 3,
+      "connected": true,
+      "clipped": false,
+      "lines": [
+        {
+          "slope": -0.5004516711833803,
+          "rmse": 0.5561407470335543,
+          "passed": true,
+          "samples": 81
+        },
+        {
+          "slope": 0.5004516711833785,
+          "rmse": 0.5561407470335544,
+          "passed": true,
+          "samples": 81
+        }
+      ],
+      "roof_lines": [
+        {
+          "seam": 1,
+          "slope": 0.5025096071568815,
+          "expected_slope": 0.5,
+          "rms": 0.6356068730900478,
+          "mean_guide_offset": 0.30166666666666675,
+          "passed": true
+        },
+        {
+          "seam": 2,
+          "slope": 0.5038362274742159,
+          "expected_slope": 0.5,
+          "rms": 0.5477053006880808,
+          "mean_guide_offset": 0.25500000000000006,
+          "passed": true
+        },
+        {
+          "seam": 3,
+          "slope": 0.5001748540905377,
+          "expected_slope": 0.4999999999999997,
+          "rms": 0.5197919152824952,
+          "mean_guide_offset": 0.1916666666666667,
+          "passed": true
+        },
+        {
+          "seam": 4,
+          "slope": 0.5018861677823868,
+          "expected_slope": 0.4999999999999997,
+          "rms": 0.4788995390299448,
+          "mean_guide_offset": 0.19833333333333336,
+          "passed": true
+        },
+        {
+          "seam": 5,
+          "slope": 0.4994397858415733,
+          "expected_slope": 0.5,
+          "rms": 0.4527196371367269,
+          "mean_guide_offset": 0.15833333333333338,
+          "passed": true
+        },
+        {
+          "seam": 6,
+          "slope": 0.4985309672111875,
+          "expected_slope": 0.5,
+          "rms": 0.4650815815555939,
+          "mean_guide_offset": 0.13666666666666671,
+          "passed": true
+        },
+        {
+          "seam": 7,
+          "slope": 0.5026434576149529,
+          "expected_slope": 0.5,
+          "rms": 0.5147143530017023,
+          "mean_guide_offset": 0.25833333333333347,
+          "passed": true
+        },
+        {
+          "seam": 8,
+          "slope": 0.4976646465310964,
+          "expected_slope": 0.5,
+          "rms": 0.6213967758105639,
+          "mean_guide_offset": 0.44333333333333347,
+          "passed": true
+        },
+        {
+          "seam": 9,
+          "slope": 0.5016527025848752,
+          "expected_slope": 0.5,
+          "rms": 0.6066356367417478,
+          "mean_guide_offset": 0.46000000000000013,
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "main_at_verification": [
+    {
+      "d": 0,
+      "file": "fac_indoor_shop_0.webp",
+      "sha256": "505dc64eacb46c5e4db1d363d3a473ef88439ae0bdf0f2ae02753dd7c410b2ec"
+    },
+    {
+      "d": 1,
+      "file": "fac_indoor_shop_1.webp",
+      "sha256": "e07140002e3ec2b3955570e6387bec066a01518eab63c67909a8242219b67918"
+    },
+    {
+      "d": 2,
+      "file": "fac_indoor_shop_2.webp",
+      "sha256": "99495ca24c564632ac4a3357d62b133545e56d208653b50cad6cdffa0cbde6cf"
+    },
+    {
+      "d": 3,
+      "file": "fac_indoor_shop_3.webp",
+      "sha256": "701728b23fecaa300e70162db1a049a0e05918ca7282fdb213c0d5b093284400"
+    }
+  ],
+  "limits": [
+    "Existing common shop assembly refined with new line sampling; source facings differ in goods and shelf layout.",
+    "Bottom and roof seam samples only, not all painted details or an aesthetic score."
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "indoor_shop",
+    "d": 0,
+    "file": "fac_indoor_shop_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "indoor_shop",
+    "d": 1,
+    "file": "fac_indoor_shop_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "indoor_shop",
+    "d": 2,
+    "file": "fac_indoor_shop_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "indoor_shop",
+    "d": 3,
+    "file": "fac_indoor_shop_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

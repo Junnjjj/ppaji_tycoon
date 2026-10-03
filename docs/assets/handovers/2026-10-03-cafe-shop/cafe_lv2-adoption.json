@@ -1,0 +1,143 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "cafe_lv2": "cafe-lv2-template-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "cafe_lv2",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-lv2-template-20261003/candidates/cafe_lv2/d0.png",
+      "source_sha256": "8dd78a9988118eba10992fe4ed1739f6ecae9ed5df97d79fb9c00fd4ef79207d",
+      "old": {
+        "file": "fac_cafe_lv2_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "6e4396ed81db1b82aff7a6784a18cc5848f60987d9ad7de0e320b5b4914ab4ad",
+        "bytes": 83134
+      },
+      "new": {
+        "file": "fac_cafe_lv2_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "27f053a79bf5dfdeb4cc6be18f815c6ef95833ca73b9c5e9a053ddbe8c54e78b",
+        "bytes": 43066
+      },
+      "old_native": {
+        "file": "cafe_lv2/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "cc3814b8efcc4a874cfafdedbb37ba987effef7c1a2eb243cfd16b464e821e08"
+      },
+      "new_native": {
+        "file": "cafe_lv2/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "89c396350065f0bd6c77a55009a2f4379764f73987c6e01d3e8d371a1300285b"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe_lv2",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-lv2-template-20261003/candidates/cafe_lv2/d1.png",
+      "source_sha256": "149fa35e9252fd379e42f1cee90dd014f9824c3b6107ebee7aa6b4a2b39ec79a",
+      "old": {
+        "file": "fac_cafe_lv2_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a2d526009cc8b0df09604bd5d073ae65214e54dd3fc540f86d4a51de58164a7d",
+        "bytes": 80388
+      },
+      "new": {
+        "file": "fac_cafe_lv2_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4a98c7e45b0c93786b06fc67a7cb6712b49169a87455ef285fc7e4265b6a59cd",
+        "bytes": 42762
+      },
+      "old_native": {
+        "file": "cafe_lv2/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "78eb5e02655ca4b8dd1a2cc9aa64fc376788959c95a7f6a11f21b6219e9e648b"
+      },
+      "new_native": {
+        "file": "cafe_lv2/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3a34a828ed1737ab00bad5b9ee6a7d8ada1e1bd9dc2f4592a9a87315ef3c9d8c"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe_lv2",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-lv2-template-20261003/candidates/cafe_lv2/d2.png",
+      "source_sha256": "9a6da9d96c89452ba25ebacdd60d4710a82d62acdc3accc49874d1ac586d1917",
+      "old": {
+        "file": "fac_cafe_lv2_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "dbfdee74bd47e21744f8ea387a6f8818725ba8d11fbb7ef9531ec3c6708faace",
+        "bytes": 70820
+      },
+      "new": {
+        "file": "fac_cafe_lv2_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "bdcdf9526bb0b715c8bf895171b2250965bea64b8e228d0f2197513b15326d2f",
+        "bytes": 35934
+      },
+      "old_native": {
+        "file": "cafe_lv2/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "08b133777ae40e6e83185feccee27a94eb28c7f7bdd295df7e9258829ea1ddf5"
+      },
+      "new_native": {
+        "file": "cafe_lv2/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a19602fac7848bfd9695cd6ba164917e514f6d463d00aa7b999916554c4e5855"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe_lv2",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-lv2-template-20261003/candidates/cafe_lv2/d3.png",
+      "source_sha256": "2ae3b3df64b72c8892bf0b74d596cc2a85beff0dee3297d56981cbf3f60bcbe7",
+      "old": {
+        "file": "fac_cafe_lv2_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b181ccced68bf550f568e0345e22da4b79d59c2a3edde0bae598b4dec005493a",
+        "bytes": 78586
+      },
+      "new": {
+        "file": "fac_cafe_lv2_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "ff1b11ffd61f8c26a30eab3ee62c3ba530daa4bc5f4da3b5f81594f017d3192b",
+        "bytes": 43674
+      },
+      "old_native": {
+        "file": "cafe_lv2/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "fd69163ad6869923c1f49ac275ce823bd39edbfb542500d15ae3d13386b3cb08"
+      },
+      "new_native": {
+        "file": "cafe_lv2/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c73247ad894bbad5286068da8c20504163352cfc935a5603d192bf06d87fca7e"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

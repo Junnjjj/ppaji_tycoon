@@ -1,0 +1,26 @@
+[
+  {
+    "id": "cafe_lv2",
+    "d": 0,
+    "file": "fac_cafe_lv2_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "cafe_lv2",
+    "d": 1,
+    "file": "fac_cafe_lv2_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "cafe_lv2",
+    "d": 2,
+    "file": "fac_cafe_lv2_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "cafe_lv2",
+    "d": 3,
+    "file": "fac_cafe_lv2_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

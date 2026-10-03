@@ -1,0 +1,143 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "indoor_shop": "indoor-shop-line-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "indoor_shop",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-shop-line-20261003/candidates/indoor_shop/d0.png",
+      "source_sha256": "ecd0e149491d5f8fc3a490cf4e1669cf2b2acddc227baa15987f8f6c924b65aa",
+      "old": {
+        "file": "fac_indoor_shop_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "505dc64eacb46c5e4db1d363d3a473ef88439ae0bdf0f2ae02753dd7c410b2ec",
+        "bytes": 71182
+      },
+      "new": {
+        "file": "fac_indoor_shop_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "1187fceaa7b1f8b97835a969e95ca4247b16f8dc2cb54d9876f02379b736100b",
+        "bytes": 49898
+      },
+      "old_native": {
+        "file": "indoor_shop/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "37b23ab5fb08562370b1e48c02bbe19c5856ab869d683745e995aecd38689e21"
+      },
+      "new_native": {
+        "file": "indoor_shop/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "7eeb2bf67dafbda02d35965807abcbb8e23c5686915fb493f06e92a2c2045a26"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "indoor_shop",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-shop-line-20261003/candidates/indoor_shop/d1.png",
+      "source_sha256": "1e1f0a9df52051fac203bd819c58b73ced1065d57424fc9d46eeee0dccf765dc",
+      "old": {
+        "file": "fac_indoor_shop_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e07140002e3ec2b3955570e6387bec066a01518eab63c67909a8242219b67918",
+        "bytes": 69882
+      },
+      "new": {
+        "file": "fac_indoor_shop_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "7a8f901dcdd6b47147cc1a2716c4cd7d55bec299b7b1f143158dc6fcbef950cd",
+        "bytes": 50736
+      },
+      "old_native": {
+        "file": "indoor_shop/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f62ce6791b3bce0033426c04c51acfbf3288aa1ce8cab8dd0c913c559b1956d5"
+      },
+      "new_native": {
+        "file": "indoor_shop/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3b3bdd158e1a746915b681e1fff6da163219776ab821b800f48eb4071736258f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "indoor_shop",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-shop-line-20261003/candidates/indoor_shop/d2.png",
+      "source_sha256": "aa4429a57aeb7bd325a65f51aa309a0e83c57211eb21ee1319f1bfc8eb996984",
+      "old": {
+        "file": "fac_indoor_shop_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "99495ca24c564632ac4a3357d62b133545e56d208653b50cad6cdffa0cbde6cf",
+        "bytes": 68934
+      },
+      "new": {
+        "file": "fac_indoor_shop_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "129ae29263c36074258edb0f932523c4b68a33c63ffd8c25404b74ede5abb6df",
+        "bytes": 52186
+      },
+      "old_native": {
+        "file": "indoor_shop/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "21f40711e4090bfec7651b6ce360fec69ca741bcc37414fb4b2212f4576bf088"
+      },
+      "new_native": {
+        "file": "indoor_shop/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c9dd20aed28c8ae3458361956936d350ac43e9f37ab3c9985ddac9ff5005e8e3"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "indoor_shop",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-shop-line-20261003/candidates/indoor_shop/d3.png",
+      "source_sha256": "ca972102d18c3ce9c6fc342ab8aa992f5215d96520935bdbd7058ed3d02e99dd",
+      "old": {
+        "file": "fac_indoor_shop_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "701728b23fecaa300e70162db1a049a0e05918ca7282fdb213c0d5b093284400",
+        "bytes": 70776
+      },
+      "new": {
+        "file": "fac_indoor_shop_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5938cc711d1dd301b48983908a29c85db428d30791639675e400b3e77edd8621",
+        "bytes": 53048
+      },
+      "old_native": {
+        "file": "indoor_shop/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0bdf642d25ed2de2d8041af19dcdc7622552840bfda60fa9569dd9f3f06fcfbb"
+      },
+      "new_native": {
+        "file": "indoor_shop/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "81073e81153a30e2d8d8649fa736bd51b4c332ab6d3cf4816f3ac907f78c3a2f"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

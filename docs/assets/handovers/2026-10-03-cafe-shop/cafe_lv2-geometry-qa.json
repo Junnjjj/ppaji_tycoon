@@ -1,0 +1,745 @@
+{
+  "status": "PASS",
+  "joints": [
+    {
+      "a": "wood-foundation",
+      "b": "floor",
+      "overlap": [
+        2.5799999999999996,
+        1.55,
+        0.10000000000000009
+      ]
+    },
+    {
+      "a": "wood-foundation",
+      "b": "cream-backwall",
+      "overlap": [
+        2.5799999999999996,
+        0.09,
+        0.0
+      ]
+    },
+    {
+      "a": "wood-foundation",
+      "b": "cream-leftwall",
+      "overlap": [
+        0.08999999999999997,
+        1.55,
+        0.0
+      ]
+    },
+    {
+      "a": "counter-body",
+      "b": "floor",
+      "overlap": [
+        1.7599999999999998,
+        0.46999999999999986,
+        0.10000000000000009
+      ]
+    },
+    {
+      "a": "counter-body",
+      "b": "counter-top",
+      "overlap": [
+        1.7599999999999998,
+        0.46999999999999986,
+        0.25
+      ]
+    },
+    {
+      "a": "back-shelf",
+      "b": "cream-backwall",
+      "overlap": [
+        1.9000000000000001,
+        0.019999999999999962,
+        0.8999999999999986
+      ]
+    },
+    {
+      "a": "coffee-machine",
+      "b": "counter-top",
+      "overlap": [
+        0.3799999999999999,
+        0.3400000000000001,
+        0.05000000000000071
+      ]
+    },
+    {
+      "a": "wood-foundation",
+      "b": "wood-post-0",
+      "overlap": [
+        0.09399999999999997,
+        0.09399999999999997,
+        0.050000000000000044
+      ]
+    },
+    {
+      "a": "wood-foundation",
+      "b": "wood-post-1",
+      "overlap": [
+        0.0940000000000003,
+        0.09399999999999997,
+        0.050000000000000044
+      ]
+    },
+    {
+      "a": "wood-foundation",
+      "b": "wood-post-2",
+      "overlap": [
+        0.09399999999999997,
+        0.09399999999999986,
+        0.050000000000000044
+      ]
+    },
+    {
+      "a": "wood-foundation",
+      "b": "wood-post-3",
+      "overlap": [
+        0.0940000000000003,
+        0.09399999999999986,
+        0.050000000000000044
+      ]
+    },
+    {
+      "a": "wood-post-0",
+      "b": "roof",
+      "overlap": [
+        0.09399999999999997,
+        0.09399999999999997,
+        0.15000000000000213
+      ]
+    },
+    {
+      "a": "wood-post-1",
+      "b": "roof",
+      "overlap": [
+        0.0940000000000003,
+        0.09399999999999997,
+        0.15000000000000213
+      ]
+    },
+    {
+      "a": "wood-post-2",
+      "b": "roof",
+      "overlap": [
+        0.09399999999999997,
+        0.09399999999999986,
+        0.15000000000000213
+      ]
+    },
+    {
+      "a": "wood-post-3",
+      "b": "roof",
+      "overlap": [
+        0.0940000000000003,
+        0.09399999999999986,
+        0.15000000000000213
+      ]
+    },
+    {
+      "a": "wood-planter-base",
+      "b": "wood-foundation",
+      "overlap": [
+        0.14000000000000012,
+        1.1600000000000001,
+        0.10000000000000009
+      ]
+    },
+    {
+      "a": "wood-planter-outer",
+      "b": "wood-planter-base",
+      "overlap": [
+        0.02499999999999991,
+        1.1600000000000001,
+        0.20000000000000018
+      ]
+    },
+    {
+      "a": "wood-planter-inner",
+      "b": "wood-planter-base",
+      "overlap": [
+        0.029999999999999805,
+        1.1600000000000001,
+        0.20000000000000018
+      ]
+    },
+    {
+      "a": "wood-planter-start",
+      "b": "wood-planter-base",
+      "overlap": [
+        0.16999999999999993,
+        0.024999999999999967,
+        0.20000000000000018
+      ]
+    },
+    {
+      "a": "wood-planter-end",
+      "b": "wood-planter-base",
+      "overlap": [
+        0.16999999999999993,
+        0.025000000000000133,
+        0.20000000000000018
+      ]
+    },
+    {
+      "a": "soil",
+      "b": "wood-planter-base",
+      "overlap": [
+        0.1299999999999999,
+        1.12,
+        0.10000000000000009
+      ]
+    },
+    {
+      "a": "leaf-0",
+      "b": "soil",
+      "overlap": [
+        0.1299999999999999,
+        0.16399999999999998,
+        1.4000000000000004
+      ]
+    },
+    {
+      "a": "leaf-1",
+      "b": "soil",
+      "overlap": [
+        0.1299999999999999,
+        0.18799999999999994,
+        1.0500000000000007
+      ]
+    },
+    {
+      "a": "leaf-2",
+      "b": "soil",
+      "overlap": [
+        0.1299999999999999,
+        0.18799999999999994,
+        1.4000000000000004
+      ]
+    },
+    {
+      "a": "leaf-3",
+      "b": "soil",
+      "overlap": [
+        0.1299999999999999,
+        0.18800000000000006,
+        1.0500000000000007
+      ]
+    },
+    {
+      "a": "leaf-4",
+      "b": "soil",
+      "overlap": [
+        0.1299999999999999,
+        0.18800000000000017,
+        1.4000000000000004
+      ]
+    },
+    {
+      "a": "leaf-5",
+      "b": "soil",
+      "overlap": [
+        0.1299999999999999,
+        0.14400000000000013,
+        1.0500000000000007
+      ]
+    },
+    {
+      "a": "cup-0",
+      "b": "counter-top",
+      "overlap": [
+        0.1499999999999999,
+        0.1499999999999999,
+        0.05000000000000071
+      ]
+    },
+    {
+      "a": "cup-1",
+      "b": "counter-top",
+      "overlap": [
+        0.1499999999999999,
+        0.1499999999999999,
+        0.05000000000000071
+      ]
+    },
+    {
+      "a": "cup-2",
+      "b": "counter-top",
+      "overlap": [
+        0.1499999999999999,
+        0.1499999999999999,
+        0.05000000000000071
+      ]
+    },
+    {
+      "a": "window-mullion-0",
+      "b": "wood-sill-front",
+      "overlap": [
+        0.04400000000000004,
+        0.053999999999999826,
+        0.3999999999999999
+      ]
+    },
+    {
+      "a": "window-mullion-0",
+      "b": "wood-header-front",
+      "overlap": [
+        0.04400000000000004,
+        0.053999999999999826,
+        0.3000000000000007
+      ]
+    },
+    {
+      "a": "window-mullion-1",
+      "b": "wood-sill-front",
+      "overlap": [
+        0.04400000000000004,
+        0.053999999999999826,
+        0.3999999999999999
+      ]
+    },
+    {
+      "a": "window-mullion-1",
+      "b": "wood-header-front",
+      "overlap": [
+        0.04400000000000004,
+        0.053999999999999826,
+        0.3000000000000007
+      ]
+    },
+    {
+      "a": "window-mullion-2",
+      "b": "wood-sill-front",
+      "overlap": [
+        0.043999999999999595,
+        0.053999999999999826,
+        0.3999999999999999
+      ]
+    },
+    {
+      "a": "window-mullion-2",
+      "b": "wood-header-front",
+      "overlap": [
+        0.043999999999999595,
+        0.053999999999999826,
+        0.3000000000000007
+      ]
+    },
+    {
+      "a": "window-side-mullion-0",
+      "b": "wood-sill-right",
+      "overlap": [
+        0.04800000000000004,
+        0.04400000000000004,
+        0.3999999999999999
+      ]
+    },
+    {
+      "a": "window-side-mullion-0",
+      "b": "wood-header-right",
+      "overlap": [
+        0.04800000000000004,
+        0.04400000000000004,
+        0.3000000000000007
+      ]
+    },
+    {
+      "a": "window-side-mullion-1",
+      "b": "wood-sill-right",
+      "overlap": [
+        0.04800000000000004,
+        0.04400000000000004,
+        0.3999999999999999
+      ]
+    },
+    {
+      "a": "window-side-mullion-1",
+      "b": "wood-header-right",
+      "overlap": [
+        0.04800000000000004,
+        0.04400000000000004,
+        0.3000000000000007
+      ]
+    },
+    {
+      "a": "door-handle-bracket-13.1",
+      "b": "door-handle",
+      "overlap": [
+        0.02100000000000002,
+        0.014000000000000012,
+        0.25
+      ]
+    },
+    {
+      "a": "door-handle-bracket-15.8",
+      "b": "door-handle",
+      "overlap": [
+        0.02100000000000002,
+        0.014000000000000012,
+        0.25
+      ]
+    }
+  ],
+  "closed_meshes": [
+    {
+      "name": "wood-foundation",
+      "edges": 12
+    },
+    {
+      "name": "floor",
+      "edges": 12
+    },
+    {
+      "name": "cream-backwall",
+      "edges": 12
+    },
+    {
+      "name": "cream-leftwall",
+      "edges": 12
+    },
+    {
+      "name": "counter-body",
+      "edges": 12
+    },
+    {
+      "name": "counter-top",
+      "edges": 12
+    },
+    {
+      "name": "back-shelf",
+      "edges": 12
+    },
+    {
+      "name": "coffee-machine",
+      "edges": 12
+    },
+    {
+      "name": "machine-face",
+      "edges": 12
+    },
+    {
+      "name": "cup-0",
+      "edges": 84
+    },
+    {
+      "name": "cup-1",
+      "edges": 84
+    },
+    {
+      "name": "cup-2",
+      "edges": 84
+    },
+    {
+      "name": "wood-post-0",
+      "edges": 12
+    },
+    {
+      "name": "wood-post-1",
+      "edges": 12
+    },
+    {
+      "name": "wood-post-2",
+      "edges": 12
+    },
+    {
+      "name": "wood-post-3",
+      "edges": 12
+    },
+    {
+      "name": "wood-header-front",
+      "edges": 12
+    },
+    {
+      "name": "wood-sill-front",
+      "edges": 12
+    },
+    {
+      "name": "wood-header-back",
+      "edges": 12
+    },
+    {
+      "name": "wood-sill-back",
+      "edges": 12
+    },
+    {
+      "name": "wood-header-left",
+      "edges": 12
+    },
+    {
+      "name": "wood-sill-left",
+      "edges": 12
+    },
+    {
+      "name": "wood-header-right",
+      "edges": 12
+    },
+    {
+      "name": "wood-sill-right",
+      "edges": 12
+    },
+    {
+      "name": "window-mullion-0",
+      "edges": 12
+    },
+    {
+      "name": "window-mullion-1",
+      "edges": 12
+    },
+    {
+      "name": "window-mullion-2",
+      "edges": 12
+    },
+    {
+      "name": "window-side-mullion-0",
+      "edges": 12
+    },
+    {
+      "name": "window-side-mullion-1",
+      "edges": 12
+    },
+    {
+      "name": "door-handle",
+      "edges": 12
+    },
+    {
+      "name": "door-handle-bracket-13.1",
+      "edges": 12
+    },
+    {
+      "name": "door-handle-bracket-15.8",
+      "edges": 12
+    },
+    {
+      "name": "roof",
+      "edges": 12
+    },
+    {
+      "name": "wood-planter-base",
+      "edges": 12
+    },
+    {
+      "name": "wood-planter-outer",
+      "edges": 12
+    },
+    {
+      "name": "wood-planter-inner",
+      "edges": 12
+    },
+    {
+      "name": "wood-planter-start",
+      "edges": 12
+    },
+    {
+      "name": "wood-planter-end",
+      "edges": 12
+    },
+    {
+      "name": "soil",
+      "edges": 12
+    },
+    {
+      "name": "leaf-0",
+      "edges": 304
+    },
+    {
+      "name": "leaf-1",
+      "edges": 304
+    },
+    {
+      "name": "leaf-2",
+      "edges": 304
+    },
+    {
+      "name": "leaf-3",
+      "edges": 304
+    },
+    {
+      "name": "leaf-4",
+      "edges": 304
+    },
+    {
+      "name": "leaf-5",
+      "edges": 304
+    }
+  ],
+  "rotation_edge_error": 4.440892098500626e-16,
+  "frames": [
+    {
+      "d": 0,
+      "connected": true,
+      "clipped": false,
+      "lines": [
+        {
+          "slope": -0.49870129870129737,
+          "rmse": 0.5582905262390842,
+          "passed": true,
+          "samples": 76
+        },
+        {
+          "slope": 0.49978270317253304,
+          "rmse": 0.5608402632230494,
+          "passed": true,
+          "samples": 117
+        }
+      ]
+    },
+    {
+      "d": 1,
+      "connected": true,
+      "clipped": false,
+      "lines": [
+        {
+          "slope": -0.5002172968274662,
+          "rmse": 0.5570501074913726,
+          "passed": true,
+          "samples": 117
+        },
+        {
+          "slope": 0.5002597402597396,
+          "rmse": 0.558987953776766,
+          "passed": true,
+          "samples": 76
+        }
+      ]
+    },
+    {
+      "d": 2,
+      "connected": true,
+      "clipped": false,
+      "lines": [
+        {
+          "slope": -0.49870129870129737,
+          "rmse": 0.5582905262390842,
+          "passed": true,
+          "samples": 76
+        },
+        {
+          "slope": 0.49978270317253304,
+          "rmse": 0.5608402632230494,
+          "passed": true,
+          "samples": 117
+        }
+      ]
+    },
+    {
+      "d": 3,
+      "connected": true,
+      "clipped": false,
+      "lines": [
+        {
+          "slope": -0.5002172968274662,
+          "rmse": 0.5570501074913726,
+          "passed": true,
+          "samples": 117
+        },
+        {
+          "slope": 0.5002597402597396,
+          "rmse": 0.558987953776766,
+          "passed": true,
+          "samples": 76
+        }
+      ]
+    }
+  ],
+  "glass_checks": [
+    {
+      "d": 0,
+      "changed_rgb_pixels": 20453,
+      "alpha_unchanged": true,
+      "depth_visibility": [
+        {
+          "face": "glass-front",
+          "visible_samples": 55996,
+          "hidden_samples": 14228
+        },
+        {
+          "face": "glass-side",
+          "visible_samples": 28516,
+          "hidden_samples": 12068
+        }
+      ],
+      "behind_solid_walls": false
+    },
+    {
+      "d": 1,
+      "changed_rgb_pixels": 12505,
+      "alpha_unchanged": true,
+      "depth_visibility": [
+        {
+          "face": "glass-front",
+          "visible_samples": 56415,
+          "hidden_samples": 14037
+        },
+        {
+          "face": "glass-side",
+          "visible_samples": 11345,
+          "hidden_samples": 29239
+        }
+      ],
+      "behind_solid_walls": false
+    },
+    {
+      "d": 2,
+      "changed_rgb_pixels": 0,
+      "alpha_unchanged": true,
+      "depth_visibility": [
+        {
+          "face": "glass-front",
+          "visible_samples": 0,
+          "hidden_samples": 70224
+        },
+        {
+          "face": "glass-side",
+          "visible_samples": 0,
+          "hidden_samples": 40584
+        }
+      ],
+      "behind_solid_walls": true
+    },
+    {
+      "d": 3,
+      "changed_rgb_pixels": 4901,
+      "alpha_unchanged": true,
+      "depth_visibility": [
+        {
+          "face": "glass-front",
+          "visible_samples": 12113,
+          "hidden_samples": 58339
+        },
+        {
+          "face": "glass-side",
+          "visible_samples": 28255,
+          "hidden_samples": 12329
+        }
+      ],
+      "behind_solid_walls": false
+    }
+  ],
+  "main_at_verification": [
+    {
+      "d": 0,
+      "file": "fac_cafe_lv2_0.webp",
+      "sha256": "6e4396ed81db1b82aff7a6784a18cc5848f60987d9ad7de0e320b5b4914ab4ad"
+    },
+    {
+      "d": 1,
+      "file": "fac_cafe_lv2_1.webp",
+      "sha256": "a2d526009cc8b0df09604bd5d073ae65214e54dd3fc540f86d4a51de58164a7d"
+    },
+    {
+      "d": 2,
+      "file": "fac_cafe_lv2_2.webp",
+      "sha256": "dbfdee74bd47e21744f8ea387a6f8818725ba8d11fbb7ef9531ec3c6708faace"
+    },
+    {
+      "d": 3,
+      "file": "fac_cafe_lv2_3.webp",
+      "sha256": "b181ccced68bf550f568e0345e22da4b79d59c2a3edde0bae598b4dec005493a"
+    }
+  ],
+  "limits": [
+    "New common layout interprets inconsistent source views.",
+    "Bottom lines and glass depth only; no automatic aesthetic score or exact hidden-structure recovery.",
+    "Glass is layered tint/reflection, not physically refracted or ray traced."
+  ]
+}
