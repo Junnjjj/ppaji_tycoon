@@ -1,0 +1,83 @@
+{
+  "http": [
+    {
+      "id": "cafe",
+      "d": 0,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "cafe",
+      "d": 1,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "cafe",
+      "d": 2,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "cafe",
+      "d": 3,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "cafe_lv3",
+      "d": 0,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "cafe_lv3",
+      "d": 1,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "cafe_lv3",
+      "d": 2,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "cafe_lv3",
+      "d": 3,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "shop",
+      "d": 0,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "shop",
+      "d": 1,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "shop",
+      "d": 2,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    },
+    {
+      "id": "shop",
+      "d": 3,
+      "http_sha_exact": true,
+      "decoded_rgba_exact": true
+    }
+  ],
+  "tests": {
+    "passed": 21,
+    "files": [
+      "approved-facilities.test.ts",
+      "outdoor-facilities.test.ts"
+    ]
+  }
+}

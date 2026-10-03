@@ -507,32 +507,32 @@
       "bytes": 26110
     },
     "fac/cafe/0": {
-      "file": "fac_cafe_0.webp",
+      "file": "fac_cafe_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "54c7ac613a588e385ef7fc631f0d751d82db571dbc58bcc8e96e577d15a9a046",
-      "bytes": 86838
+      "sha256": "3824196f2a0b50c97fb98400c01c7c3bf13b3ff45e5317e8014951ba6a1ffe26",
+      "bytes": 42392
     },
     "fac/cafe/1": {
-      "file": "fac_cafe_1.webp",
+      "file": "fac_cafe_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "c39c03e29e0788aa8f90e8afc801bb14715070b7da9166b0f75df78e4ed3bf3a",
-      "bytes": 82682
+      "sha256": "1e6b955f58e198cc131e6339dae25ffac4065382ae686a93152669c55cc415b8",
+      "bytes": 37322
     },
     "fac/cafe/2": {
-      "file": "fac_cafe_2.webp",
+      "file": "fac_cafe_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "23840e9d6d5b530cfba1161b0b0369aaa228d8cee164666ef993615752ce93b8",
-      "bytes": 66398
+      "sha256": "ce0ec89b10c5b6e51ad5ce96ac45ba9f56807b77ec6758def70a670d0c48891b",
+      "bytes": 30294
     },
     "fac/cafe/3": {
-      "file": "fac_cafe_3.webp",
+      "file": "fac_cafe_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "e7cc23f78b78e156e03ff8f6eed452afd0e4509a0e54b84397165ddddd48c912",
-      "bytes": 76720
+      "sha256": "fb681f2f0b45cb102b7aaab510c372b45acea28a590588d667c297aead1767f6",
+      "bytes": 39782
     },
     "fac/cafe_lv2/0": {
       "file": "fac_cafe_lv2_0_accepted_20261003.webp",
@@ -563,32 +563,32 @@
       "bytes": 43674
     },
     "fac/cafe_lv3/0": {
-      "file": "fac_cafe_lv3_0.webp",
+      "file": "fac_cafe_lv3_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "789838b57b22622ef2660d54fddcf51b826e9b5461a1518e0f78d79a9d82e682",
-      "bytes": 130224
+      "sha256": "5fdf8c85ec8fddda340a7b5fc3d48e8ad56133e3c2ea4b3257c3fe1c675e63e0",
+      "bytes": 54020
     },
     "fac/cafe_lv3/1": {
-      "file": "fac_cafe_lv3_1.webp",
+      "file": "fac_cafe_lv3_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "ed8082cc0960d13d1300279d51ded242d47e8cd8e5f009997456524ca39a67af",
-      "bytes": 127042
+      "sha256": "75f5e21a54811f5c13bb1f03700b0b619a686c15ed70009cd54d994778d8dc6f",
+      "bytes": 49234
     },
     "fac/cafe_lv3/2": {
-      "file": "fac_cafe_lv3_2.webp",
+      "file": "fac_cafe_lv3_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "cec59dbf09e261cfcc001275653573404ba986e0ce843352c46c40d37e70b2ae",
-      "bytes": 88410
+      "sha256": "66a916d2f5451e8d53bc619c1901680096b76f89ac7e8f2d41d5602631dda955",
+      "bytes": 38170
     },
     "fac/cafe_lv3/3": {
-      "file": "fac_cafe_lv3_3.webp",
+      "file": "fac_cafe_lv3_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "923be456153e592c9cf5938f8bf02dc934c58023be78776332e34491e1f9bf4e",
-      "bytes": 110964
+      "sha256": "6514e3797f5f4304bca817535df075028f22055ecab4ba7dcfd86d781f400827",
+      "bytes": 47876
     },
     "fac/shade_net/0": {
       "file": "fac_shade_net_0.webp",
@@ -619,32 +619,32 @@
       "bytes": 59942
     },
     "fac/shop/0": {
-      "file": "fac_shop_0.webp",
+      "file": "fac_shop_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "d1b1ed1729a919052a485d973a7afab9b46c0d7bc6afbd50c900947f1c379ec2",
-      "bytes": 87984
+      "sha256": "adb2dfba501d6d30eec12d5c8d9196904eb6b4907e801b0e848d0074029379b2",
+      "bytes": 38116
     },
     "fac/shop/1": {
-      "file": "fac_shop_1.webp",
+      "file": "fac_shop_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "63cecd685339b66d24ffba9d5a703c2f5c6f4a47e99b3e76c8b3dc139419ba00",
-      "bytes": 80860
+      "sha256": "abb49129ecf0c86bda0d43febcc23e403c9e06dac885bb1d73da4023a7215de2",
+      "bytes": 39144
     },
     "fac/shop/2": {
-      "file": "fac_shop_2.webp",
+      "file": "fac_shop_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "db3d59bfd2b3399eda374a8b2c5026601c2b725e41908020243c4dabd016081e",
-      "bytes": 66690
+      "sha256": "9731784bf6fa2fa1a6f8592dd987aef8761e239b9aa344d288cb7b9f4193d9b8",
+      "bytes": 25888
     },
     "fac/shop/3": {
-      "file": "fac_shop_3.fix-422ff9eeef95.webp",
+      "file": "fac_shop_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "422ff9eeef95631f06988ab5e65f9d940082dcabf627181f25d0cfc5b7d57e9f",
-      "bytes": 79354
+      "sha256": "8894993e6d8bd667e578bc91319d64c97a695ec233e18e6e537ba757c1101031",
+      "bytes": 29124
     },
     "fac/snackbar/0": {
       "file": "fac_snackbar_0.webp",

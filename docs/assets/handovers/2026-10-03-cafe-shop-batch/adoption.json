@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "cafe": "cafe-shop-batch-20261003",
+    "cafe_lv3": "cafe-shop-batch-20261003",
+    "shop": "cafe-shop-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "cafe",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/cafe/d0.png",
+      "source_sha256": "4dae5fb466125770c773c9d70f0f25dcf703e6a251194f7fdd0ad853971388e5",
+      "old": {
+        "file": "fac_cafe_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "54c7ac613a588e385ef7fc631f0d751d82db571dbc58bcc8e96e577d15a9a046",
+        "bytes": 86838
+      },
+      "new": {
+        "file": "fac_cafe_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3824196f2a0b50c97fb98400c01c7c3bf13b3ff45e5317e8014951ba6a1ffe26",
+        "bytes": 42392
+      },
+      "old_native": {
+        "file": "cafe/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "38c89373bad8b32ee2dfb6e02e29845cb214faeb114924592c87ab10491f25a5"
+      },
+      "new_native": {
+        "file": "cafe/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "5d7cd4a90120adbd62c43304b460f80405119ed590590b80e9606bec7d8f93a2"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/cafe/d1.png",
+      "source_sha256": "8c5e16012dc3672ff7f2b77bf8ceeafc1dd23707a60b3592d129607df1f85645",
+      "old": {
+        "file": "fac_cafe_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "c39c03e29e0788aa8f90e8afc801bb14715070b7da9166b0f75df78e4ed3bf3a",
+        "bytes": 82682
+      },
+      "new": {
+        "file": "fac_cafe_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "1e6b955f58e198cc131e6339dae25ffac4065382ae686a93152669c55cc415b8",
+        "bytes": 37322
+      },
+      "old_native": {
+        "file": "cafe/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9e9b3629968502c8a792d01a1a4ce97aaf89fba42bef5762ae0864d3b1257ec6"
+      },
+      "new_native": {
+        "file": "cafe/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "030bb939911648c36d2a8c18c31031e9496d2af172f82a39cfaa5378a085664f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/cafe/d2.png",
+      "source_sha256": "8160176f9bf8a54120ef4c3bfee365e8bc9dc1b96537dd9f464e2b5c238c01c3",
+      "old": {
+        "file": "fac_cafe_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "23840e9d6d5b530cfba1161b0b0369aaa228d8cee164666ef993615752ce93b8",
+        "bytes": 66398
+      },
+      "new": {
+        "file": "fac_cafe_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "ce0ec89b10c5b6e51ad5ce96ac45ba9f56807b77ec6758def70a670d0c48891b",
+        "bytes": 30294
+      },
+      "old_native": {
+        "file": "cafe/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f6b7d4a219213f5cdd82e1caed97c4fd3d57dda123f54dc1511b4641bbdf402d"
+      },
+      "new_native": {
+        "file": "cafe/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "acfff569b623ebac755f104b4241ebe313891c05b125269a810d63b3a1c46e47"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/cafe/d3.png",
+      "source_sha256": "781a718e84a82dbf209bba7107673bf692a6dae0cdf65e43f8b97a9d660b1f5d",
+      "old": {
+        "file": "fac_cafe_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e7cc23f78b78e156e03ff8f6eed452afd0e4509a0e54b84397165ddddd48c912",
+        "bytes": 76720
+      },
+      "new": {
+        "file": "fac_cafe_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "fb681f2f0b45cb102b7aaab510c372b45acea28a590588d667c297aead1767f6",
+        "bytes": 39782
+      },
+      "old_native": {
+        "file": "cafe/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "2883000888c9892a37a32f2773515854dcde9cb104f9f7eb39b69f2f9c11da9c"
+      },
+      "new_native": {
+        "file": "cafe/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "27cae30efbf629dbe2e01ad12103931c1b90ad326adb1abd96063be761184f4a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe_lv3",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/cafe_lv3/d0.png",
+      "source_sha256": "0d743dba8d873d74dd5b468443e9773a68be52be44c80c00ee406cdbe9a435cd",
+      "old": {
+        "file": "fac_cafe_lv3_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "789838b57b22622ef2660d54fddcf51b826e9b5461a1518e0f78d79a9d82e682",
+        "bytes": 130224
+      },
+      "new": {
+        "file": "fac_cafe_lv3_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5fdf8c85ec8fddda340a7b5fc3d48e8ad56133e3c2ea4b3257c3fe1c675e63e0",
+        "bytes": 54020
+      },
+      "old_native": {
+        "file": "cafe_lv3/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "8b52118af2cdfb035d23325d69048eba6bd8ea8e5d4f29587762e86c4c22c2e8"
+      },
+      "new_native": {
+        "file": "cafe_lv3/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "73dd1b34c9d78b646438088dbe55196d76e51dc40c04c875449f714d75851a0d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe_lv3",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/cafe_lv3/d1.png",
+      "source_sha256": "c5786ec4640af4f4485bac596fd1a314755911759ee18a8cbecfe135cd715163",
+      "old": {
+        "file": "fac_cafe_lv3_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "ed8082cc0960d13d1300279d51ded242d47e8cd8e5f009997456524ca39a67af",
+        "bytes": 127042
+      },
+      "new": {
+        "file": "fac_cafe_lv3_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "75f5e21a54811f5c13bb1f03700b0b619a686c15ed70009cd54d994778d8dc6f",
+        "bytes": 49234
+      },
+      "old_native": {
+        "file": "cafe_lv3/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e8b86be22c6c869e7a9fa59c85c075d43e2e9da4a4461a169c95401193bc2105"
+      },
+      "new_native": {
+        "file": "cafe_lv3/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "fcd5d27eab7068df95e2344a49ab9a839e81f6834735398be6e4c83e017a83b6"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe_lv3",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/cafe_lv3/d2.png",
+      "source_sha256": "c3f7f5df6991fa35ef7cc3d7f13defa045d90586d8d6bef8e846e846691a5c04",
+      "old": {
+        "file": "fac_cafe_lv3_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "cec59dbf09e261cfcc001275653573404ba986e0ce843352c46c40d37e70b2ae",
+        "bytes": 88410
+      },
+      "new": {
+        "file": "fac_cafe_lv3_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "66a916d2f5451e8d53bc619c1901680096b76f89ac7e8f2d41d5602631dda955",
+        "bytes": 38170
+      },
+      "old_native": {
+        "file": "cafe_lv3/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "88c411217cc43934309feed371ed47b4d3dcd6ae7bfed2a6c403a526658f0aa8"
+      },
+      "new_native": {
+        "file": "cafe_lv3/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9f8e36b454fa4f61846b90a0fbecdb7d351b50fc33dac6b65454519674c02d2a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "cafe_lv3",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/cafe_lv3/d3.png",
+      "source_sha256": "36da3eb1c64b8d281ff577346c0b6987caab09e1f45dd5647c28598f8cfe6194",
+      "old": {
+        "file": "fac_cafe_lv3_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "923be456153e592c9cf5938f8bf02dc934c58023be78776332e34491e1f9bf4e",
+        "bytes": 110964
+      },
+      "new": {
+        "file": "fac_cafe_lv3_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "6514e3797f5f4304bca817535df075028f22055ecab4ba7dcfd86d781f400827",
+        "bytes": 47876
+      },
+      "old_native": {
+        "file": "cafe_lv3/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "b9f58ad1db01aacbec57246b7dbc652689411adefc61f8a40d62aeffb6e68dc9"
+      },
+      "new_native": {
+        "file": "cafe_lv3/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "be26e69fb3846962523d9d36d9b95aac82231d284921f528d6adb380f4b5c62a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "shop",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/shop/d0.png",
+      "source_sha256": "44f1d91df14a476b797fdb44c7cfd44d0270adcb9da8cd87c17603ab74a93fd6",
+      "old": {
+        "file": "fac_shop_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "d1b1ed1729a919052a485d973a7afab9b46c0d7bc6afbd50c900947f1c379ec2",
+        "bytes": 87984
+      },
+      "new": {
+        "file": "fac_shop_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "adb2dfba501d6d30eec12d5c8d9196904eb6b4907e801b0e848d0074029379b2",
+        "bytes": 38116
+      },
+      "old_native": {
+        "file": "shop/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "53e051a441344baf84fcba5354601f325b93483349f7e59d83d7e99edacdcacd"
+      },
+      "new_native": {
+        "file": "shop/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0e613719fc27be1c9c1fdb68996464dbfd8a9b46f0e80e927d43807bc2792147"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "shop",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/shop/d1.png",
+      "source_sha256": "b0c8d64b7b65594fd5e0eac7aef440631d36b1cf3c4376eba4cdd3c67cbd5053",
+      "old": {
+        "file": "fac_shop_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "63cecd685339b66d24ffba9d5a703c2f5c6f4a47e99b3e76c8b3dc139419ba00",
+        "bytes": 80860
+      },
+      "new": {
+        "file": "fac_shop_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "abb49129ecf0c86bda0d43febcc23e403c9e06dac885bb1d73da4023a7215de2",
+        "bytes": 39144
+      },
+      "old_native": {
+        "file": "shop/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "852803dbe2b0ad0984901e9279485eb17803303c8406a891048c26019821e862"
+      },
+      "new_native": {
+        "file": "shop/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "da4743de50edfcf2378ac8a91495717d381b22fa3056ca6b449f88a6ba82329a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "shop",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/shop/d2.png",
+      "source_sha256": "71a8dbdc054b16609cebb2c5929a10b3eb699d0fcc43ae36c206870ea1fff2f4",
+      "old": {
+        "file": "fac_shop_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "db3d59bfd2b3399eda374a8b2c5026601c2b725e41908020243c4dabd016081e",
+        "bytes": 66690
+      },
+      "new": {
+        "file": "fac_shop_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9731784bf6fa2fa1a6f8592dd987aef8761e239b9aa344d288cb7b9f4193d9b8",
+        "bytes": 25888
+      },
+      "old_native": {
+        "file": "shop/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9e9080a0870da28756f2210203568bc6b4b6abf104d6342f7ce0f50127b9b27f"
+      },
+      "new_native": {
+        "file": "shop/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "20a3b396a6c2769bc7ed8d060c29dd556fa3ec7b93fe905c1867344811988b2d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "shop",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe-shop-batch-20261003/candidates/shop/d3.png",
+      "source_sha256": "9bdb794dbba0c83eda161f569f738f7a923dc291bf84bfcca3bfd08aa5d54f67",
+      "old": {
+        "file": "fac_shop_3.fix-422ff9eeef95.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "422ff9eeef95631f06988ab5e65f9d940082dcabf627181f25d0cfc5b7d57e9f",
+        "bytes": 79354
+      },
+      "new": {
+        "file": "fac_shop_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8894993e6d8bd667e578bc91319d64c97a695ec233e18e6e537ba757c1101031",
+        "bytes": 29124
+      },
+      "old_native": {
+        "file": "shop/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "5820bba659eb6f12263670a5dd79acbbd807e7847c51681b67c3da5931cdfc7e"
+      },
+      "new_native": {
+        "file": "shop/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "25d88ffb8d231ae58e500dc5a46e6d1175c0462922ef79bf7d2cc2535d18f9d2"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

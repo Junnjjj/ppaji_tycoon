@@ -1,0 +1,5 @@
+{
+  "failed_check": "All vertical glass invisible in cafe_lv3 d2",
+  "reason": "Upper vertical glazing is legitimately visible through actual roof apertures; lower glass is fully occluded.",
+  "replacement_check": "Require zero PNG glass on/off differences outside projected skylight openings with 3px filter margin. Keep lower glass visibility zero."
+}
