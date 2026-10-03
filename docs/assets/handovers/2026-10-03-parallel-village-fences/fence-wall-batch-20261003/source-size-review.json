@@ -1,0 +1,1090 @@
+[
+  {
+    "id": "env_wood_fence",
+    "d": 0,
+    "source": [
+      121,
+      143,
+      207,
+      229
+    ],
+    "source_nonzero_alpha_bbox": [
+      119,
+      141,
+      209,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      134,
+      208,
+      230
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_wood_fence-d0.webp",
+      "bbox": [
+        121,
+        143,
+        207,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 1,
+    "source": [
+      57,
+      143,
+      143,
+      229
+    ],
+    "source_nonzero_alpha_bbox": [
+      55,
+      141,
+      145,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      134,
+      144,
+      230
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_wood_fence-d1.webp",
+      "bbox": [
+        57,
+        143,
+        143,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 2,
+    "source": [
+      57,
+      175,
+      143,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      55,
+      173,
+      145,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      166,
+      144,
+      262
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_wood_fence-d2.webp",
+      "bbox": [
+        57,
+        175,
+        143,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 3,
+    "source": [
+      121,
+      175,
+      207,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      119,
+      173,
+      209,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      166,
+      208,
+      262
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_wood_fence-d3.webp",
+      "bbox": [
+        121,
+        175,
+        207,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 0,
+    "source": [
+      57,
+      143,
+      207,
+      229
+    ],
+    "source_nonzero_alpha_bbox": [
+      55,
+      141,
+      209,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      134,
+      208,
+      230
+    ],
+    "width_ratio": 1.0133333333333334,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_wood_fence_corner-d0.webp",
+      "bbox": [
+        57,
+        143,
+        207,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 1,
+    "source": [
+      57,
+      143,
+      143,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      55,
+      141,
+      145,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      134,
+      144,
+      262
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.0847457627118644,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_wood_fence_corner-d1.webp",
+      "bbox": [
+        57,
+        143,
+        143,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 2,
+    "source": [
+      57,
+      175,
+      207,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      55,
+      173,
+      209,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      166,
+      208,
+      262
+    ],
+    "width_ratio": 1.0133333333333334,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_wood_fence_corner-d2.webp",
+      "bbox": [
+        57,
+        175,
+        207,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 3,
+    "source": [
+      121,
+      143,
+      207,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      119,
+      141,
+      209,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      134,
+      208,
+      262
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.0847457627118644,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_wood_fence_corner-d3.webp",
+      "bbox": [
+        121,
+        143,
+        207,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 0,
+    "source": [
+      121,
+      143,
+      207,
+      229
+    ],
+    "source_nonzero_alpha_bbox": [
+      119,
+      141,
+      209,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      134,
+      208,
+      230
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_wood_fence_end-d0.webp",
+      "bbox": [
+        121,
+        143,
+        207,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 1,
+    "source": [
+      57,
+      143,
+      143,
+      229
+    ],
+    "source_nonzero_alpha_bbox": [
+      55,
+      141,
+      145,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      134,
+      144,
+      230
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_wood_fence_end-d1.webp",
+      "bbox": [
+        57,
+        143,
+        143,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 2,
+    "source": [
+      57,
+      175,
+      143,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      55,
+      173,
+      145,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      166,
+      144,
+      262
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_wood_fence_end-d2.webp",
+      "bbox": [
+        57,
+        175,
+        143,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 3,
+    "source": [
+      121,
+      175,
+      207,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      119,
+      173,
+      209,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      166,
+      208,
+      262
+    ],
+    "width_ratio": 1.0232558139534884,
+    "height_ratio": 1.1162790697674418,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_wood_fence_end-d3.webp",
+      "bbox": [
+        121,
+        175,
+        207,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 0,
+    "source": [
+      120,
+      154,
+      201,
+      230
+    ],
+    "source_nonzero_alpha_bbox": [
+      116,
+      152,
+      203,
+      232
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      148,
+      200,
+      228
+    ],
+    "width_ratio": 0.9876543209876543,
+    "height_ratio": 1.0526315789473684,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_stone_wall-d0.webp",
+      "bbox": [
+        120,
+        155,
+        200,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 1,
+    "source": [
+      55,
+      154,
+      136,
+      229
+    ],
+    "source_nonzero_alpha_bbox": [
+      53,
+      152,
+      140,
+      232
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      148,
+      136,
+      228
+    ],
+    "width_ratio": 0.9876543209876543,
+    "height_ratio": 1.0666666666666667,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_stone_wall-d1.webp",
+      "bbox": [
+        56,
+        155,
+        136,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            104,
+            162.18999999999988,
+            127,
+            154.30999999999992
+          ],
+          "degrees": -18.911905793042358,
+          "error": 7.653145206957642,
+          "rmse": 1.1089066295425762,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 2,
+    "source": [
+      55,
+      186,
+      137,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      52,
+      184,
+      139,
+      264
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      180,
+      136,
+      260
+    ],
+    "width_ratio": 0.975609756097561,
+    "height_ratio": 1.0666666666666667,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_stone_wall-d2.webp",
+      "bbox": [
+        55,
+        187,
+        136,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 3,
+    "source": [
+      120,
+      186,
+      201,
+      261
+    ],
+    "source_nonzero_alpha_bbox": [
+      22,
+      65,
+      204,
+      291
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      180,
+      200,
+      260
+    ],
+    "width_ratio": 0.9876543209876543,
+    "height_ratio": 1.0666666666666667,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_stone_wall-d3.webp",
+      "bbox": [
+        120,
+        187,
+        201,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            168,
+            194.23333333333332,
+            191,
+            186.18333333333337
+          ],
+          "degrees": -19.290046219188614,
+          "error": 7.275004780811386,
+          "rmse": 1.1008204011352427,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 0,
+    "source": [
+      56,
+      151,
+      200,
+      230
+    ],
+    "source_nonzero_alpha_bbox": [
+      53,
+      119,
+      203,
+      232
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      148,
+      200,
+      228
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0126582278481013,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_stone_wall_corner-d0.webp",
+      "bbox": [
+        56,
+        152,
+        200,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 1,
+    "source": [
+      50,
+      155,
+      136,
+      262
+    ],
+    "source_nonzero_alpha_bbox": [
+      41,
+      117,
+      150,
+      264
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      148,
+      136,
+      260
+    ],
+    "width_ratio": 0.9302325581395349,
+    "height_ratio": 1.0467289719626167,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_stone_wall_corner-d1.webp",
+      "bbox": [
+        50,
+        155,
+        136,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 2,
+    "source": [
+      56,
+      186,
+      200,
+      264
+    ],
+    "source_nonzero_alpha_bbox": [
+      52,
+      184,
+      203,
+      267
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      180,
+      200,
+      260
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0256410256410255,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_stone_wall_corner-d2.webp",
+      "bbox": [
+        56,
+        187,
+        200,
+        264
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 3,
+    "source": [
+      120,
+      154,
+      206,
+      262
+    ],
+    "source_nonzero_alpha_bbox": [
+      22,
+      65,
+      209,
+      275
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      148,
+      200,
+      260
+    ],
+    "width_ratio": 0.9302325581395349,
+    "height_ratio": 1.037037037037037,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_stone_wall_corner-d3.webp",
+      "bbox": [
+        120,
+        155,
+        206,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 0,
+    "source": [
+      120,
+      154,
+      200,
+      230
+    ],
+    "source_nonzero_alpha_bbox": [
+      79,
+      152,
+      203,
+      232
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      148,
+      200,
+      228
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0526315789473684,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_stone_wall_end-d0.webp",
+      "bbox": [
+        120,
+        155,
+        200,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            168,
+            220.80999999999997,
+            191,
+            228.69
+          ],
+          "degrees": 18.911905793042465,
+          "error": 7.653145206957536,
+          "rmse": 1.1089066295425782,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 1,
+    "source": [
+      56,
+      154,
+      136,
+      229
+    ],
+    "source_nonzero_alpha_bbox": [
+      29,
+      40,
+      150,
+      232
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      148,
+      136,
+      228
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0666666666666667,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_stone_wall_end-d1.webp",
+      "bbox": [
+        56,
+        155,
+        136,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            104,
+            162.25333333333325,
+            127,
+            154.16333333333327
+          ],
+          "degrees": -19.37876849039667,
+          "error": 7.1862825096033305,
+          "rmse": 1.0344051243843753,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 2,
+    "source": [
+      56,
+      187,
+      136,
+      262
+    ],
+    "source_nonzero_alpha_bbox": [
+      52,
+      184,
+      140,
+      264
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      56,
+      180,
+      136,
+      260
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0666666666666667,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_stone_wall_end-d2.webp",
+      "bbox": [
+        57,
+        187,
+        135,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 3,
+    "source": [
+      120,
+      187,
+      200,
+      262
+    ],
+    "source_nonzero_alpha_bbox": [
+      22,
+      65,
+      203,
+      264
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      120,
+      180,
+      200,
+      260
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0666666666666667,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_stone_wall_end-d3.webp",
+      "bbox": [
+        121,
+        187,
+        200,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  }
+]

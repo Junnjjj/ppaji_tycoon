@@ -1,0 +1,46 @@
+{
+  "run": "run_fc9dbd55012a",
+  "groups": {
+    "village-batch-20261003": [
+      "env_village_house",
+      "env_village_shop",
+      "env_pension"
+    ],
+    "village-services-batch-20261003": [
+      "env_small_hotel",
+      "env_convenience_store",
+      "env_maintenance_shed"
+    ],
+    "fence-wall-batch-20261003": [
+      "env_wood_fence",
+      "env_wood_fence_corner",
+      "env_wood_fence_end",
+      "env_stone_wall",
+      "env_stone_wall_corner",
+      "env_stone_wall_end"
+    ]
+  },
+  "applied_before_wave": 47,
+  "main_previous_commit": "d213542",
+  "dispatches": {
+    "village-batch-20261003": "ctx_0e98eeee41ac",
+    "village-services-batch-20261003": "ctx_8f2e99c5a91f",
+    "fence-wall-batch-20261003": "ctx_8137409f36a8"
+  },
+  "integration_owner": "coordinator",
+  "status": "APPLIED_VERIFIED",
+  "worker_outcomes": {
+    "village-batch-20261003": "succeeded",
+    "village-services-batch-20261003": "succeeded",
+    "fence-wall-batch-20261003": "succeeded"
+  },
+  "followup": {
+    "task": "task_49856df8fe53",
+    "dispatch": "ctx_0130fe112f25",
+    "outcome": "succeeded",
+    "change": "Continuous coplanar gable plaster"
+  },
+  "resources": "All settled worker terminals released; old retained rows are ownership transfer history",
+  "applied_after_wave": 59,
+  "remaining": 41
+}

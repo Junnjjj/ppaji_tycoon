@@ -1,0 +1,109 @@
+{
+  "status": "INSPECTED",
+  "scope": "12 final candidates, originals and saved-line overlays inspected in view_image; no actual runtime review",
+  "boards": [
+    "env_village_house-comparison.png",
+    "env_village_shop-comparison.png",
+    "env_pension-comparison.png"
+  ],
+  "fixed": [
+    "source roof ridge orientation",
+    "solid teal paneled doors",
+    "round corner shrubs and white flowers",
+    "raised balcony flowerboxes",
+    "artificial gable material line",
+    "door handle and balcony return gaps",
+    "Coplanar wall/gable diagonal color boundary: exterior gable inherits adjoining wall base color and outward-normal shade"
+  ],
+  "remaining": [
+    "Authored paint is smoother and more regular than the source.",
+    "Source rear flowerbox/window variability normalized to a declared inferred layout.",
+    "Source relative dimensions reviewed numerically; largest alpha>128 height ratio is 1.087 for pension rear views.",
+    "No exact collision or art95 certification."
+  ],
+  "files": [
+    {
+      "id": "env_village_house",
+      "d": 0,
+      "file": "candidates/env_village_house/d0.png",
+      "sha256": "a178f54c9d27813be7976da3381fe2cbcfc9d2c4d88d981812d910fef444f983"
+    },
+    {
+      "id": "env_village_house",
+      "d": 1,
+      "file": "candidates/env_village_house/d1.png",
+      "sha256": "2b1a4235294c43644e7d76a4b506aa485a6f7d511c032208db0f2252329ed05f"
+    },
+    {
+      "id": "env_village_house",
+      "d": 2,
+      "file": "candidates/env_village_house/d2.png",
+      "sha256": "d741fc849fc91093971c2a6b18054f1d60fada74ff87e7741bb17eba28b34b49"
+    },
+    {
+      "id": "env_village_house",
+      "d": 3,
+      "file": "candidates/env_village_house/d3.png",
+      "sha256": "2dedd825ab9759faafaede583f69b52ed53a08023fabf3cbe33e84aaa737ca24"
+    },
+    {
+      "id": "env_village_shop",
+      "d": 0,
+      "file": "candidates/env_village_shop/d0.png",
+      "sha256": "2af0fa42001015292f792b7b175dc2dc32e9e9a06912f32da04af9bec189170b"
+    },
+    {
+      "id": "env_village_shop",
+      "d": 1,
+      "file": "candidates/env_village_shop/d1.png",
+      "sha256": "366eb31004621768ffa165e0062443fe3605c52082550b9193d8db8358a043fd"
+    },
+    {
+      "id": "env_village_shop",
+      "d": 2,
+      "file": "candidates/env_village_shop/d2.png",
+      "sha256": "aad3376252888017438884d9d6cccbf3a7904a59662eb9544e8afebad9c7c094"
+    },
+    {
+      "id": "env_village_shop",
+      "d": 3,
+      "file": "candidates/env_village_shop/d3.png",
+      "sha256": "93e5c5f2bcc03271ad6891931811a290236dc2b81ef4ed80a296be2f03652adf"
+    },
+    {
+      "id": "env_pension",
+      "d": 0,
+      "file": "candidates/env_pension/d0.png",
+      "sha256": "6aa1068fec51940e3c286329d59289bd342aa7041e9ca732664bb3a63bc644b3"
+    },
+    {
+      "id": "env_pension",
+      "d": 1,
+      "file": "candidates/env_pension/d1.png",
+      "sha256": "7f9e67b8dc07ca0dfe5811211041ac7ea14411bf68a364f38ac5deb3f5c9bc7c"
+    },
+    {
+      "id": "env_pension",
+      "d": 2,
+      "file": "candidates/env_pension/d2.png",
+      "sha256": "bd6f82bc45bf4ce5e25a775e2b20bfeae217c8b416d6b674e1d6af64e7885f78"
+    },
+    {
+      "id": "env_pension",
+      "d": 3,
+      "file": "candidates/env_pension/d3.png",
+      "sha256": "b318b81c08185708c192da0458b70167d69708c2283dc3e60f10448f3d12ae5c"
+    }
+  ],
+  "gable_paint_followup": {
+    "all_12_visually_reviewed": true,
+    "boards": [
+      "env_village_house-comparison.png",
+      "env_village_shop-comparison.png",
+      "env_pension-comparison.png"
+    ],
+    "qa": "gable-paint-qa.json",
+    "pre_fix_evidence": "pre-gable-paint-fix/",
+    "geometry_and_alpha_unchanged": true
+  }
+}

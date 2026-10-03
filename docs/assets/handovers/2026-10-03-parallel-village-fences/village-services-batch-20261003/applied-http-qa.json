@@ -1,0 +1,86 @@
+[
+  {
+    "id": "env_small_hotel",
+    "d": 0,
+    "sha256": "61e1c64fff860e4d366f58edb20f26ed51a5a9279393d1fa91dc955ea2e40cf6",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 1,
+    "sha256": "39847a72575d32e0b35db2fe1d6ea998915f76dbaa11e90f81508cec0f2123fa",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 2,
+    "sha256": "a4b8825c7bd0fe83700e0024bf820333b1dbdf30389020d42ecdfe175e8d3a28",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 3,
+    "sha256": "17e52ce686969252183ed69b56ddc0cccbafa139431e9831aac69c18fbf0e8fe",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 0,
+    "sha256": "45de29fee19ee229de613adfb25294453c3eb14f830be3ca256c09b32c89717c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 1,
+    "sha256": "a3b0828728d6a595fbfc420c27d4dbf375033195fdb54b3dc43a0ceda41e2978",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 2,
+    "sha256": "5d0dbab66e6e2f043e049b345891d56c5da78e90509f8876dbefe4810680919f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 3,
+    "sha256": "6cd798ad42672e8c39a9cfaf4f7ea2f0b1713878161fd8a9d762278ba1ff0be0",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 0,
+    "sha256": "2e5263de39ff221e0a57696fdf1c04ab63777a740bc8dd1006bd44ea7129efb1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 1,
+    "sha256": "4ff89a597480fd5dd4019c6a64c89bdc8759088bbf0c404531834aa2b1736fe1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 2,
+    "sha256": "0f14b34cccf5b39ef51a94ac13eab849e01a08fbdf4e0714d0545e822db73bee",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 3,
+    "sha256": "7446fc3670a3fc74006cb1cd77554ab36b2eaa892322ac35a0625611d3048a9b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

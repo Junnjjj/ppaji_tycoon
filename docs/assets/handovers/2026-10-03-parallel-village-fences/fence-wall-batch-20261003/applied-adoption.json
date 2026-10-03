@@ -1,0 +1,616 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "env_wood_fence": "fence-wall-batch-20261003",
+    "env_wood_fence_corner": "fence-wall-batch-20261003",
+    "env_wood_fence_end": "fence-wall-batch-20261003",
+    "env_stone_wall": "fence-wall-batch-20261003",
+    "env_stone_wall_corner": "fence-wall-batch-20261003",
+    "env_stone_wall_end": "fence-wall-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "env_wood_fence",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence/d0.png",
+      "source_sha256": "4ac9e6108bfcbd5e5ad25cf38cca2d1a71159c89f9a4cd986d2fe6a8b4b39bd3",
+      "old": {
+        "file": "fac_env_wood_fence_0.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "b926a5099232de5e3dc5f41073ba650880c1ac9aeb540bc8a5a379f66e38e1dd",
+        "bytes": 2108
+      },
+      "new": {
+        "file": "fac_env_wood_fence_0_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "f83ff06848d76c3c5c238d1b7364e6ea92b394f780646b705f93b8a6acd8f29e",
+        "bytes": 3894
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence/d1.png",
+      "source_sha256": "a56658dd491be1bd26ae8e2dbf5ecb0295a7f1c87b8995ee54b625804d3a4e82",
+      "old": {
+        "file": "fac_env_wood_fence_1.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "ff0ff15562d120a587a72c46e90bbb0d2c1579d58d25207d783847bc7c1021b6",
+        "bytes": 2146
+      },
+      "new": {
+        "file": "fac_env_wood_fence_1_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "46fa808db2c955aa61835375bd369a634b93aa84de0704422afd8906c49990ba",
+        "bytes": 3846
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence/d2.png",
+      "source_sha256": "6b26ac9629ed2bf2552c1599d6c3607dbee96d3940b3fce8a20aabe5393f5e9d",
+      "old": {
+        "file": "fac_env_wood_fence_2.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "ceb5d77d470baed7e58f9e171a57c84bdf861ed39f76f43652a8fba42f4fd1d6",
+        "bytes": 2110
+      },
+      "new": {
+        "file": "fac_env_wood_fence_2_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "38668b269a1c6de24984b7525cacc55a769c22778b9d1d827d25afd5062f1fc1",
+        "bytes": 3896
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence/d3.png",
+      "source_sha256": "b5a3d9ebf2020a67e19b0ac316029143580643542aaa43e38b7882610d16cd99",
+      "old": {
+        "file": "fac_env_wood_fence_3.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "2bd2ba284b9a7ab552d4fb52cfdce936cdcdaa283bb9602f18384cbfdb6f5a81",
+        "bytes": 2148
+      },
+      "new": {
+        "file": "fac_env_wood_fence_3_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "28d8b8c8f1c868897a4f79d0dd1f6a42abb2fdef04bc9a8457a3901902e40c12",
+        "bytes": 3866
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence_corner/d0.png",
+      "source_sha256": "2dc0009503aaa6ba2d05ec5894af405eb70a834840acee3c2e73cf02c9e20aa6",
+      "old": {
+        "file": "fac_env_wood_fence_corner_0.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "ce75d3045ba880d9a994e62806c6c8bb725989c2b8eb0b79ac3d07df8c5b4a20",
+        "bytes": 3020
+      },
+      "new": {
+        "file": "fac_env_wood_fence_corner_0_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "151d2c8c20d7ca724ec2e01ed8feb9141f6628852da00b7ce0d35564f24abb73",
+        "bytes": 6138
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence_corner/d1.png",
+      "source_sha256": "3c936c1104d9bde8c7bed8f2048e2f2068f0ac2d16ce6677465cd68ba9515759",
+      "old": {
+        "file": "fac_env_wood_fence_corner_1.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "570396aa0505177e8080a617796b0abb1aded209bb6145277e6ac253b8904424",
+        "bytes": 3292
+      },
+      "new": {
+        "file": "fac_env_wood_fence_corner_1_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "49ba3240f9223a22e99f0f351c4a5ffe5e58fa6addd171f1363ccf68bbd95e89",
+        "bytes": 5804
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence_corner/d2.png",
+      "source_sha256": "2b9481e25052774716850a89634a73111e4584a76aabb1a681d03cb7db3a8f79",
+      "old": {
+        "file": "fac_env_wood_fence_corner_2.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "7160b92521934bee82acc7bc32ac2e2a74736e2e9b5f6ecc9d0b5b8ec589e3b0",
+        "bytes": 3108
+      },
+      "new": {
+        "file": "fac_env_wood_fence_corner_2_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "33e3bb6b9fef75d5d79f17068ac75f5219dc8d1f2ab82bcb45d025c6d2ad3c43",
+        "bytes": 6158
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence_corner/d3.png",
+      "source_sha256": "e99c8915174abdf53b2dccb9afecc4c4a63f8e3ca14924d6ec5410a8dc5150ef",
+      "old": {
+        "file": "fac_env_wood_fence_corner_3.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "74fcdfda3c44ff9fc070e9fe3928787715e8a633f7fa4498e732b9322eb4bb69",
+        "bytes": 3302
+      },
+      "new": {
+        "file": "fac_env_wood_fence_corner_3_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "2db2211afaee00f8574be585b8bd05f479fb2da82817df69f43a5a7d607fd3bc",
+        "bytes": 5998
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence_end/d0.png",
+      "source_sha256": "4ac9e6108bfcbd5e5ad25cf38cca2d1a71159c89f9a4cd986d2fe6a8b4b39bd3",
+      "old": {
+        "file": "fac_env_wood_fence_end_0.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "b926a5099232de5e3dc5f41073ba650880c1ac9aeb540bc8a5a379f66e38e1dd",
+        "bytes": 2108
+      },
+      "new": {
+        "file": "fac_env_wood_fence_end_0_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "f83ff06848d76c3c5c238d1b7364e6ea92b394f780646b705f93b8a6acd8f29e",
+        "bytes": 3894
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence_end/d1.png",
+      "source_sha256": "a56658dd491be1bd26ae8e2dbf5ecb0295a7f1c87b8995ee54b625804d3a4e82",
+      "old": {
+        "file": "fac_env_wood_fence_end_1.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "ff0ff15562d120a587a72c46e90bbb0d2c1579d58d25207d783847bc7c1021b6",
+        "bytes": 2146
+      },
+      "new": {
+        "file": "fac_env_wood_fence_end_1_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "46fa808db2c955aa61835375bd369a634b93aa84de0704422afd8906c49990ba",
+        "bytes": 3846
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence_end/d2.png",
+      "source_sha256": "6b26ac9629ed2bf2552c1599d6c3607dbee96d3940b3fce8a20aabe5393f5e9d",
+      "old": {
+        "file": "fac_env_wood_fence_end_2.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "ceb5d77d470baed7e58f9e171a57c84bdf861ed39f76f43652a8fba42f4fd1d6",
+        "bytes": 2110
+      },
+      "new": {
+        "file": "fac_env_wood_fence_end_2_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "38668b269a1c6de24984b7525cacc55a769c22778b9d1d827d25afd5062f1fc1",
+        "bytes": 3896
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_wood_fence_end/d3.png",
+      "source_sha256": "b5a3d9ebf2020a67e19b0ac316029143580643542aaa43e38b7882610d16cd99",
+      "old": {
+        "file": "fac_env_wood_fence_end_3.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "2bd2ba284b9a7ab552d4fb52cfdce936cdcdaa283bb9602f18384cbfdb6f5a81",
+        "bytes": 2148
+      },
+      "new": {
+        "file": "fac_env_wood_fence_end_3_accepted_20261003.webp",
+        "w": 34,
+        "h": 48,
+        "pad": 16,
+        "sha256": "28d8b8c8f1c868897a4f79d0dd1f6a42abb2fdef04bc9a8457a3901902e40c12",
+        "bytes": 3866
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall/d0.png",
+      "source_sha256": "710021b78d042c078dd938ab8f222b5d5c7272bc67224b961fc22560582204e1",
+      "old": {
+        "file": "fac_env_stone_wall_0.fix-732f65aae77f.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "732f65aae77f30c28ac7daa54607ac7196ef569ae402b5d6806daf6ecee9a4f8",
+        "bytes": 6946
+      },
+      "new": {
+        "file": "fac_env_stone_wall_0_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "18447a3add1c8207efbabd96f36940d68b10356b8dd90a71fdfeddadde929e94",
+        "bytes": 3684
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall/d1.png",
+      "source_sha256": "c4eb944eea9b1403179fd84e40cd50e4b8d8137c3de7f2ea3c333c40b7d53a63",
+      "old": {
+        "file": "fac_env_stone_wall_1.fix-058abba8d9fc.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "058abba8d9fc0cd26e89e77935551ad14a39e670419a23c77306b3fc517b7008",
+        "bytes": 6980
+      },
+      "new": {
+        "file": "fac_env_stone_wall_1_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "aed4f8a3ed44c83de3dacc639a6d91145531a9418c062b98988b923d18a23f59",
+        "bytes": 3692
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall/d2.png",
+      "source_sha256": "be5a1e7cfbab78f6ad216b80e7cef9dd700edd30dddc0a1c4e80998a3cf8358a",
+      "old": {
+        "file": "fac_env_stone_wall_2.fix-7bb41335c568.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "7bb41335c56870cabf62e03a6bfec3c82a1e2df3fd684661fe66202b6850e550",
+        "bytes": 6926
+      },
+      "new": {
+        "file": "fac_env_stone_wall_2_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "c4257b73b5268b7f1054545794ddac5785dfcb8443e50c1d2780f819309230e9",
+        "bytes": 3820
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall/d3.png",
+      "source_sha256": "e3e1815b8df6c7b36e2af34df72e078a028402978214c36a7fb26e2175f127ea",
+      "old": {
+        "file": "fac_env_stone_wall_3.fix-be26e4796200.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "be26e4796200996c4bde252cab2eb95a5685d77aece608e69cef83afb66ea902",
+        "bytes": 6926
+      },
+      "new": {
+        "file": "fac_env_stone_wall_3_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "71c2c2fe5b13aa0acfa96a2bb096865ab060e305845bd16ac01b0514ade4ebc5",
+        "bytes": 3678
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall_corner/d0.png",
+      "source_sha256": "b86ae307795370c7668888f6a784df4d8af876fa084e8131a22b825a9aa8fb87",
+      "old": {
+        "file": "fac_env_stone_wall_corner_0.fix-4f7b0f8e30b4.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "4f7b0f8e30b47fc8787c6e179087404df67f7802cd7f21eb017ac22b96b10053",
+        "bytes": 12256
+      },
+      "new": {
+        "file": "fac_env_stone_wall_corner_0_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "905cfa4f92bfaa94b5af4e783fe806806ae0da873cffdfee73e1f156df4ab336",
+        "bytes": 7190
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall_corner/d1.png",
+      "source_sha256": "4c5e57ce8c82b86ebb558d8a2175e87ec1ecde053e087dd54e23b1075696e2cd",
+      "old": {
+        "file": "fac_env_stone_wall_corner_1.fix-f530656df680.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "f530656df6806f2f59d27a9c3ca5bc2d27adb770fed94e2111127a1cdf3f18de",
+        "bytes": 11304
+      },
+      "new": {
+        "file": "fac_env_stone_wall_corner_1_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "419ecb9200a1c8890d9f2f6fdb5c2079112ab7dc03878a9025a0b5ce4498f2d7",
+        "bytes": 6258
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall_corner/d2.png",
+      "source_sha256": "88354cd1badf0b70feeea6e7cfd2e16b4e2e1aa5553e5fda439202d6e2bfb942",
+      "old": {
+        "file": "fac_env_stone_wall_corner_2.fix-acaa398ab4b3.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "acaa398ab4b354aa7c89ee8f55ff5375c44c2b25233a048cc9dc9c78d9db7ce4",
+        "bytes": 13398
+      },
+      "new": {
+        "file": "fac_env_stone_wall_corner_2_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "0d16298b18c82763465c9051a9044bc99fea96d42718cefa5200834da67a98e1",
+        "bytes": 7642
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall_corner/d3.png",
+      "source_sha256": "0b8b111a22fcc5dc5e27b04fdf58b5ca4b8ce2c923c2e6f4d79b4dfe5c139e36",
+      "old": {
+        "file": "fac_env_stone_wall_corner_3.fix-cff821e20e1c.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "cff821e20e1c9e1b46e60c0b1e5b1f2b01dd0fdecc53f59fce08b2fdf944c9e2",
+        "bytes": 11510
+      },
+      "new": {
+        "file": "fac_env_stone_wall_corner_3_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "2c8ce3cf434fb8e5d7d45e571d33740982d0678644a20e153fe6eab6bb39785c",
+        "bytes": 6492
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall_end",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall_end/d0.png",
+      "source_sha256": "710021b78d042c078dd938ab8f222b5d5c7272bc67224b961fc22560582204e1",
+      "old": {
+        "file": "fac_env_stone_wall_end_0.fix-b4a29121e36a.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "b4a29121e36a6be39a0bce68703ac5ef715cc222f5db5a533422114fee4cd317",
+        "bytes": 7844
+      },
+      "new": {
+        "file": "fac_env_stone_wall_end_0_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "18447a3add1c8207efbabd96f36940d68b10356b8dd90a71fdfeddadde929e94",
+        "bytes": 3684
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall_end",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall_end/d1.png",
+      "source_sha256": "c4eb944eea9b1403179fd84e40cd50e4b8d8137c3de7f2ea3c333c40b7d53a63",
+      "old": {
+        "file": "fac_env_stone_wall_end_1.fix-a65f4a3db277.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "a65f4a3db277faa0a239af2086baf163bf0276a0d74566a3041e720d29af7e35",
+        "bytes": 7846
+      },
+      "new": {
+        "file": "fac_env_stone_wall_end_1_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "aed4f8a3ed44c83de3dacc639a6d91145531a9418c062b98988b923d18a23f59",
+        "bytes": 3692
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall_end",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall_end/d2.png",
+      "source_sha256": "be5a1e7cfbab78f6ad216b80e7cef9dd700edd30dddc0a1c4e80998a3cf8358a",
+      "old": {
+        "file": "fac_env_stone_wall_end_2.fix-7259b79c5f6d.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "7259b79c5f6d4f25ce2136f071ef712e8e8a3aa3f4947b2603f71392d728999b",
+        "bytes": 7604
+      },
+      "new": {
+        "file": "fac_env_stone_wall_end_2_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "c4257b73b5268b7f1054545794ddac5785dfcb8443e50c1d2780f819309230e9",
+        "bytes": 3820
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_stone_wall_end",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/fence-wall-batch-20261003/candidates/env_stone_wall_end/d3.png",
+      "source_sha256": "e3e1815b8df6c7b36e2af34df72e078a028402978214c36a7fb26e2175f127ea",
+      "old": {
+        "file": "fac_env_stone_wall_end_3.fix-d5eb492468a2.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "d5eb492468a272d6eb16c2c82596e54616345970f003acc65daca0461e52f108",
+        "bytes": 7614
+      },
+      "new": {
+        "file": "fac_env_stone_wall_end_3_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "71c2c2fe5b13aa0acfa96a2bb096865ab060e305845bd16ac01b0514ade4ebc5",
+        "bytes": 3678
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

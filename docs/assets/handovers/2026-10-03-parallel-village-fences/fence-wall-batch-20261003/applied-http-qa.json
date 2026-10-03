@@ -1,0 +1,170 @@
+[
+  {
+    "id": "env_wood_fence",
+    "d": 0,
+    "sha256": "f83ff06848d76c3c5c238d1b7364e6ea92b394f780646b705f93b8a6acd8f29e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 1,
+    "sha256": "46fa808db2c955aa61835375bd369a634b93aa84de0704422afd8906c49990ba",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 2,
+    "sha256": "38668b269a1c6de24984b7525cacc55a769c22778b9d1d827d25afd5062f1fc1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 3,
+    "sha256": "28d8b8c8f1c868897a4f79d0dd1f6a42abb2fdef04bc9a8457a3901902e40c12",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 0,
+    "sha256": "151d2c8c20d7ca724ec2e01ed8feb9141f6628852da00b7ce0d35564f24abb73",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 1,
+    "sha256": "49ba3240f9223a22e99f0f351c4a5ffe5e58fa6addd171f1363ccf68bbd95e89",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 2,
+    "sha256": "33e3bb6b9fef75d5d79f17068ac75f5219dc8d1f2ab82bcb45d025c6d2ad3c43",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 3,
+    "sha256": "2db2211afaee00f8574be585b8bd05f479fb2da82817df69f43a5a7d607fd3bc",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 0,
+    "sha256": "f83ff06848d76c3c5c238d1b7364e6ea92b394f780646b705f93b8a6acd8f29e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 1,
+    "sha256": "46fa808db2c955aa61835375bd369a634b93aa84de0704422afd8906c49990ba",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 2,
+    "sha256": "38668b269a1c6de24984b7525cacc55a769c22778b9d1d827d25afd5062f1fc1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 3,
+    "sha256": "28d8b8c8f1c868897a4f79d0dd1f6a42abb2fdef04bc9a8457a3901902e40c12",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 0,
+    "sha256": "18447a3add1c8207efbabd96f36940d68b10356b8dd90a71fdfeddadde929e94",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 1,
+    "sha256": "aed4f8a3ed44c83de3dacc639a6d91145531a9418c062b98988b923d18a23f59",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 2,
+    "sha256": "c4257b73b5268b7f1054545794ddac5785dfcb8443e50c1d2780f819309230e9",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 3,
+    "sha256": "71c2c2fe5b13aa0acfa96a2bb096865ab060e305845bd16ac01b0514ade4ebc5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 0,
+    "sha256": "905cfa4f92bfaa94b5af4e783fe806806ae0da873cffdfee73e1f156df4ab336",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 1,
+    "sha256": "419ecb9200a1c8890d9f2f6fdb5c2079112ab7dc03878a9025a0b5ce4498f2d7",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 2,
+    "sha256": "0d16298b18c82763465c9051a9044bc99fea96d42718cefa5200834da67a98e1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 3,
+    "sha256": "2c8ce3cf434fb8e5d7d45e571d33740982d0678644a20e153fe6eab6bb39785c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 0,
+    "sha256": "18447a3add1c8207efbabd96f36940d68b10356b8dd90a71fdfeddadde929e94",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 1,
+    "sha256": "aed4f8a3ed44c83de3dacc639a6d91145531a9418c062b98988b923d18a23f59",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 2,
+    "sha256": "c4257b73b5268b7f1054545794ddac5785dfcb8443e50c1d2780f819309230e9",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 3,
+    "sha256": "71c2c2fe5b13aa0acfa96a2bb096865ab060e305845bd16ac01b0514ade4ebc5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

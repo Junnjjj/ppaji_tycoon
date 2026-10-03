@@ -1,0 +1,373 @@
+{
+  "status": "PASS",
+  "diagnosis": "Gable external quads had correct outward normal shades but generic #f5e3b5 base color, unlike #dfc697 right plaster and #f5e3b3 left plaster. Exterior gable now inherits wall material and per-facing shade; same canonical world paint function stays continuous.",
+  "assets": [
+    {
+      "id": "env_village_house",
+      "geometry_registration_exact_equal": true,
+      "changed_faces": [
+        {
+          "face": "cream-gable-left-0/side3",
+          "old_material": "#f5e3b5",
+          "new_material": "#f5e3b3",
+          "old_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ],
+          "new_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ]
+        },
+        {
+          "face": "cream-gable-left-1/side3",
+          "old_material": "#f5e3b5",
+          "new_material": "#f5e3b3",
+          "old_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ],
+          "new_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ]
+        },
+        {
+          "face": "cream-gable-right-0/side1",
+          "old_material": "#f5e3b5",
+          "new_material": "#dfc697",
+          "old_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ],
+          "new_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ]
+        },
+        {
+          "face": "cream-gable-right-1/side1",
+          "old_material": "#f5e3b5",
+          "new_material": "#dfc697",
+          "old_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ],
+          "new_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ]
+        }
+      ],
+      "paint_tests": [
+        {
+          "side": "left",
+          "half": 0,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "left",
+          "half": 1,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "right",
+          "half": 0,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "right",
+          "half": 1,
+          "world_paint_exact_equal_facings": 4
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4680,
+          "sha256": "a178f54c9d27813be7976da3381fe2cbcfc9d2c4d88d981812d910fef444f983"
+        },
+        {
+          "d": 1,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4203,
+          "sha256": "2b1a4235294c43644e7d76a4b506aa485a6f7d511c032208db0f2252329ed05f"
+        },
+        {
+          "d": 2,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4152,
+          "sha256": "d741fc849fc91093971c2a6b18054f1d60fada74ff87e7741bb17eba28b34b49"
+        },
+        {
+          "d": 3,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4714,
+          "sha256": "2dedd825ab9759faafaede583f69b52ed53a08023fabf3cbe33e84aaa737ca24"
+        }
+      ]
+    },
+    {
+      "id": "env_village_shop",
+      "geometry_registration_exact_equal": true,
+      "changed_faces": [
+        {
+          "face": "cream-gable-left-0/side3",
+          "old_material": "#f5e3b5",
+          "new_material": "#f5e3b3",
+          "old_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ],
+          "new_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ]
+        },
+        {
+          "face": "cream-gable-left-1/side3",
+          "old_material": "#f5e3b5",
+          "new_material": "#f5e3b3",
+          "old_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ],
+          "new_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ]
+        },
+        {
+          "face": "cream-gable-right-0/side1",
+          "old_material": "#f5e3b5",
+          "new_material": "#dfc697",
+          "old_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ],
+          "new_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ]
+        },
+        {
+          "face": "cream-gable-right-1/side1",
+          "old_material": "#f5e3b5",
+          "new_material": "#dfc697",
+          "old_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ],
+          "new_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ]
+        }
+      ],
+      "paint_tests": [
+        {
+          "side": "left",
+          "half": 0,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "left",
+          "half": 1,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "right",
+          "half": 0,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "right",
+          "half": 1,
+          "world_paint_exact_equal_facings": 4
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 5134,
+          "sha256": "2af0fa42001015292f792b7b175dc2dc32e9e9a06912f32da04af9bec189170b"
+        },
+        {
+          "d": 1,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4697,
+          "sha256": "366eb31004621768ffa165e0062443fe3605c52082550b9193d8db8358a043fd"
+        },
+        {
+          "d": 2,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4641,
+          "sha256": "aad3376252888017438884d9d6cccbf3a7904a59662eb9544e8afebad9c7c094"
+        },
+        {
+          "d": 3,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 5203,
+          "sha256": "93e5c5f2bcc03271ad6891931811a290236dc2b81ef4ed80a296be2f03652adf"
+        }
+      ]
+    },
+    {
+      "id": "env_pension",
+      "geometry_registration_exact_equal": true,
+      "changed_faces": [
+        {
+          "face": "cream-gable-left-0/side3",
+          "old_material": "#f5e3b5",
+          "new_material": "#f5e3b3",
+          "old_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ],
+          "new_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ]
+        },
+        {
+          "face": "cream-gable-left-1/side3",
+          "old_material": "#f5e3b5",
+          "new_material": "#f5e3b3",
+          "old_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ],
+          "new_shade": [
+            0.9525,
+            0.9865,
+            0.8675,
+            0.8335
+          ]
+        },
+        {
+          "face": "cream-gable-right-0/side1",
+          "old_material": "#f5e3b5",
+          "new_material": "#dfc697",
+          "old_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ],
+          "new_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ]
+        },
+        {
+          "face": "cream-gable-right-1/side1",
+          "old_material": "#f5e3b5",
+          "new_material": "#dfc697",
+          "old_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ],
+          "new_shade": [
+            0.8675,
+            0.8335,
+            0.9525,
+            0.9865
+          ]
+        }
+      ],
+      "paint_tests": [
+        {
+          "side": "left",
+          "half": 0,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "left",
+          "half": 1,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "right",
+          "half": 0,
+          "world_paint_exact_equal_facings": 4
+        },
+        {
+          "side": "right",
+          "half": 1,
+          "world_paint_exact_equal_facings": 4
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4886,
+          "sha256": "6aa1068fec51940e3c286329d59289bd342aa7041e9ca732664bb3a63bc644b3"
+        },
+        {
+          "d": 1,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4417,
+          "sha256": "7f9e67b8dc07ca0dfe5811211041ac7ea14411bf68a364f38ac5deb3f5c9bc7c"
+        },
+        {
+          "d": 2,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4386,
+          "sha256": "bd6f82bc45bf4ce5e25a775e2b20bfeae217c8b416d6b674e1d6af64e7885f78"
+        },
+        {
+          "d": 3,
+          "alpha_exact_equal": true,
+          "changed_rgb_pixels": 4927,
+          "sha256": "b318b81c08185708c192da0458b70167d69708c2283dc3e60f10448f3d12ae5c"
+        }
+      ]
+    }
+  ],
+  "scope": "Exact primitive paint equivalence and alpha/geometry invariance; final appearance also visually reviewed. Not runtime QA."
+}

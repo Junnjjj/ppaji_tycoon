@@ -1,0 +1,86 @@
+[
+  {
+    "id": "env_village_house",
+    "d": 0,
+    "sha256": "b0cb4678db898aef7edb178441dd802081745fbef5598203f55f4bad8701c7da",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_village_house",
+    "d": 1,
+    "sha256": "78d6ca1806a2958c9611d82843d7d62ce1748b9c04240665778f60369ff0fe4e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_village_house",
+    "d": 2,
+    "sha256": "8dc434e23654557bedda4e63157102be14d3799d3ccc1e8376497a74d251ba20",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_village_house",
+    "d": 3,
+    "sha256": "f2a4df372dd618a3ee9f3b90dd2e6978e822dd465a1be926730503e375bf3be5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_village_shop",
+    "d": 0,
+    "sha256": "0866b609392cc4a873cc8efcf5e3d6864eb5276bbdcf37587e19ad84b0136c7f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_village_shop",
+    "d": 1,
+    "sha256": "fb8798be335010ca83ff5928139bd73dcbf8aaa50505cb78e0a6a7f94481ec32",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_village_shop",
+    "d": 2,
+    "sha256": "4cda91df422ad93fd4e74951eec4efe7db05907fb214ee61ea6be9ce3e470a98",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_village_shop",
+    "d": 3,
+    "sha256": "60966a0b64c5d7231d5b1da450536afd69e610960173095f33ae10eb91af6708",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_pension",
+    "d": 0,
+    "sha256": "083425f12ad4857ca3888eb1fd3d458b8ad1e5e68c00c53285bd124ebb2db265",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_pension",
+    "d": 1,
+    "sha256": "0239e743318b127f8864dbf7961f2fd543ee25d511d1615349c39851309dd597",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_pension",
+    "d": 2,
+    "sha256": "f011eeee7ddf409004eff88bfd8bc488946395f4099d066c319a9e5f9d525984",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_pension",
+    "d": 3,
+    "sha256": "fce11ed8479adc98c3fad0ee3f2a3158a36101c5153a0e4c7d75590d429a339d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

@@ -1,0 +1,1419 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "env_village_house",
+      "curved_roof_tiles": [
+        {
+          "part": "roof-tile-0-0-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-0-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-0-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-1-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-1-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-1-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-2-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-2-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-2-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-3-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-3-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-3-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-4-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-4-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-4-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-5-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-5-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-5-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-6-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-6-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-6-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-7-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-7-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-7-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-8-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-8-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-8-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-9-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-9-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-9-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-10-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-10-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-10-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-11-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-11-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-11-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-12-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-12-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-12-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-13-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-0-13-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-0-13-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000053
+        },
+        {
+          "part": "roof-tile-1-0-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-0-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-0-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-1-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-1-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-1-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-2-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-2-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-2-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-3-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-3-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-3-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-4-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-4-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-4-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-5-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-5-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-5-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-6-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-6-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-6-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-7-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-7-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-7-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-8-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-8-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-8-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-9-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-9-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-9-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-10-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-10-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-10-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-11-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-11-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-11-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-12-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-12-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-12-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-13-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7020000000000195
+        },
+        {
+          "part": "roof-tile-1-13-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        },
+        {
+          "part": "roof-tile-1-13-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7019999999999982
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 7127,
+          "isolated_curved_tile_components": [
+            440
+          ],
+          "isolated_balcony_components": null
+        },
+        {
+          "d": 1,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 6715,
+          "isolated_curved_tile_components": [
+            460
+          ],
+          "isolated_balcony_components": null
+        },
+        {
+          "d": 2,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 5883,
+          "isolated_curved_tile_components": [
+            1084
+          ],
+          "isolated_balcony_components": null
+        },
+        {
+          "d": 3,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 6655,
+          "isolated_curved_tile_components": [
+            1064
+          ],
+          "isolated_balcony_components": null
+        }
+      ]
+    },
+    {
+      "id": "env_village_shop",
+      "curved_roof_tiles": [
+        {
+          "part": "roof-tile-0-0-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-0-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-0-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-1-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-1-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-1-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-2-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-2-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-2-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-3-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-3-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-3-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-4-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-4-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-4-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-5-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-5-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-5-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-6-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-6-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-6-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-7-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-7-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-7-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-8-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-8-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-8-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-9-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-9-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-9-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-10-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-10-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-10-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-11-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-11-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-11-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-12-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-12-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-12-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-0-13-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000528
+        },
+        {
+          "part": "roof-tile-0-13-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000243
+        },
+        {
+          "part": "roof-tile-0-13-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-0-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-0-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-0-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-1-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-1-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-1-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-2-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-2-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-2-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-3-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-3-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-3-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-4-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-4-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-4-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-5-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-5-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-5-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-6-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-6-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-6-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-7-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-7-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-7-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-8-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-8-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-8-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-9-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-9-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-9-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-10-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-10-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-10-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-11-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-11-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-11-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-12-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-12-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-12-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-13-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000385
+        },
+        {
+          "part": "roof-tile-1-13-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        },
+        {
+          "part": "roof-tile-1-13-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7670000000000101
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 10483,
+          "isolated_curved_tile_components": [
+            440
+          ],
+          "isolated_balcony_components": null
+        },
+        {
+          "d": 1,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 10017,
+          "isolated_curved_tile_components": [
+            456
+          ],
+          "isolated_balcony_components": null
+        },
+        {
+          "d": 2,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 8165,
+          "isolated_curved_tile_components": [
+            1120
+          ],
+          "isolated_balcony_components": null
+        },
+        {
+          "d": 3,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 8685,
+          "isolated_curved_tile_components": [
+            1104
+          ],
+          "isolated_balcony_components": null
+        }
+      ]
+    },
+    {
+      "id": "env_pension",
+      "curved_roof_tiles": [
+        {
+          "part": "roof-tile-0-0-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-0-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-0-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-1-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-1-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-1-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-2-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-2-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-2-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-3-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-3-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-3-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-4-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-4-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-4-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-5-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-5-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-5-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-6-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-6-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-6-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-7-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-7-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-7-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-8-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-8-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-8-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-9-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-9-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-9-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-10-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-10-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-10-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-11-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-11-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-11-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-12-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-12-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-12-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-0-13-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-13-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-0-13-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-0-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-0-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-0-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-1-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-1-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-1-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-2-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-2-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-2-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-3-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-3-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-3-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-4-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-4-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-4-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-5-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-5-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-5-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-6-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-6-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-6-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-7-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-7-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-7-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-8-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-8-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-8-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-9-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-9-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-9-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-10-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-10-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-10-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-11-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-11-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-11-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-12-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-12-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-12-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        },
+        {
+          "part": "roof-tile-1-13-0",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000296
+        },
+        {
+          "part": "roof-tile-1-13-1",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000153
+        },
+        {
+          "part": "roof-tile-1-13-2",
+          "strips": 6,
+          "cross_section_relief_logical": 0.7800000000000011
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 12425,
+          "isolated_curved_tile_components": [
+            492
+          ],
+          "isolated_balcony_components": [
+            13396
+          ]
+        },
+        {
+          "d": 1,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 11970,
+          "isolated_curved_tile_components": [
+            492
+          ],
+          "isolated_balcony_components": [
+            13396
+          ]
+        },
+        {
+          "d": 2,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 9762,
+          "isolated_curved_tile_components": [
+            1388
+          ],
+          "isolated_balcony_components": [
+            17068
+          ]
+        },
+        {
+          "d": 3,
+          "canvas_preserved": true,
+          "registration_preserved": true,
+          "opaque_rgb_colors": 10977,
+          "isolated_curved_tile_components": [
+            1396
+          ],
+          "isolated_balcony_components": [
+            17068
+          ]
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Curve check establishes authored non-flat six-strip profile and isolated connected saved coverage; not continuous analytic curvature or art approval.",
+    "Balcony isolated connected alpha and structural joints do not certify exact collision-free intersections.",
+    "All rear details are declared inferred, not observed reconstructions."
+  ]
+}

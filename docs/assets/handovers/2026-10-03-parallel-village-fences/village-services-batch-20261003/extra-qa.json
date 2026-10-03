@@ -1,0 +1,1613 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "env_small_hotel",
+      "checks": [
+        {
+          "check": "env_small_hotel/registration",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "env_small_hotel/rigid-assembly",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-0-1-planter-0",
+          "pass": true,
+          "detail": 1.3183898417423734e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-0-1-planter-0",
+          "pass": true,
+          "detail": 1.1275702593849246e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-0-1-planter-1",
+          "pass": true,
+          "detail": 1.3877787807814457e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-0-1-planter-2",
+          "pass": true,
+          "detail": 1.3877787807814457e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-0-1-planter-2",
+          "pass": true,
+          "detail": 1.1275702593849246e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-0-1-planter-3",
+          "pass": true,
+          "detail": 1.3877787807814457e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-0-1-planter-4",
+          "pass": true,
+          "detail": 1.3877787807814457e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-0-1-planter-4",
+          "pass": true,
+          "detail": 1.1275702593849246e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-0-planter-0",
+          "pass": true,
+          "detail": 9.43689570931383e-16
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-0-0-planter-0",
+          "pass": true,
+          "detail": 9.26342336171615e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-0-planter-1",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-0-planter-2",
+          "pass": true,
+          "detail": 9.43689570931383e-16
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-0-0-planter-2",
+          "pass": true,
+          "detail": 9.332812300755222e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-0-planter-3",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-0-planter-4",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-0-0-planter-4",
+          "pass": true,
+          "detail": 9.26342336171615e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-1-planter-0",
+          "pass": true,
+          "detail": 1.27675647831893e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-0-1-planter-0",
+          "pass": true,
+          "detail": 1.0269562977782698e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-1-planter-1",
+          "pass": true,
+          "detail": 1.3877787807814457e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-1-planter-2",
+          "pass": true,
+          "detail": 1.3877787807814457e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-0-1-planter-2",
+          "pass": true,
+          "detail": 9.26342336171615e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-1-planter-3",
+          "pass": true,
+          "detail": 1.0824674490095276e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-0-1-planter-4",
+          "pass": true,
+          "detail": 1.0824674490095276e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-0-1-planter-4",
+          "pass": true,
+          "detail": 9.26342336171615e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-0-planter-0",
+          "pass": true,
+          "detail": 9.43689570931383e-16
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-0-0-planter-0",
+          "pass": true,
+          "detail": 6.83481049534862e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-0-planter-1",
+          "pass": true,
+          "detail": 9.43689570931383e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-0-planter-2",
+          "pass": true,
+          "detail": 9.43689570931383e-16
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-0-0-planter-2",
+          "pass": true,
+          "detail": 6.83481049534862e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-0-planter-3",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-0-planter-4",
+          "pass": true,
+          "detail": 1.1657341758564144e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-0-0-planter-4",
+          "pass": true,
+          "detail": 7.528699885739343e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-1-planter-0",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-0-1-planter-0",
+          "pass": true,
+          "detail": 7.528699885739343e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-1-planter-1",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-1-planter-2",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-0-1-planter-2",
+          "pass": true,
+          "detail": 7.528699885739343e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-1-planter-3",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-0-1-planter-4",
+          "pass": true,
+          "detail": 1.3877787807814457e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-0-1-planter-4",
+          "pass": true,
+          "detail": 7.528699885739343e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-0-planter-0",
+          "pass": true,
+          "detail": 9.43689570931383e-16
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-0-0-planter-0",
+          "pass": true,
+          "detail": 7.771561172376096e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-0-planter-1",
+          "pass": true,
+          "detail": 9.43689570931383e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-0-planter-2",
+          "pass": true,
+          "detail": 9.43689570931383e-16
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-0-0-planter-2",
+          "pass": true,
+          "detail": 7.771561172376096e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-0-planter-3",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-0-planter-4",
+          "pass": true,
+          "detail": 1.1657341758564144e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-0-0-planter-4",
+          "pass": true,
+          "detail": 8.569533971325427e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-1-planter-0",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-0-1-planter-0",
+          "pass": true,
+          "detail": 7.389922007661198e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-1-planter-1",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-1-planter-2",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-0-1-planter-2",
+          "pass": true,
+          "detail": 7.389922007661198e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-1-planter-3",
+          "pass": true,
+          "detail": 1.0130785099704553e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-0-1-planter-4",
+          "pass": true,
+          "detail": 1.3877787807814457e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-0-1-planter-4",
+          "pass": true,
+          "detail": 7.389922007661198e-16
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-0-planter-0",
+          "pass": true,
+          "detail": 3.0253577421035516e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-1-0-planter-0",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-0-planter-1",
+          "pass": true,
+          "detail": 3.094746681142624e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-0-planter-2",
+          "pass": true,
+          "detail": 3.011479954295737e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-1-0-planter-2",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-0-planter-3",
+          "pass": true,
+          "detail": 3.094746681142624e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-0-planter-4",
+          "pass": true,
+          "detail": 3.094746681142624e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-1-0-planter-4",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-1-planter-0",
+          "pass": true,
+          "detail": 3.094746681142624e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-1-1-planter-0",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-1-planter-1",
+          "pass": true,
+          "detail": 3.164135620181696e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-1-planter-2",
+          "pass": true,
+          "detail": 3.164135620181696e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-1-1-planter-2",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-1-planter-3",
+          "pass": true,
+          "detail": 3.164135620181696e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-1-1-planter-4",
+          "pass": true,
+          "detail": 3.164135620181696e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-1-1-planter-4",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-0-planter-0",
+          "pass": true,
+          "detail": 2.7200464103316335e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-1-0-planter-0",
+          "pass": true,
+          "detail": 3.146788385421928e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-0-planter-1",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-0-planter-2",
+          "pass": true,
+          "detail": 2.7200464103316335e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-1-0-planter-2",
+          "pass": true,
+          "detail": 3.1537272793258353e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-0-planter-3",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-0-planter-4",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-1-0-planter-4",
+          "pass": true,
+          "detail": 3.146788385421928e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-1-planter-0",
+          "pass": true,
+          "detail": 3.0531133177191805e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-1-1-planter-0",
+          "pass": true,
+          "detail": 3.247402347028583e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-1-planter-1",
+          "pass": true,
+          "detail": 3.164135620181696e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-1-planter-2",
+          "pass": true,
+          "detail": 3.164135620181696e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-1-1-planter-2",
+          "pass": true,
+          "detail": 3.146788385421928e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-1-planter-3",
+          "pass": true,
+          "detail": 2.858824288409778e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-1-1-planter-4",
+          "pass": true,
+          "detail": 2.858824288409778e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-1-1-planter-4",
+          "pass": true,
+          "detail": 3.146788385421928e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-0-planter-0",
+          "pass": true,
+          "detail": 2.7200464103316335e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-1-0-planter-0",
+          "pass": true,
+          "detail": 2.903927098785175e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-0-planter-1",
+          "pass": true,
+          "detail": 2.7200464103316335e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-0-planter-2",
+          "pass": true,
+          "detail": 2.7200464103316335e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-1-0-planter-2",
+          "pass": true,
+          "detail": 2.903927098785175e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-0-planter-3",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-0-planter-4",
+          "pass": true,
+          "detail": 2.942091015256665e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-1-0-planter-4",
+          "pass": true,
+          "detail": 2.9733160378242474e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-1-planter-0",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-1-1-planter-0",
+          "pass": true,
+          "detail": 2.9733160378242474e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-1-planter-1",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-1-planter-2",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-1-1-planter-2",
+          "pass": true,
+          "detail": 2.9733160378242474e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-1-planter-3",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-1-1-planter-4",
+          "pass": true,
+          "detail": 3.164135620181696e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-1-1-planter-4",
+          "pass": true,
+          "detail": 2.9733160378242474e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-0-planter-0",
+          "pass": true,
+          "detail": 2.7200464103316335e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-1-0-planter-0",
+          "pass": true,
+          "detail": 2.9976021664879227e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-0-planter-1",
+          "pass": true,
+          "detail": 2.7200464103316335e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-0-planter-2",
+          "pass": true,
+          "detail": 2.7200464103316335e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-1-0-planter-2",
+          "pass": true,
+          "detail": 2.9976021664879227e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-0-planter-3",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-0-planter-4",
+          "pass": true,
+          "detail": 2.942091015256665e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-1-0-planter-4",
+          "pass": true,
+          "detail": 3.0773994463828558e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-1-planter-0",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-1-1-planter-0",
+          "pass": true,
+          "detail": 2.959438250016433e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-1-planter-1",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-1-planter-2",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-1-1-planter-2",
+          "pass": true,
+          "detail": 2.959438250016433e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-1-planter-3",
+          "pass": true,
+          "detail": 2.789435349370706e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-1-1-planter-4",
+          "pass": true,
+          "detail": 3.164135620181696e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-1-1-planter-4",
+          "pass": true,
+          "detail": 2.959438250016433e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-0-planter-0",
+          "pass": true,
+          "detail": 5.856426454897701e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-2-0-planter-0",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-0-planter-1",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-0-planter-2",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-2-0-planter-2",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-0-planter-3",
+          "pass": true,
+          "detail": 5.953570969552402e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-0-planter-4",
+          "pass": true,
+          "detail": 5.953570969552402e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-2-0-planter-4",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-1-planter-0",
+          "pass": true,
+          "detail": 6.2450045135165055e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-2-1-planter-0",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-1-planter-1",
+          "pass": true,
+          "detail": 6.2450045135165055e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-1-planter-2",
+          "pass": true,
+          "detail": 6.25888230132432e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-2-1-planter-2",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-1-planter-3",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-front-2-1-planter-4",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-front-2-1-planter-4",
+          "pass": true,
+          "detail": 3.3480163086352377e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-0-planter-0",
+          "pass": true,
+          "detail": 5.856426454897701e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-2-0-planter-0",
+          "pass": true,
+          "detail": 3.146788385421928e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-0-planter-1",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-0-planter-2",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-2-0-planter-2",
+          "pass": true,
+          "detail": 3.1537272793258353e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-0-planter-3",
+          "pass": true,
+          "detail": 5.953570969552402e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-0-planter-4",
+          "pass": true,
+          "detail": 5.953570969552402e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-2-0-planter-4",
+          "pass": true,
+          "detail": 3.146788385421928e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-1-planter-0",
+          "pass": true,
+          "detail": 6.2450045135165055e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-2-1-planter-0",
+          "pass": true,
+          "detail": 3.247402347028583e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-1-planter-1",
+          "pass": true,
+          "detail": 6.2450045135165055e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-1-planter-2",
+          "pass": true,
+          "detail": 6.25888230132432e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-2-1-planter-2",
+          "pass": true,
+          "detail": 3.146788385421928e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-1-planter-3",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-back-2-1-planter-4",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-back-2-1-planter-4",
+          "pass": true,
+          "detail": 3.146788385421928e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-0-planter-0",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-2-0-planter-0",
+          "pass": true,
+          "detail": 2.903927098785175e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-0-planter-1",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-0-planter-2",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-2-0-planter-2",
+          "pass": true,
+          "detail": 2.903927098785175e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-0-planter-3",
+          "pass": true,
+          "detail": 5.856426454897701e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-0-planter-4",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-2-0-planter-4",
+          "pass": true,
+          "detail": 2.9733160378242474e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-1-planter-0",
+          "pass": true,
+          "detail": 5.953570969552402e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-2-1-planter-0",
+          "pass": true,
+          "detail": 2.9733160378242474e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-1-planter-1",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-1-planter-2",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-2-1-planter-2",
+          "pass": true,
+          "detail": 2.9733160378242474e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-1-planter-3",
+          "pass": true,
+          "detail": 6.2450045135165055e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-right-2-1-planter-4",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-right-2-1-planter-4",
+          "pass": true,
+          "detail": 2.9733160378242474e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-0-planter-0",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-2-0-planter-0",
+          "pass": true,
+          "detail": 2.9976021664879227e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-0-planter-1",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-0-planter-2",
+          "pass": true,
+          "detail": 5.814793091474257e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-2-0-planter-2",
+          "pass": true,
+          "detail": 2.9976021664879227e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-0-planter-3",
+          "pass": true,
+          "detail": 5.856426454897701e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-0-planter-4",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-2-0-planter-4",
+          "pass": true,
+          "detail": 3.0773994463828558e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-1-planter-0",
+          "pass": true,
+          "detail": 5.953570969552402e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-2-1-planter-0",
+          "pass": true,
+          "detail": 2.959438250016433e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-1-planter-1",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-1-planter-2",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-2-1-planter-2",
+          "pass": true,
+          "detail": 2.959438250016433e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-1-planter-3",
+          "pass": true,
+          "detail": 6.2450045135165055e-15
+        },
+        {
+          "check": "env_small_hotel/profile/leaf-window-left-2-1-planter-4",
+          "pass": true,
+          "detail": 5.9396931817445875e-15
+        },
+        {
+          "check": "env_small_hotel/profile/flower-window-left-2-1-planter-4",
+          "pass": true,
+          "detail": 2.959438250016433e-15
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-0",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-1",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-2",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-3",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-4",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-5",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-6",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-7",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-8",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-9",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-10",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-0-11",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-0",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-1",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-2",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-3",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-4",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-5",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-6",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-7",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-8",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-9",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-10",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/roof-cross-section/roof-tile-1-11",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_small_hotel/solid-teal-door",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "env_small_hotel/connected/d0",
+          "pass": true,
+          "detail": [
+            206036
+          ]
+        },
+        {
+          "check": "env_small_hotel/full-color/d0",
+          "pass": true,
+          "detail": 13209
+        },
+        {
+          "check": "env_small_hotel/connected/d1",
+          "pass": true,
+          "detail": [
+            206036
+          ]
+        },
+        {
+          "check": "env_small_hotel/full-color/d1",
+          "pass": true,
+          "detail": 13537
+        },
+        {
+          "check": "env_small_hotel/connected/d2",
+          "pass": true,
+          "detail": [
+            206004
+          ]
+        },
+        {
+          "check": "env_small_hotel/full-color/d2",
+          "pass": true,
+          "detail": 10776
+        },
+        {
+          "check": "env_small_hotel/connected/d3",
+          "pass": true,
+          "detail": [
+            206004
+          ]
+        },
+        {
+          "check": "env_small_hotel/full-color/d3",
+          "pass": true,
+          "detail": 12069
+        }
+      ]
+    },
+    {
+      "id": "env_convenience_store",
+      "checks": [
+        {
+          "check": "env_convenience_store/registration",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "env_convenience_store/rigid-assembly",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "env_convenience_store/profile/wood-store-planter",
+          "pass": true,
+          "detail": 6.938893903907228e-16
+        },
+        {
+          "check": "env_convenience_store/profile/leaf-store-planter-0",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_convenience_store/profile/leaf-store-planter-1",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_convenience_store/profile/leaf-store-planter-2",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_convenience_store/profile/leaf-store-planter-3",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_convenience_store/profile/leaf-store-planter-4",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_convenience_store/connected/d0",
+          "pass": true,
+          "detail": [
+            74216
+          ]
+        },
+        {
+          "check": "env_convenience_store/full-color/d0",
+          "pass": true,
+          "detail": 6878
+        },
+        {
+          "check": "env_convenience_store/connected/d1",
+          "pass": true,
+          "detail": [
+            74292
+          ]
+        },
+        {
+          "check": "env_convenience_store/full-color/d1",
+          "pass": true,
+          "detail": 6813
+        },
+        {
+          "check": "env_convenience_store/connected/d2",
+          "pass": true,
+          "detail": [
+            74024
+          ]
+        },
+        {
+          "check": "env_convenience_store/full-color/d2",
+          "pass": true,
+          "detail": 4606
+        },
+        {
+          "check": "env_convenience_store/connected/d3",
+          "pass": true,
+          "detail": [
+            74104
+          ]
+        },
+        {
+          "check": "env_convenience_store/full-color/d3",
+          "pass": true,
+          "detail": 4826
+        }
+      ]
+    },
+    {
+      "id": "env_maintenance_shed",
+      "checks": [
+        {
+          "check": "env_maintenance_shed/registration",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "env_maintenance_shed/rigid-assembly",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "env_maintenance_shed/profile/wood-shed-planter",
+          "pass": true,
+          "detail": 6.938893903907228e-16
+        },
+        {
+          "check": "env_maintenance_shed/profile/leaf-shed-planter-0",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_maintenance_shed/profile/leaf-shed-planter-1",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_maintenance_shed/profile/leaf-shed-planter-2",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_maintenance_shed/profile/leaf-shed-planter-3",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_maintenance_shed/profile/leaf-shed-planter-4",
+          "pass": true,
+          "detail": 1.016547956922409e-15
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-0",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-1",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-2",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-3",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-4",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-5",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-6",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-7",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-8",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-9",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-10",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-11",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-12",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-0-13",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-0",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-1",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-2",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-3",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-4",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-5",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-6",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-7",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-8",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-9",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-10",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-11",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-12",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/roof-cross-section/roof-tile-1-13",
+          "pass": true,
+          "detail": {
+            "cross_sections": 7,
+            "end_stations": 2
+          }
+        },
+        {
+          "check": "env_maintenance_shed/solid-teal-door",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "env_maintenance_shed/connected/d0",
+          "pass": true,
+          "detail": [
+            68904
+          ]
+        },
+        {
+          "check": "env_maintenance_shed/full-color/d0",
+          "pass": true,
+          "detail": 7038
+        },
+        {
+          "check": "env_maintenance_shed/connected/d1",
+          "pass": true,
+          "detail": [
+            69052
+          ]
+        },
+        {
+          "check": "env_maintenance_shed/full-color/d1",
+          "pass": true,
+          "detail": 7474
+        },
+        {
+          "check": "env_maintenance_shed/connected/d2",
+          "pass": true,
+          "detail": [
+            68904
+          ]
+        },
+        {
+          "check": "env_maintenance_shed/full-color/d2",
+          "pass": true,
+          "detail": 6396
+        },
+        {
+          "check": "env_maintenance_shed/connected/d3",
+          "pass": true,
+          "detail": [
+            69060
+          ]
+        },
+        {
+          "check": "env_maintenance_shed/full-color/d3",
+          "pass": true,
+          "detail": 6724
+        }
+      ]
+    }
+  ],
+  "negative_control": {
+    "check": "bent-line-negative-control",
+    "pass": true,
+    "detail": {
+      "rms": 2.502441644625929,
+      "threshold": 1.5
+    }
+  },
+  "failures": [],
+  "limits": [
+    "Connected saved alpha does not prove internal contact. Radial-profile checks certify declared geometry, not exact botanical or source reconstruction.",
+    "Color diversity and line finish do not certify art style or art95."
+  ]
+}

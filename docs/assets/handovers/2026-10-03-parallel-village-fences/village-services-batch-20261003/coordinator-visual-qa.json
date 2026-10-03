@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "scope": "All four facings in original/candidate/line-overlay comparison boards",
+  "reviewer": "coordinator",
+  "findings_resolved": [
+    "source roof ridge orientation",
+    "solid teal doors except glazed storefront",
+    "continuous coplanar plaster shading"
+  ],
+  "limitations": [
+    "Stylized common geometry; not exact original recovery",
+    "Runtime maps checked separately"
+  ],
+  "main_modified": false
+}

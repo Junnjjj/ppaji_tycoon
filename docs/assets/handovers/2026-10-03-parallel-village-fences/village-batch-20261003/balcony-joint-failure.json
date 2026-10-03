@@ -1,0 +1,10 @@
+{
+  "check": "AABB joint",
+  "asset": "env_pension",
+  "parts": [
+    "wood-balcony-return-0",
+    "cream-wall-front"
+  ],
+  "gap_tile": 0.0016,
+  "fix": "Extend balcony return rail cross section .028 to .035 so both return ends meet wall; tolerance unchanged"
+}

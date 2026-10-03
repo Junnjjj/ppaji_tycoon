@@ -1,0 +1,313 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "env_village_house": "village-batch-20261003",
+    "env_village_shop": "village-batch-20261003",
+    "env_pension": "village-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "env_village_house",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_village_house/d0.png",
+      "source_sha256": "a178f54c9d27813be7976da3381fe2cbcfc9d2c4d88d981812d910fef444f983",
+      "old": {
+        "file": "fac_env_village_house_0.webp",
+        "w": 96,
+        "h": 84,
+        "pad": 16,
+        "sha256": "4706d741f234cb89a8e4d2087949d6b74fc8404c0a168fca580aac4c9df45fa0",
+        "bytes": 118652
+      },
+      "new": {
+        "file": "fac_env_village_house_0_accepted_20261003.webp",
+        "w": 96,
+        "h": 84,
+        "pad": 16,
+        "sha256": "b0cb4678db898aef7edb178441dd802081745fbef5598203f55f4bad8701c7da",
+        "bytes": 61866
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_village_house",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_village_house/d1.png",
+      "source_sha256": "2b1a4235294c43644e7d76a4b506aa485a6f7d511c032208db0f2252329ed05f",
+      "old": {
+        "file": "fac_env_village_house_1.webp",
+        "w": 96,
+        "h": 84,
+        "pad": 16,
+        "sha256": "444620d93c609cae5eba8c1290b57d2c059a1f2ad58468ac867a6e16396745f4",
+        "bytes": 101642
+      },
+      "new": {
+        "file": "fac_env_village_house_1_accepted_20261003.webp",
+        "w": 96,
+        "h": 84,
+        "pad": 16,
+        "sha256": "78d6ca1806a2958c9611d82843d7d62ce1748b9c04240665778f60369ff0fe4e",
+        "bytes": 61682
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_village_house",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_village_house/d2.png",
+      "source_sha256": "d741fc849fc91093971c2a6b18054f1d60fada74ff87e7741bb17eba28b34b49",
+      "old": {
+        "file": "fac_env_village_house_2.webp",
+        "w": 96,
+        "h": 84,
+        "pad": 16,
+        "sha256": "419182b01c4877fe37c1da9eb5018e5d9a6cac0d80f85f3dd0ac09f8828c7c1c",
+        "bytes": 118804
+      },
+      "new": {
+        "file": "fac_env_village_house_2_accepted_20261003.webp",
+        "w": 96,
+        "h": 84,
+        "pad": 16,
+        "sha256": "8dc434e23654557bedda4e63157102be14d3799d3ccc1e8376497a74d251ba20",
+        "bytes": 61054
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_village_house",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_village_house/d3.png",
+      "source_sha256": "2dedd825ab9759faafaede583f69b52ed53a08023fabf3cbe33e84aaa737ca24",
+      "old": {
+        "file": "fac_env_village_house_3.webp",
+        "w": 96,
+        "h": 84,
+        "pad": 16,
+        "sha256": "72e48ecb0aaa626eaa37a945c37c52cf3f7e6c356bbd7474664cd1a0696a510e",
+        "bytes": 102180
+      },
+      "new": {
+        "file": "fac_env_village_house_3_accepted_20261003.webp",
+        "w": 96,
+        "h": 84,
+        "pad": 16,
+        "sha256": "f2a4df372dd618a3ee9f3b90dd2e6978e822dd465a1be926730503e375bf3be5",
+        "bytes": 66540
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_village_shop",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_village_shop/d0.png",
+      "source_sha256": "2af0fa42001015292f792b7b175dc2dc32e9e9a06912f32da04af9bec189170b",
+      "old": {
+        "file": "fac_env_village_shop_0.fix-170a09203b8c.webp",
+        "w": 104,
+        "h": 118,
+        "pad": 16,
+        "sha256": "170a09203b8cc5dcbf7db43a159735f47bb46d77667b30e8be5f74f169bb1a36",
+        "bytes": 182196
+      },
+      "new": {
+        "file": "fac_env_village_shop_0_accepted_20261003.webp",
+        "w": 104,
+        "h": 118,
+        "pad": 16,
+        "sha256": "0866b609392cc4a873cc8efcf5e3d6864eb5276bbdcf37587e19ad84b0136c7f",
+        "bytes": 98044
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_village_shop",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_village_shop/d1.png",
+      "source_sha256": "366eb31004621768ffa165e0062443fe3605c52082550b9193d8db8358a043fd",
+      "old": {
+        "file": "fac_env_village_shop_1.webp",
+        "w": 104,
+        "h": 118,
+        "pad": 16,
+        "sha256": "d32c0f948a062bee6b5272c505ce69cda5e3dada25e7c7f463b08567dd9e7b3c",
+        "bytes": 158204
+      },
+      "new": {
+        "file": "fac_env_village_shop_1_accepted_20261003.webp",
+        "w": 104,
+        "h": 118,
+        "pad": 16,
+        "sha256": "fb8798be335010ca83ff5928139bd73dcbf8aaa50505cb78e0a6a7f94481ec32",
+        "bytes": 98090
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_village_shop",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_village_shop/d2.png",
+      "source_sha256": "aad3376252888017438884d9d6cccbf3a7904a59662eb9544e8afebad9c7c094",
+      "old": {
+        "file": "fac_env_village_shop_2.webp",
+        "w": 104,
+        "h": 118,
+        "pad": 16,
+        "sha256": "b5db1fdc72a63e229ef0fde152efea9ae9d9cb28075dc302336fb827c622b433",
+        "bytes": 177050
+      },
+      "new": {
+        "file": "fac_env_village_shop_2_accepted_20261003.webp",
+        "w": 104,
+        "h": 118,
+        "pad": 16,
+        "sha256": "4cda91df422ad93fd4e74951eec4efe7db05907fb214ee61ea6be9ce3e470a98",
+        "bytes": 91052
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_village_shop",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_village_shop/d3.png",
+      "source_sha256": "93e5c5f2bcc03271ad6891931811a290236dc2b81ef4ed80a296be2f03652adf",
+      "old": {
+        "file": "fac_env_village_shop_3.webp",
+        "w": 104,
+        "h": 118,
+        "pad": 16,
+        "sha256": "535c3578f77d9722d603c4c6163c84cc7c6e9cadcfedaf913a040fefe34a7f87",
+        "bytes": 151638
+      },
+      "new": {
+        "file": "fac_env_village_shop_3_accepted_20261003.webp",
+        "w": 104,
+        "h": 118,
+        "pad": 16,
+        "sha256": "60966a0b64c5d7231d5b1da450536afd69e610960173095f33ae10eb91af6708",
+        "bytes": 91644
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_pension",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_pension/d0.png",
+      "source_sha256": "6aa1068fec51940e3c286329d59289bd342aa7041e9ca732664bb3a63bc644b3",
+      "old": {
+        "file": "fac_env_pension_0.webp",
+        "w": 112,
+        "h": 126,
+        "pad": 16,
+        "sha256": "d52f246aba4eba12643ca0b394b04a179145e83d4ccdc1af71b91d3b738c49c1",
+        "bytes": 177296
+      },
+      "new": {
+        "file": "fac_env_pension_0_accepted_20261003.webp",
+        "w": 112,
+        "h": 126,
+        "pad": 16,
+        "sha256": "083425f12ad4857ca3888eb1fd3d458b8ad1e5e68c00c53285bd124ebb2db265",
+        "bytes": 122382
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_pension",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_pension/d1.png",
+      "source_sha256": "7f9e67b8dc07ca0dfe5811211041ac7ea14411bf68a364f38ac5deb3f5c9bc7c",
+      "old": {
+        "file": "fac_env_pension_1.webp",
+        "w": 112,
+        "h": 126,
+        "pad": 16,
+        "sha256": "9daa80807a64c28b11ab5570ae74e9fe31bf610e5a7bf0a824eca7f9b36450a8",
+        "bytes": 182498
+      },
+      "new": {
+        "file": "fac_env_pension_1_accepted_20261003.webp",
+        "w": 112,
+        "h": 126,
+        "pad": 16,
+        "sha256": "0239e743318b127f8864dbf7961f2fd543ee25d511d1615349c39851309dd597",
+        "bytes": 121668
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_pension",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_pension/d2.png",
+      "source_sha256": "bd6f82bc45bf4ce5e25a775e2b20bfeae217c8b416d6b674e1d6af64e7885f78",
+      "old": {
+        "file": "fac_env_pension_2.webp",
+        "w": 112,
+        "h": 126,
+        "pad": 16,
+        "sha256": "91409ae608e88e3f57e6ccb0c7fe0e5ace7db48837d7ea1b69206acc822a16e4",
+        "bytes": 181978
+      },
+      "new": {
+        "file": "fac_env_pension_2_accepted_20261003.webp",
+        "w": 112,
+        "h": 126,
+        "pad": 16,
+        "sha256": "f011eeee7ddf409004eff88bfd8bc488946395f4099d066c319a9e5f9d525984",
+        "bytes": 114014
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_pension",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-batch-20261003/candidates/env_pension/d3.png",
+      "source_sha256": "b318b81c08185708c192da0458b70167d69708c2283dc3e60f10448f3d12ae5c",
+      "old": {
+        "file": "fac_env_pension_3.webp",
+        "w": 112,
+        "h": 126,
+        "pad": 16,
+        "sha256": "ba1e8405631d4b62a75258a8f48c9ad172d3f6f82759118defa99c5d47ec82bf",
+        "bytes": 173596
+      },
+      "new": {
+        "file": "fac_env_pension_3_accepted_20261003.webp",
+        "w": 112,
+        "h": 126,
+        "pad": 16,
+        "sha256": "fce11ed8479adc98c3fad0ee3f2a3158a36101c5153a0e4c7d75590d429a339d",
+        "bytes": 115738
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

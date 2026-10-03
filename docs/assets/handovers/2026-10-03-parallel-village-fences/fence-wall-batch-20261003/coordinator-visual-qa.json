@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "scope": "All24 candidates, source grids and both actual game chain maps",
+  "findings_resolved": [
+    "stone block bevel shading",
+    "timber line color and rail aperture",
+    "cropped chain board panels"
+  ],
+  "limitations": [
+    "intentional shared-post overlap",
+    "two occluded stone-corner edge subsets unclaimed"
+  ],
+  "runtime_chain": "Two families,20 placements each,4direction chains"
+}

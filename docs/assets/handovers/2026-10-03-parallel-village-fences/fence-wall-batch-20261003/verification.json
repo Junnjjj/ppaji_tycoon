@@ -1,0 +1,1727 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "env_wood_fence",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "wood-post-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-cap-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-post-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-cap-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-rail-0-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-rail-0-1",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "wood-post-0",
+          "b": "wood-cap-0",
+          "overlap": [
+            0.13,
+            0.13,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-post-1",
+          "b": "wood-cap-1",
+          "overlap": [
+            0.1299999999999999,
+            0.13,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-0",
+          "b": "wood-post-0",
+          "overlap": [
+            0.065,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-0",
+          "b": "wood-post-1",
+          "overlap": [
+            0.06499999999999995,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-1",
+          "b": "wood-post-0",
+          "overlap": [
+            0.065,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-1",
+          "b": "wood-post-1",
+          "overlap": [
+            0.06499999999999995,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 1.1102230246251565e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            3912
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 37,
+                "coverage": 0.925,
+                "status": "PASS",
+                "slope": 0.4978662873399711,
+                "rms": 0.5642046275176696
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.4999999999999998,
+              "slope": 0.5009380863039393,
+              "rms": 0.5589121032971177,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            3912
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 38,
+                "coverage": 0.95,
+                "status": "PASS",
+                "slope": -0.4989604989604997,
+                "rms": 0.5582808805560545
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.4999999999999999,
+              "slope": -0.5028142589118186,
+              "rms": 0.5580722649514716,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            3912
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 37,
+                "coverage": 0.925,
+                "status": "PASS",
+                "slope": 0.49786628733997146,
+                "rms": 0.5642046275176673
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.4999999999999999,
+              "slope": 0.5009380863039392,
+              "rms": 0.5589121032971187,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            3912
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 38,
+                "coverage": 0.95,
+                "status": "PASS",
+                "slope": -0.4989604989605003,
+                "rms": 0.5582808805560502
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.5028142589118185,
+              "rms": 0.5580722649514747,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "wood-post-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-cap-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-post-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-cap-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-post-2",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-cap-2",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-rail-0-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-rail-0-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-rail-1-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-rail-1-1",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "wood-post-0",
+          "b": "wood-cap-0",
+          "overlap": [
+            0.13,
+            0.13,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-post-1",
+          "b": "wood-cap-1",
+          "overlap": [
+            0.1299999999999999,
+            0.13,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-post-2",
+          "b": "wood-cap-2",
+          "overlap": [
+            0.13,
+            0.1299999999999999,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-0",
+          "b": "wood-post-0",
+          "overlap": [
+            0.065,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-0",
+          "b": "wood-post-1",
+          "overlap": [
+            0.06499999999999995,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-1",
+          "b": "wood-post-0",
+          "overlap": [
+            0.065,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-1",
+          "b": "wood-post-1",
+          "overlap": [
+            0.06499999999999995,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-1-0",
+          "b": "wood-post-0",
+          "overlap": [
+            0.076,
+            0.065,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-1-0",
+          "b": "wood-post-2",
+          "overlap": [
+            0.076,
+            0.06499999999999995,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-1-1",
+          "b": "wood-post-0",
+          "overlap": [
+            0.076,
+            0.065,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-1-1",
+          "b": "wood-post-2",
+          "overlap": [
+            0.076,
+            0.06499999999999995,
+            1.25
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 1.1102230246251565e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            6568
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 37,
+                "coverage": 0.925,
+                "status": "PASS",
+                "slope": 0.4978662873399711,
+                "rms": 0.5642046275176696
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.4999999999999998,
+              "slope": 0.5009380863039393,
+              "rms": 0.5589121032971177,
+              "offset": 0.5409999999999968,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 38,
+                "coverage": 0.95,
+                "status": "PASS",
+                "slope": -0.4989604989604997,
+                "rms": 0.5582808805560545
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.4999999999999999,
+              "slope": -0.5028142589118186,
+              "rms": 0.5580722649514716,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            6288
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 38,
+                "coverage": 0.95,
+                "status": "PASS",
+                "slope": -0.4989604989604997,
+                "rms": 0.5582808805560545
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.4999999999999999,
+              "slope": -0.5028142589118186,
+              "rms": 0.5580722649514716,
+              "offset": 0.5409999999999968,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 20,
+                "coverage": 0.5,
+                "status": "PASS",
+                "slope": 0.4907593541274882,
+                "rms": 0.5471124926664267
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.4999999999999999,
+              "slope": 0.5009380863039392,
+              "rms": 0.5589121032971187,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            6568
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 37,
+                "coverage": 0.925,
+                "status": "PASS",
+                "slope": 0.49786628733997146,
+                "rms": 0.5642046275176673
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.4999999999999999,
+              "slope": 0.5009380863039392,
+              "rms": 0.5589121032971187,
+              "offset": 0.5409999999999968,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 38,
+                "coverage": 0.95,
+                "status": "PASS",
+                "slope": -0.4989604989605003,
+                "rms": 0.5582808805560502
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.5028142589118185,
+              "rms": 0.5580722649514747,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            6288
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 20,
+                "coverage": 0.5,
+                "status": "PASS",
+                "slope": -0.49075935412748806,
+                "rms": 0.5471124926664301
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.5028142589118185,
+              "rms": 0.5580722649514747,
+              "offset": 0.5409999999999968,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 37,
+                "coverage": 0.925,
+                "status": "PASS",
+                "slope": 0.4978662873399711,
+                "rms": 0.5642046275176696
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.4999999999999998,
+              "slope": 0.5009380863039393,
+              "rms": 0.5589121032971177,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "env_wood_fence_end",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "wood-post-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-cap-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-post-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-cap-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-rail-0-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "wood-rail-0-1",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "wood-post-0",
+          "b": "wood-cap-0",
+          "overlap": [
+            0.13,
+            0.13,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-post-1",
+          "b": "wood-cap-1",
+          "overlap": [
+            0.1299999999999999,
+            0.13,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-0",
+          "b": "wood-post-0",
+          "overlap": [
+            0.065,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-0",
+          "b": "wood-post-1",
+          "overlap": [
+            0.06499999999999995,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-1",
+          "b": "wood-post-0",
+          "overlap": [
+            0.065,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "wood-rail-0-1",
+          "b": "wood-post-1",
+          "overlap": [
+            0.06499999999999995,
+            0.076,
+            1.25
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 1.1102230246251565e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            3912
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 37,
+                "coverage": 0.925,
+                "status": "PASS",
+                "slope": 0.4978662873399711,
+                "rms": 0.5642046275176696
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.4999999999999998,
+              "slope": 0.5009380863039393,
+              "rms": 0.5589121032971177,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            3912
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 38,
+                "coverage": 0.95,
+                "status": "PASS",
+                "slope": -0.4989604989604997,
+                "rms": 0.5582808805560545
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.4999999999999999,
+              "slope": -0.5028142589118186,
+              "rms": 0.5580722649514716,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            3912
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 37,
+                "coverage": 0.925,
+                "status": "PASS",
+                "slope": 0.49786628733997146,
+                "rms": 0.5642046275176673
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.4999999999999999,
+              "slope": 0.5009380863039392,
+              "rms": 0.5589121032971187,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            3912
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 38,
+                "coverage": 0.95,
+                "status": "PASS",
+                "slope": -0.4989604989605003,
+                "rms": 0.5582808805560502
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.5028142589118185,
+              "rms": 0.5580722649514747,
+              "offset": 0.5409999999999968,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "env_stone_wall",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "stone-body-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "stone-coping-0",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "stone-body-0",
+          "b": "stone-coping-0",
+          "overlap": [
+            1.0,
+            0.18,
+            0.09999999999999964
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 5.551115123125783e-17,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            4344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": 0.5009380863039405,
+                "rms": 0.5589121032971175
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039405,
+              "rms": 0.5589121032971175,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            4344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030044,
+                "rms": 0.5563887852034637
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030044,
+              "rms": 0.5563887852034637,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            4344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": 0.5009380863039391,
+                "rms": 0.5589121032971187
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039391,
+              "rms": 0.5589121032971187,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            4344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030067,
+                "rms": 0.5563887852034654
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030067,
+              "rms": 0.5563887852034654,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "stone-body-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "stone-coping-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "stone-body-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "stone-coping-1",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "stone-body-0",
+          "b": "stone-coping-0",
+          "overlap": [
+            1.0,
+            0.18,
+            0.09999999999999964
+          ],
+          "passed": true
+        },
+        {
+          "a": "stone-body-1",
+          "b": "stone-coping-1",
+          "overlap": [
+            0.18,
+            1.0,
+            0.09999999999999964
+          ],
+          "passed": true
+        },
+        {
+          "a": "stone-body-0",
+          "b": "stone-body-1",
+          "overlap": [
+            0.09,
+            0.09,
+            9.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "stone-coping-0",
+          "b": "stone-coping-1",
+          "overlap": [
+            0.105,
+            0.105,
+            0.5499999999999989
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 5.551115123125783e-17,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            7952
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": 0.5009380863039405,
+                "rms": 0.5589121032971175
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039405,
+              "rms": 0.5589121032971175,
+              "offset": 0.5,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030044,
+                "rms": 0.5563887852034637
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030044,
+              "rms": 0.5563887852034637,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            6792
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030044,
+                "rms": 0.5563887852034637
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030044,
+              "rms": 0.5563887852034637,
+              "offset": 0.5,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 1,
+                "coverage": 0.025,
+                "status": "OCCLUDED_OR_TOO_SHORT"
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039391,
+              "rms": 0.5589121032971187,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            7936
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": 0.5009380863039391,
+                "rms": 0.5589121032971187
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039391,
+              "rms": 0.5589121032971187,
+              "offset": 0.5,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030067,
+                "rms": 0.5563887852034654
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030067,
+              "rms": 0.5563887852034654,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            6792
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 0,
+                "coverage": 0.0,
+                "status": "OCCLUDED_OR_TOO_SHORT"
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030067,
+              "rms": 0.5563887852034654,
+              "offset": 0.5,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": 0.5009380863039405,
+                "rms": 0.5589121032971175
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039405,
+              "rms": 0.5589121032971175,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "env_stone_wall_end",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "stone-body-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "stone-coping-0",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "stone-body-0",
+          "b": "stone-coping-0",
+          "overlap": [
+            1.0,
+            0.18,
+            0.09999999999999964
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 5.551115123125783e-17,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            4344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": 0.5009380863039405,
+                "rms": 0.5589121032971175
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039405,
+              "rms": 0.5589121032971175,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            4344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030044,
+                "rms": 0.5563887852034637
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030044,
+              "rms": 0.5563887852034637,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            4344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": 0.5009380863039391,
+                "rms": 0.5589121032971187
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039391,
+              "rms": 0.5589121032971187,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            4344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030067,
+                "rms": 0.5563887852034654
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030067,
+              "rms": 0.5563887852034654,
+              "offset": 0.5,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence_end",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence_corner",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence_corner",
+      "b": "env_wood_fence",
+      "d": 0,
+      "b_direction": 3,
+      "translation": [
+        -1,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence_end",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence_corner",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence_corner",
+      "b": "env_wood_fence",
+      "d": 1,
+      "b_direction": 0,
+      "translation": [
+        1,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence_end",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence_corner",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence_corner",
+      "b": "env_wood_fence",
+      "d": 2,
+      "b_direction": 1,
+      "translation": [
+        1,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence_end",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence",
+      "b": "env_wood_fence_corner",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_wood_fence_corner",
+      "b": "env_wood_fence",
+      "d": 3,
+      "b_direction": 2,
+      "translation": [
+        -1,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall_end",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall_corner",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall_corner",
+      "b": "env_stone_wall",
+      "d": 0,
+      "b_direction": 3,
+      "translation": [
+        -1,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall_end",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall_corner",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall_corner",
+      "b": "env_stone_wall",
+      "d": 1,
+      "b_direction": 0,
+      "translation": [
+        1,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall_end",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall_corner",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall_corner",
+      "b": "env_stone_wall",
+      "d": 2,
+      "b_direction": 1,
+      "translation": [
+        1,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall_end",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall",
+      "b": "env_stone_wall_corner",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_stone_wall_corner",
+      "b": "env_stone_wall",
+      "d": 3,
+      "b_direction": 2,
+      "translation": [
+        -1,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    }
+  ],
+  "line_counts": {
+    "total": 32,
+    "passed": 32
+  },
+  "limits": [
+    "Boundary port coincidence proves declared placement only; AABB is not exact collision certification.",
+    "Long exposed upper edges sampled; short cap edges, vertical edges and mortar paint excluded from slope certification.",
+    "No curved parts observed; no curve certification required.",
+    "Numeric QA is not art95 certification. Runtime QA not run."
+  ]
+}

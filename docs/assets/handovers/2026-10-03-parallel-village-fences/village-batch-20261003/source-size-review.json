@@ -1,0 +1,485 @@
+{
+  "scope": "Fixed common assembly; source alpha boxes vary by facing. No per-facing recentering.",
+  "frames": [
+    {
+      "id": "env_village_house",
+      "d": 0,
+      "source_canvas": [
+        512,
+        464
+      ],
+      "candidate_canvas": [
+        512,
+        464
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        74,
+        64,
+        439,
+        400
+      ],
+      "candidate_bbox": [
+        72,
+        54,
+        440,
+        398
+      ],
+      "source_any_alpha_bbox": [
+        72,
+        41,
+        443,
+        402
+      ],
+      "candidate_any_alpha_bbox": [
+        71,
+        53,
+        441,
+        399
+      ],
+      "width_ratio": 1.0082191780821919,
+      "height_ratio": 1.0238095238095237,
+      "same_registration": true
+    },
+    {
+      "id": "env_village_house",
+      "d": 1,
+      "source_canvas": [
+        512,
+        464
+      ],
+      "candidate_canvas": [
+        512,
+        464
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        71,
+        64,
+        441,
+        400
+      ],
+      "candidate_bbox": [
+        72,
+        54,
+        440,
+        398
+      ],
+      "source_any_alpha_bbox": [
+        20,
+        63,
+        442,
+        424
+      ],
+      "candidate_any_alpha_bbox": [
+        71,
+        53,
+        441,
+        399
+      ],
+      "width_ratio": 0.9945945945945946,
+      "height_ratio": 1.0238095238095237,
+      "same_registration": true
+    },
+    {
+      "id": "env_village_house",
+      "d": 2,
+      "source_canvas": [
+        512,
+        464
+      ],
+      "candidate_canvas": [
+        512,
+        464
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        65,
+        64,
+        447,
+        400
+      ],
+      "candidate_bbox": [
+        72,
+        54,
+        440,
+        398
+      ],
+      "source_any_alpha_bbox": [
+        63,
+        63,
+        449,
+        403
+      ],
+      "candidate_any_alpha_bbox": [
+        71,
+        53,
+        441,
+        399
+      ],
+      "width_ratio": 0.9633507853403142,
+      "height_ratio": 1.0238095238095237,
+      "same_registration": true
+    },
+    {
+      "id": "env_village_house",
+      "d": 3,
+      "source_canvas": [
+        512,
+        464
+      ],
+      "candidate_canvas": [
+        512,
+        464
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        67,
+        64,
+        445,
+        400
+      ],
+      "candidate_bbox": [
+        72,
+        54,
+        440,
+        398
+      ],
+      "source_any_alpha_bbox": [
+        65,
+        62,
+        447,
+        434
+      ],
+      "candidate_any_alpha_bbox": [
+        71,
+        53,
+        441,
+        399
+      ],
+      "width_ratio": 0.9735449735449735,
+      "height_ratio": 1.0238095238095237,
+      "same_registration": true
+    },
+    {
+      "id": "env_village_shop",
+      "d": 0,
+      "source_canvas": [
+        544,
+        600
+      ],
+      "candidate_canvas": [
+        544,
+        600
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        69,
+        63,
+        458,
+        537
+      ],
+      "candidate_bbox": [
+        86,
+        44,
+        456,
+        534
+      ],
+      "source_any_alpha_bbox": [
+        66,
+        60,
+        502,
+        567
+      ],
+      "candidate_any_alpha_bbox": [
+        85,
+        43,
+        457,
+        535
+      ],
+      "width_ratio": 0.9511568123393316,
+      "height_ratio": 1.0337552742616034,
+      "same_registration": true
+    },
+    {
+      "id": "env_village_shop",
+      "d": 1,
+      "source_canvas": [
+        544,
+        600
+      ],
+      "candidate_canvas": [
+        544,
+        600
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        87,
+        64,
+        474,
+        536
+      ],
+      "candidate_bbox": [
+        88,
+        44,
+        458,
+        534
+      ],
+      "source_any_alpha_bbox": [
+        85,
+        63,
+        475,
+        538
+      ],
+      "candidate_any_alpha_bbox": [
+        87,
+        43,
+        459,
+        535
+      ],
+      "width_ratio": 0.9560723514211886,
+      "height_ratio": 1.0381355932203389,
+      "same_registration": true
+    },
+    {
+      "id": "env_village_shop",
+      "d": 2,
+      "source_canvas": [
+        544,
+        600
+      ],
+      "candidate_canvas": [
+        544,
+        600
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        80,
+        68,
+        480,
+        536
+      ],
+      "candidate_bbox": [
+        88,
+        44,
+        458,
+        534
+      ],
+      "source_any_alpha_bbox": [
+        76,
+        42,
+        543,
+        546
+      ],
+      "candidate_any_alpha_bbox": [
+        87,
+        43,
+        459,
+        535
+      ],
+      "width_ratio": 0.925,
+      "height_ratio": 1.047008547008547,
+      "same_registration": true
+    },
+    {
+      "id": "env_village_shop",
+      "d": 3,
+      "source_canvas": [
+        544,
+        600
+      ],
+      "candidate_canvas": [
+        544,
+        600
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        72,
+        64,
+        456,
+        536
+      ],
+      "candidate_bbox": [
+        86,
+        44,
+        456,
+        534
+      ],
+      "source_any_alpha_bbox": [
+        70,
+        62,
+        463,
+        538
+      ],
+      "candidate_any_alpha_bbox": [
+        85,
+        43,
+        457,
+        535
+      ],
+      "width_ratio": 0.9635416666666666,
+      "height_ratio": 1.0381355932203389,
+      "same_registration": true
+    },
+    {
+      "id": "env_pension",
+      "d": 0,
+      "source_canvas": [
+        576,
+        632
+      ],
+      "candidate_canvas": [
+        576,
+        632
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        86,
+        64,
+        490,
+        568
+      ],
+      "candidate_bbox": [
+        72,
+        38,
+        504,
+        564
+      ],
+      "source_any_alpha_bbox": [
+        83,
+        61,
+        491,
+        569
+      ],
+      "candidate_any_alpha_bbox": [
+        71,
+        37,
+        505,
+        565
+      ],
+      "width_ratio": 1.0693069306930694,
+      "height_ratio": 1.0436507936507937,
+      "same_registration": true
+    },
+    {
+      "id": "env_pension",
+      "d": 1,
+      "source_canvas": [
+        576,
+        632
+      ],
+      "candidate_canvas": [
+        576,
+        632
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        66,
+        64,
+        510,
+        568
+      ],
+      "candidate_bbox": [
+        72,
+        38,
+        504,
+        564
+      ],
+      "source_any_alpha_bbox": [
+        64,
+        47,
+        559,
+        599
+      ],
+      "candidate_any_alpha_bbox": [
+        71,
+        37,
+        505,
+        565
+      ],
+      "width_ratio": 0.972972972972973,
+      "height_ratio": 1.0436507936507937,
+      "same_registration": true
+    },
+    {
+      "id": "env_pension",
+      "d": 2,
+      "source_canvas": [
+        576,
+        632
+      ],
+      "candidate_canvas": [
+        576,
+        632
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        76,
+        84,
+        500,
+        568
+      ],
+      "candidate_bbox": [
+        72,
+        38,
+        504,
+        564
+      ],
+      "source_any_alpha_bbox": [
+        74,
+        83,
+        501,
+        571
+      ],
+      "candidate_any_alpha_bbox": [
+        71,
+        37,
+        505,
+        565
+      ],
+      "width_ratio": 1.0188679245283019,
+      "height_ratio": 1.0867768595041323,
+      "same_registration": true
+    },
+    {
+      "id": "env_pension",
+      "d": 3,
+      "source_canvas": [
+        576,
+        632
+      ],
+      "candidate_canvas": [
+        576,
+        632
+      ],
+      "alpha_threshold": 128,
+      "source_bbox": [
+        69,
+        84,
+        506,
+        568
+      ],
+      "candidate_bbox": [
+        72,
+        38,
+        504,
+        564
+      ],
+      "source_any_alpha_bbox": [
+        51,
+        83,
+        508,
+        569
+      ],
+      "candidate_any_alpha_bbox": [
+        71,
+        37,
+        505,
+        565
+      ],
+      "width_ratio": 0.988558352402746,
+      "height_ratio": 1.0867768595041323,
+      "same_registration": true
+    }
+  ]
+}

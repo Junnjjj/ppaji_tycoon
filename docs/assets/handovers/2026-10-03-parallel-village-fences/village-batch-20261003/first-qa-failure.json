@@ -1,0 +1,10 @@
+{
+  "check": "AABB declared joint",
+  "asset": "env_village_house",
+  "parts": [
+    "door-handle",
+    "entrance-pane"
+  ],
+  "gap_tile": 0.01575,
+  "fix": "extend handle inward to contact pane, preserve tolerance"
+}

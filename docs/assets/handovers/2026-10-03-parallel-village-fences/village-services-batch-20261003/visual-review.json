@@ -1,0 +1,76 @@
+{
+  "status": "VISUALLY_REVIEWED_LOCAL_CANDIDATES",
+  "method": "view_image, original and candidate four-direction boards plus fixed-registration comparison boards",
+  "files": [
+    {
+      "file": "candidates/env_small_hotel/d0.png",
+      "sha256": "cb121bf838edd7c535b7e98644f85a3f2f3c56a15436c1e5d2a64caf2a7a57e4",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_small_hotel/d1.png",
+      "sha256": "f697921648ef366b4057f545cb2e7a473dc22112b1cc5e54ecbd9666a4793240",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_small_hotel/d2.png",
+      "sha256": "53f0a6dbbae22e7e93e0dcaeb11146ff2920250bc0045d451d3bb671a9462061",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_small_hotel/d3.png",
+      "sha256": "b40524d6ab8dee067ce15d2c0f81f2563a87500f5b181d884addca41a4bc4320",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_convenience_store/d0.png",
+      "sha256": "b41d9a84e80e4381d1e4e697f84e66fa929620eeaba65787b64b29bd2ef22a5b",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_convenience_store/d1.png",
+      "sha256": "fafe1bc458a222235960fc085c5816e0144ea625fde2c29e9eefece50efc381c",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_convenience_store/d2.png",
+      "sha256": "5cb79e7794115b5354c1b8513dc1e6691905e50e906d2724232d1e10fb47e274",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_convenience_store/d3.png",
+      "sha256": "4e5dd91d34085d1b09d6f7c9cf4946149c4b3a19dda3a44408fcca8baf44f923",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_maintenance_shed/d0.png",
+      "sha256": "0db6ad20e177cfea0271bed6dcf1d82cc8ae14e0bb803bacc35bbd317bee48d9",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_maintenance_shed/d1.png",
+      "sha256": "fe297a5ff4215337824feb389bd5489178d06763b967b239f9b3a605082aa5ee",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_maintenance_shed/d2.png",
+      "sha256": "97feb8dff9b657e55ea77aafd1716362d7db33bc81fc76128fed003cad79ae33",
+      "visually_reviewed": true
+    },
+    {
+      "file": "candidates/env_maintenance_shed/d3.png",
+      "sha256": "ae486c8e28b239dfa078be1cc1921cb864a6d447a6a7467c496db05687318fe4",
+      "visually_reviewed": true
+    }
+  ],
+  "observations": [
+    "All original direction boards inspected before authoring.",
+    "All final candidate d0-d3 boards viewed with view_image after latest render.",
+    "Hotel/shed gable plaster seam removed; same-plane paint continuous.",
+    "Hotel/shed entrances are solid teal; store entrance retains glass reflections.",
+    "Roof ridges, display placement, planter identity, roller slots and latch arms stay fixed through rotation.",
+    "Source facings contradict some window and balcony visibility; chosen shared layout is declared, not exact source recovery."
+  ],
+  "runtime_reviewed": false,
+  "main_modified": false
+}

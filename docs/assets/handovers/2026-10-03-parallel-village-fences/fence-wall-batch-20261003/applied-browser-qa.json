@@ -1,0 +1,146 @@
+[
+  {
+    "id": "env_wood_fence",
+    "d": 0,
+    "file": "fac_env_wood_fence_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 1,
+    "file": "fac_env_wood_fence_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 2,
+    "file": "fac_env_wood_fence_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence",
+    "d": 3,
+    "file": "fac_env_wood_fence_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 0,
+    "file": "fac_env_wood_fence_corner_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 1,
+    "file": "fac_env_wood_fence_corner_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 2,
+    "file": "fac_env_wood_fence_corner_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence_corner",
+    "d": 3,
+    "file": "fac_env_wood_fence_corner_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 0,
+    "file": "fac_env_wood_fence_end_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 1,
+    "file": "fac_env_wood_fence_end_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 2,
+    "file": "fac_env_wood_fence_end_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_wood_fence_end",
+    "d": 3,
+    "file": "fac_env_wood_fence_end_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 0,
+    "file": "fac_env_stone_wall_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 1,
+    "file": "fac_env_stone_wall_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 2,
+    "file": "fac_env_stone_wall_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall",
+    "d": 3,
+    "file": "fac_env_stone_wall_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 0,
+    "file": "fac_env_stone_wall_corner_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 1,
+    "file": "fac_env_stone_wall_corner_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 2,
+    "file": "fac_env_stone_wall_corner_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall_corner",
+    "d": 3,
+    "file": "fac_env_stone_wall_corner_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 0,
+    "file": "fac_env_stone_wall_end_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 1,
+    "file": "fac_env_stone_wall_end_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 2,
+    "file": "fac_env_stone_wall_end_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_stone_wall_end",
+    "d": 3,
+    "file": "fac_env_stone_wall_end_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

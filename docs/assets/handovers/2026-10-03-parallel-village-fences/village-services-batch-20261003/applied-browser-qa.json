@@ -1,0 +1,74 @@
+[
+  {
+    "id": "env_small_hotel",
+    "d": 0,
+    "file": "fac_env_small_hotel_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 1,
+    "file": "fac_env_small_hotel_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 2,
+    "file": "fac_env_small_hotel_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 3,
+    "file": "fac_env_small_hotel_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 0,
+    "file": "fac_env_convenience_store_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 1,
+    "file": "fac_env_convenience_store_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 2,
+    "file": "fac_env_convenience_store_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 3,
+    "file": "fac_env_convenience_store_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 0,
+    "file": "fac_env_maintenance_shed_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 1,
+    "file": "fac_env_maintenance_shed_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 2,
+    "file": "fac_env_maintenance_shed_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 3,
+    "file": "fac_env_maintenance_shed_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

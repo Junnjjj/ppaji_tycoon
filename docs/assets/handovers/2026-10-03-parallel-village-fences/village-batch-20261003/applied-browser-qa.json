@@ -1,0 +1,74 @@
+[
+  {
+    "id": "env_village_house",
+    "d": 0,
+    "file": "fac_env_village_house_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_village_house",
+    "d": 1,
+    "file": "fac_env_village_house_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_village_house",
+    "d": 2,
+    "file": "fac_env_village_house_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_village_house",
+    "d": 3,
+    "file": "fac_env_village_house_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_village_shop",
+    "d": 0,
+    "file": "fac_env_village_shop_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_village_shop",
+    "d": 1,
+    "file": "fac_env_village_shop_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_village_shop",
+    "d": 2,
+    "file": "fac_env_village_shop_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_village_shop",
+    "d": 3,
+    "file": "fac_env_village_shop_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_pension",
+    "d": 0,
+    "file": "fac_env_pension_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_pension",
+    "d": 1,
+    "file": "fac_env_pension_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_pension",
+    "d": 2,
+    "file": "fac_env_pension_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_pension",
+    "d": 3,
+    "file": "fac_env_pension_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

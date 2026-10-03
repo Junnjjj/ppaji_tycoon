@@ -1,0 +1,278 @@
+[
+  {
+    "id": "env_small_hotel",
+    "d": 0,
+    "canvas": [
+      576,
+      768
+    ],
+    "source_bbox": [
+      82,
+      65,
+      495,
+      705
+    ],
+    "candidate_bbox": [
+      78,
+      62,
+      498,
+      696
+    ],
+    "width_ratio": 1.0169491525423728,
+    "height_ratio": 0.990625,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 1,
+    "canvas": [
+      576,
+      768
+    ],
+    "source_bbox": [
+      74,
+      64,
+      501,
+      704
+    ],
+    "candidate_bbox": [
+      78,
+      62,
+      498,
+      696
+    ],
+    "width_ratio": 0.9836065573770492,
+    "height_ratio": 0.990625,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 2,
+    "canvas": [
+      576,
+      768
+    ],
+    "source_bbox": [
+      72,
+      84,
+      504,
+      704
+    ],
+    "candidate_bbox": [
+      78,
+      62,
+      498,
+      696
+    ],
+    "width_ratio": 0.9722222222222222,
+    "height_ratio": 1.0225806451612902,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_small_hotel",
+    "d": 3,
+    "canvas": [
+      576,
+      768
+    ],
+    "source_bbox": [
+      81,
+      84,
+      495,
+      704
+    ],
+    "candidate_bbox": [
+      78,
+      62,
+      498,
+      696
+    ],
+    "width_ratio": 1.0144927536231885,
+    "height_ratio": 1.0225806451612902,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 0,
+    "canvas": [
+      480,
+      436
+    ],
+    "source_bbox": [
+      69,
+      64,
+      395,
+      372
+    ],
+    "candidate_bbox": [
+      74,
+      54,
+      400,
+      372
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0324675324675325,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 1,
+    "canvas": [
+      480,
+      436
+    ],
+    "source_bbox": [
+      80,
+      70,
+      416,
+      372
+    ],
+    "candidate_bbox": [
+      80,
+      54,
+      406,
+      372
+    ],
+    "width_ratio": 0.9702380952380952,
+    "height_ratio": 1.0529801324503312,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 2,
+    "canvas": [
+      480,
+      436
+    ],
+    "source_bbox": [
+      82,
+      64,
+      414,
+      372
+    ],
+    "candidate_bbox": [
+      80,
+      54,
+      406,
+      372
+    ],
+    "width_ratio": 0.9819277108433735,
+    "height_ratio": 1.0324675324675325,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_convenience_store",
+    "d": 3,
+    "canvas": [
+      480,
+      436
+    ],
+    "source_bbox": [
+      72,
+      64,
+      392,
+      367
+    ],
+    "candidate_bbox": [
+      74,
+      54,
+      400,
+      372
+    ],
+    "width_ratio": 1.01875,
+    "height_ratio": 1.0495049504950495,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 0,
+    "canvas": [
+      448,
+      432
+    ],
+    "source_bbox": [
+      64,
+      68,
+      384,
+      368
+    ],
+    "candidate_bbox": [
+      62,
+      56,
+      386,
+      368
+    ],
+    "width_ratio": 1.0125,
+    "height_ratio": 1.04,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 1,
+    "canvas": [
+      448,
+      432
+    ],
+    "source_bbox": [
+      64,
+      65,
+      384,
+      368
+    ],
+    "candidate_bbox": [
+      62,
+      56,
+      386,
+      368
+    ],
+    "width_ratio": 1.0125,
+    "height_ratio": 1.0297029702970297,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 2,
+    "canvas": [
+      448,
+      432
+    ],
+    "source_bbox": [
+      68,
+      64,
+      380,
+      368
+    ],
+    "candidate_bbox": [
+      62,
+      56,
+      386,
+      368
+    ],
+    "width_ratio": 1.0384615384615385,
+    "height_ratio": 1.0263157894736843,
+    "registration_unchanged": true
+  },
+  {
+    "id": "env_maintenance_shed",
+    "d": 3,
+    "canvas": [
+      448,
+      432
+    ],
+    "source_bbox": [
+      71,
+      64,
+      381,
+      370
+    ],
+    "candidate_bbox": [
+      62,
+      56,
+      386,
+      368
+    ],
+    "width_ratio": 1.0451612903225806,
+    "height_ratio": 1.0196078431372548,
+    "registration_unchanged": true
+  }
+]

@@ -1,0 +1,304 @@
+{
+  "status": "PASS",
+  "registrations": [
+    {
+      "id": "env_wood_fence",
+      "d": 0,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 1,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 2,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 3,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "d": 0,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "d": 1,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "d": 2,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence_corner",
+      "d": 3,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 0,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 1,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 2,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 3,
+      "registration_exact": true,
+      "canvas": [
+        264,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall",
+      "d": 0,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall",
+      "d": 1,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall",
+      "d": 2,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall",
+      "d": 3,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "d": 0,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "d": 1,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "d": 2,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall_corner",
+      "d": 3,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall_end",
+      "d": 0,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall_end",
+      "d": 1,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall_end",
+      "d": 2,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    },
+    {
+      "id": "env_stone_wall_end",
+      "d": 3,
+      "registration_exact": true,
+      "canvas": [
+        256,
+        320
+      ]
+    }
+  ],
+  "separate_rail_openings": [
+    {
+      "id": "env_wood_fence",
+      "d": 0,
+      "rail_gap_pixel": [
+        164,
+        184
+      ],
+      "alpha": 0,
+      "passed": true
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 1,
+      "rail_gap_pixel": [
+        100,
+        184
+      ],
+      "alpha": 0,
+      "passed": true
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 2,
+      "rail_gap_pixel": [
+        100,
+        216
+      ],
+      "alpha": 0,
+      "passed": true
+    },
+    {
+      "id": "env_wood_fence",
+      "d": 3,
+      "rail_gap_pixel": [
+        164,
+        216
+      ],
+      "alpha": 0,
+      "passed": true
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 0,
+      "rail_gap_pixel": [
+        164,
+        184
+      ],
+      "alpha": 0,
+      "passed": true
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 1,
+      "rail_gap_pixel": [
+        100,
+        184
+      ],
+      "alpha": 0,
+      "passed": true
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 2,
+      "rail_gap_pixel": [
+        100,
+        216
+      ],
+      "alpha": 0,
+      "passed": true
+    },
+    {
+      "id": "env_wood_fence_end",
+      "d": 3,
+      "rail_gap_pixel": [
+        164,
+        216
+      ],
+      "alpha": 0,
+      "passed": true
+    }
+  ],
+  "limits": "Gap samples certify the midspan aperture for straight/end sprites; corners may occlude this aperture."
+}

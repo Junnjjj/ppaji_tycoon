@@ -1263,196 +1263,196 @@
       "bytes": 16436
     },
     "fac/env_village_house/0": {
-      "file": "fac_env_village_house_0.webp",
+      "file": "fac_env_village_house_0_accepted_20261003.webp",
       "w": 96,
       "h": 84,
       "pad": 16,
-      "sha256": "4706d741f234cb89a8e4d2087949d6b74fc8404c0a168fca580aac4c9df45fa0",
-      "bytes": 118652
+      "sha256": "b0cb4678db898aef7edb178441dd802081745fbef5598203f55f4bad8701c7da",
+      "bytes": 61866
     },
     "fac/env_village_house/1": {
-      "file": "fac_env_village_house_1.webp",
+      "file": "fac_env_village_house_1_accepted_20261003.webp",
       "w": 96,
       "h": 84,
       "pad": 16,
-      "sha256": "444620d93c609cae5eba8c1290b57d2c059a1f2ad58468ac867a6e16396745f4",
-      "bytes": 101642
+      "sha256": "78d6ca1806a2958c9611d82843d7d62ce1748b9c04240665778f60369ff0fe4e",
+      "bytes": 61682
     },
     "fac/env_village_house/2": {
-      "file": "fac_env_village_house_2.webp",
+      "file": "fac_env_village_house_2_accepted_20261003.webp",
       "w": 96,
       "h": 84,
       "pad": 16,
-      "sha256": "419182b01c4877fe37c1da9eb5018e5d9a6cac0d80f85f3dd0ac09f8828c7c1c",
-      "bytes": 118804
+      "sha256": "8dc434e23654557bedda4e63157102be14d3799d3ccc1e8376497a74d251ba20",
+      "bytes": 61054
     },
     "fac/env_village_house/3": {
-      "file": "fac_env_village_house_3.webp",
+      "file": "fac_env_village_house_3_accepted_20261003.webp",
       "w": 96,
       "h": 84,
       "pad": 16,
-      "sha256": "72e48ecb0aaa626eaa37a945c37c52cf3f7e6c356bbd7474664cd1a0696a510e",
-      "bytes": 102180
+      "sha256": "f2a4df372dd618a3ee9f3b90dd2e6978e822dd465a1be926730503e375bf3be5",
+      "bytes": 66540
     },
     "fac/env_village_shop/0": {
-      "file": "fac_env_village_shop_0.fix-170a09203b8c.webp",
+      "file": "fac_env_village_shop_0_accepted_20261003.webp",
       "w": 104,
       "h": 118,
       "pad": 16,
-      "sha256": "170a09203b8cc5dcbf7db43a159735f47bb46d77667b30e8be5f74f169bb1a36",
-      "bytes": 182196
+      "sha256": "0866b609392cc4a873cc8efcf5e3d6864eb5276bbdcf37587e19ad84b0136c7f",
+      "bytes": 98044
     },
     "fac/env_village_shop/1": {
-      "file": "fac_env_village_shop_1.webp",
+      "file": "fac_env_village_shop_1_accepted_20261003.webp",
       "w": 104,
       "h": 118,
       "pad": 16,
-      "sha256": "d32c0f948a062bee6b5272c505ce69cda5e3dada25e7c7f463b08567dd9e7b3c",
-      "bytes": 158204
+      "sha256": "fb8798be335010ca83ff5928139bd73dcbf8aaa50505cb78e0a6a7f94481ec32",
+      "bytes": 98090
     },
     "fac/env_village_shop/2": {
-      "file": "fac_env_village_shop_2.webp",
+      "file": "fac_env_village_shop_2_accepted_20261003.webp",
       "w": 104,
       "h": 118,
       "pad": 16,
-      "sha256": "b5db1fdc72a63e229ef0fde152efea9ae9d9cb28075dc302336fb827c622b433",
-      "bytes": 177050
+      "sha256": "4cda91df422ad93fd4e74951eec4efe7db05907fb214ee61ea6be9ce3e470a98",
+      "bytes": 91052
     },
     "fac/env_village_shop/3": {
-      "file": "fac_env_village_shop_3.webp",
+      "file": "fac_env_village_shop_3_accepted_20261003.webp",
       "w": 104,
       "h": 118,
       "pad": 16,
-      "sha256": "535c3578f77d9722d603c4c6163c84cc7c6e9cadcfedaf913a040fefe34a7f87",
-      "bytes": 151638
+      "sha256": "60966a0b64c5d7231d5b1da450536afd69e610960173095f33ae10eb91af6708",
+      "bytes": 91644
     },
     "fac/env_pension/0": {
-      "file": "fac_env_pension_0.webp",
+      "file": "fac_env_pension_0_accepted_20261003.webp",
       "w": 112,
       "h": 126,
       "pad": 16,
-      "sha256": "d52f246aba4eba12643ca0b394b04a179145e83d4ccdc1af71b91d3b738c49c1",
-      "bytes": 177296
+      "sha256": "083425f12ad4857ca3888eb1fd3d458b8ad1e5e68c00c53285bd124ebb2db265",
+      "bytes": 122382
     },
     "fac/env_pension/1": {
-      "file": "fac_env_pension_1.webp",
+      "file": "fac_env_pension_1_accepted_20261003.webp",
       "w": 112,
       "h": 126,
       "pad": 16,
-      "sha256": "9daa80807a64c28b11ab5570ae74e9fe31bf610e5a7bf0a824eca7f9b36450a8",
-      "bytes": 182498
+      "sha256": "0239e743318b127f8864dbf7961f2fd543ee25d511d1615349c39851309dd597",
+      "bytes": 121668
     },
     "fac/env_pension/2": {
-      "file": "fac_env_pension_2.webp",
+      "file": "fac_env_pension_2_accepted_20261003.webp",
       "w": 112,
       "h": 126,
       "pad": 16,
-      "sha256": "91409ae608e88e3f57e6ccb0c7fe0e5ace7db48837d7ea1b69206acc822a16e4",
-      "bytes": 181978
+      "sha256": "f011eeee7ddf409004eff88bfd8bc488946395f4099d066c319a9e5f9d525984",
+      "bytes": 114014
     },
     "fac/env_pension/3": {
-      "file": "fac_env_pension_3.webp",
+      "file": "fac_env_pension_3_accepted_20261003.webp",
       "w": 112,
       "h": 126,
       "pad": 16,
-      "sha256": "ba1e8405631d4b62a75258a8f48c9ad172d3f6f82759118defa99c5d47ec82bf",
-      "bytes": 173596
+      "sha256": "fce11ed8479adc98c3fad0ee3f2a3158a36101c5153a0e4c7d75590d429a339d",
+      "bytes": 115738
     },
     "fac/env_small_hotel/0": {
-      "file": "fac_env_small_hotel_0.fix-533d7b574d32.webp",
+      "file": "fac_env_small_hotel_0_accepted_20261003.webp",
       "w": 112,
       "h": 160,
       "pad": 16,
-      "sha256": "533d7b574d32e115152042c08a411a96cf7e91bfbf11a39d332ede46320ab524",
-      "bytes": 246768
+      "sha256": "61e1c64fff860e4d366f58edb20f26ed51a5a9279393d1fa91dc955ea2e40cf6",
+      "bytes": 148742
     },
     "fac/env_small_hotel/1": {
-      "file": "fac_env_small_hotel_1.webp",
+      "file": "fac_env_small_hotel_1_accepted_20261003.webp",
       "w": 112,
       "h": 160,
       "pad": 16,
-      "sha256": "2fed3820933cc0cc635f25acda489c1a8fa3745c9dbf2f469b3c436ebfe07c79",
-      "bytes": 231578
+      "sha256": "39847a72575d32e0b35db2fe1d6ea998915f76dbaa11e90f81508cec0f2123fa",
+      "bytes": 147548
     },
     "fac/env_small_hotel/2": {
-      "file": "fac_env_small_hotel_2.webp",
+      "file": "fac_env_small_hotel_2_accepted_20261003.webp",
       "w": 112,
       "h": 160,
       "pad": 16,
-      "sha256": "5a9d7125a40b162a59049ae60b3f31e87577a3cc7fbe15869523b88caabc80bc",
-      "bytes": 211328
+      "sha256": "a4b8825c7bd0fe83700e0024bf820333b1dbdf30389020d42ecdfe175e8d3a28",
+      "bytes": 128114
     },
     "fac/env_small_hotel/3": {
-      "file": "fac_env_small_hotel_3.webp",
+      "file": "fac_env_small_hotel_3_accepted_20261003.webp",
       "w": 112,
       "h": 160,
       "pad": 16,
-      "sha256": "07e5286d77949405482dd51a954ad07788d1af8a01654de1c10736705aec049a",
-      "bytes": 212650
+      "sha256": "17e52ce686969252183ed69b56ddc0cccbafa139431e9831aac69c18fbf0e8fe",
+      "bytes": 127392
     },
     "fac/env_convenience_store/0": {
-      "file": "fac_env_convenience_store_0.webp",
+      "file": "fac_env_convenience_store_0_accepted_20261003.webp",
       "w": 88,
       "h": 77,
       "pad": 16,
-      "sha256": "fb95cadffbdbecce27d2e2c85a87f2509a72efa41c4459c3380ed779eedd84f2",
-      "bytes": 91422
+      "sha256": "45de29fee19ee229de613adfb25294453c3eb14f830be3ca256c09b32c89717c",
+      "bytes": 45960
     },
     "fac/env_convenience_store/1": {
-      "file": "fac_env_convenience_store_1.webp",
+      "file": "fac_env_convenience_store_1_accepted_20261003.webp",
       "w": 88,
       "h": 77,
       "pad": 16,
-      "sha256": "5c9224f66653d3bf891ca783d57c3e115f55586e16a72f795ade461f43bbb3d3",
-      "bytes": 85598
+      "sha256": "a3b0828728d6a595fbfc420c27d4dbf375033195fdb54b3dc43a0ceda41e2978",
+      "bytes": 46604
     },
     "fac/env_convenience_store/2": {
-      "file": "fac_env_convenience_store_2.webp",
+      "file": "fac_env_convenience_store_2_accepted_20261003.webp",
       "w": 88,
       "h": 77,
       "pad": 16,
-      "sha256": "6d531338cf360e28c874e5e860954e1aaf163c6b6c13dc82f0d7804e53e9e628",
-      "bytes": 75584
+      "sha256": "5d0dbab66e6e2f043e049b345891d56c5da78e90509f8876dbefe4810680919f",
+      "bytes": 35672
     },
     "fac/env_convenience_store/3": {
-      "file": "fac_env_convenience_store_3.fix-4de777170525.webp",
+      "file": "fac_env_convenience_store_3_accepted_20261003.webp",
       "w": 88,
       "h": 77,
       "pad": 16,
-      "sha256": "4de777170525fd9a83957ef5e8e909d4537072c7c5d2bf82d91c3235162b4ecc",
-      "bytes": 82154
+      "sha256": "6cd798ad42672e8c39a9cfaf4f7ea2f0b1713878161fd8a9d762278ba1ff0be0",
+      "bytes": 38122
     },
     "fac/env_maintenance_shed/0": {
-      "file": "fac_env_maintenance_shed_0.webp",
+      "file": "fac_env_maintenance_shed_0_accepted_20261003.webp",
       "w": 80,
       "h": 76,
       "pad": 16,
-      "sha256": "88a0e30f126b809114082efb0b35baef9e2a760cc1d7188f29b074ea5407cb1b",
-      "bytes": 88444
+      "sha256": "2e5263de39ff221e0a57696fdf1c04ab63777a740bc8dd1006bd44ea7129efb1",
+      "bytes": 57840
     },
     "fac/env_maintenance_shed/1": {
-      "file": "fac_env_maintenance_shed_1.webp",
+      "file": "fac_env_maintenance_shed_1_accepted_20261003.webp",
       "w": 80,
       "h": 76,
       "pad": 16,
-      "sha256": "0e684a91728863d5c6e7114529f19e0f1bd72ecead34ebb6f9f49c895c700e42",
-      "bytes": 89472
+      "sha256": "4ff89a597480fd5dd4019c6a64c89bdc8759088bbf0c404531834aa2b1736fe1",
+      "bytes": 58358
     },
     "fac/env_maintenance_shed/2": {
-      "file": "fac_env_maintenance_shed_2.webp",
+      "file": "fac_env_maintenance_shed_2_accepted_20261003.webp",
       "w": 80,
       "h": 76,
       "pad": 16,
-      "sha256": "0d2e18d61c58127f939d84022729a6f9f37a77bcf37f2e21f24239bf40078aca",
-      "bytes": 78708
+      "sha256": "0f14b34cccf5b39ef51a94ac13eab849e01a08fbdf4e0714d0545e822db73bee",
+      "bytes": 60148
     },
     "fac/env_maintenance_shed/3": {
-      "file": "fac_env_maintenance_shed_3.fix-3b46c66e725a.webp",
+      "file": "fac_env_maintenance_shed_3_accepted_20261003.webp",
       "w": 80,
       "h": 76,
       "pad": 16,
-      "sha256": "3b46c66e725aebfcafcf8320ed757afb7cca0368a7a2f5a6912b7ae2102fd5ea",
-      "bytes": 85054
+      "sha256": "7446fc3670a3fc74006cb1cd77554ab36b2eaa892322ac35a0625611d3048a9b",
+      "bytes": 59290
     },
     "fac/env_pine/0": {
       "file": "fac_env_pine_0.webp",
@@ -1671,196 +1671,196 @@
       "bytes": 21634
     },
     "fac/env_wood_fence/0": {
-      "file": "fac_env_wood_fence_0.webp",
+      "file": "fac_env_wood_fence_0_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "b926a5099232de5e3dc5f41073ba650880c1ac9aeb540bc8a5a379f66e38e1dd",
-      "bytes": 2108
+      "sha256": "f83ff06848d76c3c5c238d1b7364e6ea92b394f780646b705f93b8a6acd8f29e",
+      "bytes": 3894
     },
     "fac/env_wood_fence/1": {
-      "file": "fac_env_wood_fence_1.webp",
+      "file": "fac_env_wood_fence_1_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "ff0ff15562d120a587a72c46e90bbb0d2c1579d58d25207d783847bc7c1021b6",
-      "bytes": 2146
+      "sha256": "46fa808db2c955aa61835375bd369a634b93aa84de0704422afd8906c49990ba",
+      "bytes": 3846
     },
     "fac/env_wood_fence/2": {
-      "file": "fac_env_wood_fence_2.webp",
+      "file": "fac_env_wood_fence_2_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "ceb5d77d470baed7e58f9e171a57c84bdf861ed39f76f43652a8fba42f4fd1d6",
-      "bytes": 2110
+      "sha256": "38668b269a1c6de24984b7525cacc55a769c22778b9d1d827d25afd5062f1fc1",
+      "bytes": 3896
     },
     "fac/env_wood_fence/3": {
-      "file": "fac_env_wood_fence_3.webp",
+      "file": "fac_env_wood_fence_3_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "2bd2ba284b9a7ab552d4fb52cfdce936cdcdaa283bb9602f18384cbfdb6f5a81",
-      "bytes": 2148
+      "sha256": "28d8b8c8f1c868897a4f79d0dd1f6a42abb2fdef04bc9a8457a3901902e40c12",
+      "bytes": 3866
     },
     "fac/env_wood_fence_corner/0": {
-      "file": "fac_env_wood_fence_corner_0.webp",
+      "file": "fac_env_wood_fence_corner_0_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "ce75d3045ba880d9a994e62806c6c8bb725989c2b8eb0b79ac3d07df8c5b4a20",
-      "bytes": 3020
+      "sha256": "151d2c8c20d7ca724ec2e01ed8feb9141f6628852da00b7ce0d35564f24abb73",
+      "bytes": 6138
     },
     "fac/env_wood_fence_corner/1": {
-      "file": "fac_env_wood_fence_corner_1.webp",
+      "file": "fac_env_wood_fence_corner_1_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "570396aa0505177e8080a617796b0abb1aded209bb6145277e6ac253b8904424",
-      "bytes": 3292
+      "sha256": "49ba3240f9223a22e99f0f351c4a5ffe5e58fa6addd171f1363ccf68bbd95e89",
+      "bytes": 5804
     },
     "fac/env_wood_fence_corner/2": {
-      "file": "fac_env_wood_fence_corner_2.webp",
+      "file": "fac_env_wood_fence_corner_2_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "7160b92521934bee82acc7bc32ac2e2a74736e2e9b5f6ecc9d0b5b8ec589e3b0",
-      "bytes": 3108
+      "sha256": "33e3bb6b9fef75d5d79f17068ac75f5219dc8d1f2ab82bcb45d025c6d2ad3c43",
+      "bytes": 6158
     },
     "fac/env_wood_fence_corner/3": {
-      "file": "fac_env_wood_fence_corner_3.webp",
+      "file": "fac_env_wood_fence_corner_3_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "74fcdfda3c44ff9fc070e9fe3928787715e8a633f7fa4498e732b9322eb4bb69",
-      "bytes": 3302
+      "sha256": "2db2211afaee00f8574be585b8bd05f479fb2da82817df69f43a5a7d607fd3bc",
+      "bytes": 5998
     },
     "fac/env_wood_fence_end/0": {
-      "file": "fac_env_wood_fence_end_0.webp",
+      "file": "fac_env_wood_fence_end_0_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "b926a5099232de5e3dc5f41073ba650880c1ac9aeb540bc8a5a379f66e38e1dd",
-      "bytes": 2108
+      "sha256": "f83ff06848d76c3c5c238d1b7364e6ea92b394f780646b705f93b8a6acd8f29e",
+      "bytes": 3894
     },
     "fac/env_wood_fence_end/1": {
-      "file": "fac_env_wood_fence_end_1.webp",
+      "file": "fac_env_wood_fence_end_1_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "ff0ff15562d120a587a72c46e90bbb0d2c1579d58d25207d783847bc7c1021b6",
-      "bytes": 2146
+      "sha256": "46fa808db2c955aa61835375bd369a634b93aa84de0704422afd8906c49990ba",
+      "bytes": 3846
     },
     "fac/env_wood_fence_end/2": {
-      "file": "fac_env_wood_fence_end_2.webp",
+      "file": "fac_env_wood_fence_end_2_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "ceb5d77d470baed7e58f9e171a57c84bdf861ed39f76f43652a8fba42f4fd1d6",
-      "bytes": 2110
+      "sha256": "38668b269a1c6de24984b7525cacc55a769c22778b9d1d827d25afd5062f1fc1",
+      "bytes": 3896
     },
     "fac/env_wood_fence_end/3": {
-      "file": "fac_env_wood_fence_end_3.webp",
+      "file": "fac_env_wood_fence_end_3_accepted_20261003.webp",
       "w": 34,
       "h": 48,
       "pad": 16,
-      "sha256": "2bd2ba284b9a7ab552d4fb52cfdce936cdcdaa283bb9602f18384cbfdb6f5a81",
-      "bytes": 2148
+      "sha256": "28d8b8c8f1c868897a4f79d0dd1f6a42abb2fdef04bc9a8457a3901902e40c12",
+      "bytes": 3866
     },
     "fac/env_stone_wall/0": {
-      "file": "fac_env_stone_wall_0.fix-732f65aae77f.webp",
+      "file": "fac_env_stone_wall_0_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "732f65aae77f30c28ac7daa54607ac7196ef569ae402b5d6806daf6ecee9a4f8",
-      "bytes": 6946
+      "sha256": "18447a3add1c8207efbabd96f36940d68b10356b8dd90a71fdfeddadde929e94",
+      "bytes": 3684
     },
     "fac/env_stone_wall/1": {
-      "file": "fac_env_stone_wall_1.fix-058abba8d9fc.webp",
+      "file": "fac_env_stone_wall_1_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "058abba8d9fc0cd26e89e77935551ad14a39e670419a23c77306b3fc517b7008",
-      "bytes": 6980
+      "sha256": "aed4f8a3ed44c83de3dacc639a6d91145531a9418c062b98988b923d18a23f59",
+      "bytes": 3692
     },
     "fac/env_stone_wall/2": {
-      "file": "fac_env_stone_wall_2.fix-7bb41335c568.webp",
+      "file": "fac_env_stone_wall_2_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "7bb41335c56870cabf62e03a6bfec3c82a1e2df3fd684661fe66202b6850e550",
-      "bytes": 6926
+      "sha256": "c4257b73b5268b7f1054545794ddac5785dfcb8443e50c1d2780f819309230e9",
+      "bytes": 3820
     },
     "fac/env_stone_wall/3": {
-      "file": "fac_env_stone_wall_3.fix-be26e4796200.webp",
+      "file": "fac_env_stone_wall_3_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "be26e4796200996c4bde252cab2eb95a5685d77aece608e69cef83afb66ea902",
-      "bytes": 6926
+      "sha256": "71c2c2fe5b13aa0acfa96a2bb096865ab060e305845bd16ac01b0514ade4ebc5",
+      "bytes": 3678
     },
     "fac/env_stone_wall_corner/0": {
-      "file": "fac_env_stone_wall_corner_0.fix-4f7b0f8e30b4.webp",
+      "file": "fac_env_stone_wall_corner_0_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "4f7b0f8e30b47fc8787c6e179087404df67f7802cd7f21eb017ac22b96b10053",
-      "bytes": 12256
+      "sha256": "905cfa4f92bfaa94b5af4e783fe806806ae0da873cffdfee73e1f156df4ab336",
+      "bytes": 7190
     },
     "fac/env_stone_wall_corner/1": {
-      "file": "fac_env_stone_wall_corner_1.fix-f530656df680.webp",
+      "file": "fac_env_stone_wall_corner_1_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "f530656df6806f2f59d27a9c3ca5bc2d27adb770fed94e2111127a1cdf3f18de",
-      "bytes": 11304
+      "sha256": "419ecb9200a1c8890d9f2f6fdb5c2079112ab7dc03878a9025a0b5ce4498f2d7",
+      "bytes": 6258
     },
     "fac/env_stone_wall_corner/2": {
-      "file": "fac_env_stone_wall_corner_2.fix-acaa398ab4b3.webp",
+      "file": "fac_env_stone_wall_corner_2_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "acaa398ab4b354aa7c89ee8f55ff5375c44c2b25233a048cc9dc9c78d9db7ce4",
-      "bytes": 13398
+      "sha256": "0d16298b18c82763465c9051a9044bc99fea96d42718cefa5200834da67a98e1",
+      "bytes": 7642
     },
     "fac/env_stone_wall_corner/3": {
-      "file": "fac_env_stone_wall_corner_3.fix-cff821e20e1c.webp",
+      "file": "fac_env_stone_wall_corner_3_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "cff821e20e1c9e1b46e60c0b1e5b1f2b01dd0fdecc53f59fce08b2fdf944c9e2",
-      "bytes": 11510
+      "sha256": "2c8ce3cf434fb8e5d7d45e571d33740982d0678644a20e153fe6eab6bb39785c",
+      "bytes": 6492
     },
     "fac/env_stone_wall_end/0": {
-      "file": "fac_env_stone_wall_end_0.fix-b4a29121e36a.webp",
+      "file": "fac_env_stone_wall_end_0_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "b4a29121e36a6be39a0bce68703ac5ef715cc222f5db5a533422114fee4cd317",
-      "bytes": 7844
+      "sha256": "18447a3add1c8207efbabd96f36940d68b10356b8dd90a71fdfeddadde929e94",
+      "bytes": 3684
     },
     "fac/env_stone_wall_end/1": {
-      "file": "fac_env_stone_wall_end_1.fix-a65f4a3db277.webp",
+      "file": "fac_env_stone_wall_end_1_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "a65f4a3db277faa0a239af2086baf163bf0276a0d74566a3041e720d29af7e35",
-      "bytes": 7846
+      "sha256": "aed4f8a3ed44c83de3dacc639a6d91145531a9418c062b98988b923d18a23f59",
+      "bytes": 3692
     },
     "fac/env_stone_wall_end/2": {
-      "file": "fac_env_stone_wall_end_2.fix-7259b79c5f6d.webp",
+      "file": "fac_env_stone_wall_end_2_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "7259b79c5f6d4f25ce2136f071ef712e8e8a3aa3f4947b2603f71392d728999b",
-      "bytes": 7604
+      "sha256": "c4257b73b5268b7f1054545794ddac5785dfcb8443e50c1d2780f819309230e9",
+      "bytes": 3820
     },
     "fac/env_stone_wall_end/3": {
-      "file": "fac_env_stone_wall_end_3.fix-d5eb492468a2.webp",
+      "file": "fac_env_stone_wall_end_3_accepted_20261003.webp",
       "w": 32,
       "h": 48,
       "pad": 16,
-      "sha256": "d5eb492468a272d6eb16c2c82596e54616345970f003acc65daca0461e52f108",
-      "bytes": 7614
+      "sha256": "71c2c2fe5b13aa0acfa96a2bb096865ab060e305845bd16ac01b0514ade4ebc5",
+      "bytes": 3678
     },
     "fac/env_hedge/0": {
       "file": "fac_env_hedge_0.webp",

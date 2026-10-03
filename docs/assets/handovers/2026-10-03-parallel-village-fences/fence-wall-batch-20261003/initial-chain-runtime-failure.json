@@ -1,0 +1,1 @@
+{"issue":"Candidate chain used family base URL for corner/end; scoped middleware requires matching asset ID", "fix":"Use each part ID in candidate URL; middleware restrictions unchanged", "main_modified":false}

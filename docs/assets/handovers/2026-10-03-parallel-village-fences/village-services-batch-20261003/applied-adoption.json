@@ -1,0 +1,313 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "env_small_hotel": "village-services-batch-20261003",
+    "env_convenience_store": "village-services-batch-20261003",
+    "env_maintenance_shed": "village-services-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "env_small_hotel",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_small_hotel/d0.png",
+      "source_sha256": "cb121bf838edd7c535b7e98644f85a3f2f3c56a15436c1e5d2a64caf2a7a57e4",
+      "old": {
+        "file": "fac_env_small_hotel_0.fix-533d7b574d32.webp",
+        "w": 112,
+        "h": 160,
+        "pad": 16,
+        "sha256": "533d7b574d32e115152042c08a411a96cf7e91bfbf11a39d332ede46320ab524",
+        "bytes": 246768
+      },
+      "new": {
+        "file": "fac_env_small_hotel_0_accepted_20261003.webp",
+        "w": 112,
+        "h": 160,
+        "pad": 16,
+        "sha256": "61e1c64fff860e4d366f58edb20f26ed51a5a9279393d1fa91dc955ea2e40cf6",
+        "bytes": 148742
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_small_hotel",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_small_hotel/d1.png",
+      "source_sha256": "f697921648ef366b4057f545cb2e7a473dc22112b1cc5e54ecbd9666a4793240",
+      "old": {
+        "file": "fac_env_small_hotel_1.webp",
+        "w": 112,
+        "h": 160,
+        "pad": 16,
+        "sha256": "2fed3820933cc0cc635f25acda489c1a8fa3745c9dbf2f469b3c436ebfe07c79",
+        "bytes": 231578
+      },
+      "new": {
+        "file": "fac_env_small_hotel_1_accepted_20261003.webp",
+        "w": 112,
+        "h": 160,
+        "pad": 16,
+        "sha256": "39847a72575d32e0b35db2fe1d6ea998915f76dbaa11e90f81508cec0f2123fa",
+        "bytes": 147548
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_small_hotel",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_small_hotel/d2.png",
+      "source_sha256": "53f0a6dbbae22e7e93e0dcaeb11146ff2920250bc0045d451d3bb671a9462061",
+      "old": {
+        "file": "fac_env_small_hotel_2.webp",
+        "w": 112,
+        "h": 160,
+        "pad": 16,
+        "sha256": "5a9d7125a40b162a59049ae60b3f31e87577a3cc7fbe15869523b88caabc80bc",
+        "bytes": 211328
+      },
+      "new": {
+        "file": "fac_env_small_hotel_2_accepted_20261003.webp",
+        "w": 112,
+        "h": 160,
+        "pad": 16,
+        "sha256": "a4b8825c7bd0fe83700e0024bf820333b1dbdf30389020d42ecdfe175e8d3a28",
+        "bytes": 128114
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_small_hotel",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_small_hotel/d3.png",
+      "source_sha256": "b40524d6ab8dee067ce15d2c0f81f2563a87500f5b181d884addca41a4bc4320",
+      "old": {
+        "file": "fac_env_small_hotel_3.webp",
+        "w": 112,
+        "h": 160,
+        "pad": 16,
+        "sha256": "07e5286d77949405482dd51a954ad07788d1af8a01654de1c10736705aec049a",
+        "bytes": 212650
+      },
+      "new": {
+        "file": "fac_env_small_hotel_3_accepted_20261003.webp",
+        "w": 112,
+        "h": 160,
+        "pad": 16,
+        "sha256": "17e52ce686969252183ed69b56ddc0cccbafa139431e9831aac69c18fbf0e8fe",
+        "bytes": 127392
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_convenience_store",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_convenience_store/d0.png",
+      "source_sha256": "b41d9a84e80e4381d1e4e697f84e66fa929620eeaba65787b64b29bd2ef22a5b",
+      "old": {
+        "file": "fac_env_convenience_store_0.webp",
+        "w": 88,
+        "h": 77,
+        "pad": 16,
+        "sha256": "fb95cadffbdbecce27d2e2c85a87f2509a72efa41c4459c3380ed779eedd84f2",
+        "bytes": 91422
+      },
+      "new": {
+        "file": "fac_env_convenience_store_0_accepted_20261003.webp",
+        "w": 88,
+        "h": 77,
+        "pad": 16,
+        "sha256": "45de29fee19ee229de613adfb25294453c3eb14f830be3ca256c09b32c89717c",
+        "bytes": 45960
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_convenience_store",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_convenience_store/d1.png",
+      "source_sha256": "fafe1bc458a222235960fc085c5816e0144ea625fde2c29e9eefece50efc381c",
+      "old": {
+        "file": "fac_env_convenience_store_1.webp",
+        "w": 88,
+        "h": 77,
+        "pad": 16,
+        "sha256": "5c9224f66653d3bf891ca783d57c3e115f55586e16a72f795ade461f43bbb3d3",
+        "bytes": 85598
+      },
+      "new": {
+        "file": "fac_env_convenience_store_1_accepted_20261003.webp",
+        "w": 88,
+        "h": 77,
+        "pad": 16,
+        "sha256": "a3b0828728d6a595fbfc420c27d4dbf375033195fdb54b3dc43a0ceda41e2978",
+        "bytes": 46604
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_convenience_store",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_convenience_store/d2.png",
+      "source_sha256": "5cb79e7794115b5354c1b8513dc1e6691905e50e906d2724232d1e10fb47e274",
+      "old": {
+        "file": "fac_env_convenience_store_2.webp",
+        "w": 88,
+        "h": 77,
+        "pad": 16,
+        "sha256": "6d531338cf360e28c874e5e860954e1aaf163c6b6c13dc82f0d7804e53e9e628",
+        "bytes": 75584
+      },
+      "new": {
+        "file": "fac_env_convenience_store_2_accepted_20261003.webp",
+        "w": 88,
+        "h": 77,
+        "pad": 16,
+        "sha256": "5d0dbab66e6e2f043e049b345891d56c5da78e90509f8876dbefe4810680919f",
+        "bytes": 35672
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_convenience_store",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_convenience_store/d3.png",
+      "source_sha256": "4e5dd91d34085d1b09d6f7c9cf4946149c4b3a19dda3a44408fcca8baf44f923",
+      "old": {
+        "file": "fac_env_convenience_store_3.fix-4de777170525.webp",
+        "w": 88,
+        "h": 77,
+        "pad": 16,
+        "sha256": "4de777170525fd9a83957ef5e8e909d4537072c7c5d2bf82d91c3235162b4ecc",
+        "bytes": 82154
+      },
+      "new": {
+        "file": "fac_env_convenience_store_3_accepted_20261003.webp",
+        "w": 88,
+        "h": 77,
+        "pad": 16,
+        "sha256": "6cd798ad42672e8c39a9cfaf4f7ea2f0b1713878161fd8a9d762278ba1ff0be0",
+        "bytes": 38122
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_maintenance_shed",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_maintenance_shed/d0.png",
+      "source_sha256": "0db6ad20e177cfea0271bed6dcf1d82cc8ae14e0bb803bacc35bbd317bee48d9",
+      "old": {
+        "file": "fac_env_maintenance_shed_0.webp",
+        "w": 80,
+        "h": 76,
+        "pad": 16,
+        "sha256": "88a0e30f126b809114082efb0b35baef9e2a760cc1d7188f29b074ea5407cb1b",
+        "bytes": 88444
+      },
+      "new": {
+        "file": "fac_env_maintenance_shed_0_accepted_20261003.webp",
+        "w": 80,
+        "h": 76,
+        "pad": 16,
+        "sha256": "2e5263de39ff221e0a57696fdf1c04ab63777a740bc8dd1006bd44ea7129efb1",
+        "bytes": 57840
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_maintenance_shed",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_maintenance_shed/d1.png",
+      "source_sha256": "fe297a5ff4215337824feb389bd5489178d06763b967b239f9b3a605082aa5ee",
+      "old": {
+        "file": "fac_env_maintenance_shed_1.webp",
+        "w": 80,
+        "h": 76,
+        "pad": 16,
+        "sha256": "0e684a91728863d5c6e7114529f19e0f1bd72ecead34ebb6f9f49c895c700e42",
+        "bytes": 89472
+      },
+      "new": {
+        "file": "fac_env_maintenance_shed_1_accepted_20261003.webp",
+        "w": 80,
+        "h": 76,
+        "pad": 16,
+        "sha256": "4ff89a597480fd5dd4019c6a64c89bdc8759088bbf0c404531834aa2b1736fe1",
+        "bytes": 58358
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_maintenance_shed",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_maintenance_shed/d2.png",
+      "source_sha256": "97feb8dff9b657e55ea77aafd1716362d7db33bc81fc76128fed003cad79ae33",
+      "old": {
+        "file": "fac_env_maintenance_shed_2.webp",
+        "w": 80,
+        "h": 76,
+        "pad": 16,
+        "sha256": "0d2e18d61c58127f939d84022729a6f9f37a77bcf37f2e21f24239bf40078aca",
+        "bytes": 78708
+      },
+      "new": {
+        "file": "fac_env_maintenance_shed_2_accepted_20261003.webp",
+        "w": 80,
+        "h": 76,
+        "pad": 16,
+        "sha256": "0f14b34cccf5b39ef51a94ac13eab849e01a08fbdf4e0714d0545e822db73bee",
+        "bytes": 60148
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_maintenance_shed",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/village-services-batch-20261003/candidates/env_maintenance_shed/d3.png",
+      "source_sha256": "ae486c8e28b239dfa078be1cc1921cb864a6d447a6a7467c496db05687318fe4",
+      "old": {
+        "file": "fac_env_maintenance_shed_3.fix-3b46c66e725a.webp",
+        "w": 80,
+        "h": 76,
+        "pad": 16,
+        "sha256": "3b46c66e725aebfcafcf8320ed757afb7cca0368a7a2f5a6912b7ae2102fd5ea",
+        "bytes": 85054
+      },
+      "new": {
+        "file": "fac_env_maintenance_shed_3_accepted_20261003.webp",
+        "w": 80,
+        "h": 76,
+        "pad": 16,
+        "sha256": "7446fc3670a3fc74006cb1cd77554ab36b2eaa892322ac35a0625611d3048a9b",
+        "bytes": 59290
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}
