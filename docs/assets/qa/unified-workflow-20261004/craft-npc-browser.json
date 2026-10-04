@@ -1,0 +1,972 @@
+{
+  "kind": "isolated browser replay of copied current modules; no main game boot, no saves",
+  "origin": "explicit live banana depth origin borrowed for diagnostic composition only",
+  "providerFailure": "SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+  "headings": [
+    {
+      "heading": 0,
+      "craftHeadingRoundTrip": 0,
+      "npcFacing": 1,
+      "visible": [
+        2297,
+        2250,
+        2259,
+        2072,
+        2117
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": 0,
+          "dj": 1.28,
+          "z": 0.595,
+          "heading": 0,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": 0,
+          "dj": 0.64,
+          "z": 0.595,
+          "heading": 0,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 0,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": 0,
+          "dj": -0.64,
+          "z": 0.595,
+          "heading": 0,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": 0,
+          "dj": -1.28,
+          "z": 0.595,
+          "heading": 0,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 1,
+      "craftHeadingRoundTrip": 1,
+      "npcFacing": 1,
+      "visible": [
+        2438,
+        1667,
+        1746,
+        1572,
+        1654
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": 0.48983479342731495,
+          "dj": 1.1825658016144471,
+          "z": 0.595,
+          "heading": 1,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": 0.24491739671365748,
+          "dj": 0.5912829008072236,
+          "z": 0.595,
+          "heading": 1,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 1,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": -0.24491739671365748,
+          "dj": -0.5912829008072236,
+          "z": 0.595,
+          "heading": 1,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": -0.48983479342731495,
+          "dj": -1.1825658016144471,
+          "z": 0.595,
+          "heading": 1,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 2,
+      "craftHeadingRoundTrip": 2,
+      "npcFacing": 0,
+      "visible": [
+        2489,
+        1513,
+        1403,
+        1246,
+        1254
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": 0.9050966799187807,
+          "dj": 0.905096679918781,
+          "z": 0.595,
+          "heading": 2,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": 0.45254833995939037,
+          "dj": 0.4525483399593905,
+          "z": 0.595,
+          "heading": 2,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 2,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": -0.45254833995939037,
+          "dj": -0.4525483399593905,
+          "z": 0.595,
+          "heading": 2,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": -0.9050966799187807,
+          "dj": -0.905096679918781,
+          "z": 0.595,
+          "heading": 2,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 3,
+      "craftHeadingRoundTrip": 3,
+      "npcFacing": 0,
+      "visible": [
+        2438,
+        1667,
+        1746,
+        1572,
+        1654
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": 1.1825658016144471,
+          "dj": 0.489834793427315,
+          "z": 0.595,
+          "heading": 3,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": 0.5912829008072236,
+          "dj": 0.2449173967136575,
+          "z": 0.595,
+          "heading": 3,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 3,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": -0.5912829008072236,
+          "dj": -0.2449173967136575,
+          "z": 0.595,
+          "heading": 3,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": -1.1825658016144471,
+          "dj": -0.489834793427315,
+          "z": 0.595,
+          "heading": 3,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 4,
+      "craftHeadingRoundTrip": 4,
+      "npcFacing": 0,
+      "visible": [
+        2297,
+        2250,
+        2259,
+        2072,
+        2117
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": 1.28,
+          "dj": 7.83773951454306e-17,
+          "z": 0.595,
+          "heading": 4,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": 0.64,
+          "dj": 3.91886975727153e-17,
+          "z": 0.595,
+          "heading": 4,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 4,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": -0.64,
+          "dj": -3.91886975727153e-17,
+          "z": 0.595,
+          "heading": 4,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": -1.28,
+          "dj": -7.83773951454306e-17,
+          "z": 0.595,
+          "heading": 4,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 5,
+      "craftHeadingRoundTrip": 5,
+      "npcFacing": 0,
+      "visible": [
+        2378,
+        2421,
+        2372,
+        2216,
+        2235
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": 1.1825658016144471,
+          "dj": -0.48983479342731484,
+          "z": 0.595,
+          "heading": 5,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": 0.5912829008072236,
+          "dj": -0.24491739671365742,
+          "z": 0.595,
+          "heading": 5,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 5,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": -0.5912829008072236,
+          "dj": 0.24491739671365742,
+          "z": 0.595,
+          "heading": 5,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": -1.1825658016144471,
+          "dj": 0.48983479342731484,
+          "z": 0.595,
+          "heading": 5,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 6,
+      "craftHeadingRoundTrip": 6,
+      "npcFacing": 3,
+      "visible": [
+        2273,
+        2368,
+        2278,
+        2300,
+        2298
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": 0.905096679918781,
+          "dj": -0.9050966799187807,
+          "z": 0.595,
+          "heading": 6,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": 0.4525483399593905,
+          "dj": -0.45254833995939037,
+          "z": 0.595,
+          "heading": 6,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 6,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": -0.4525483399593905,
+          "dj": 0.45254833995939037,
+          "z": 0.595,
+          "heading": 6,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": -0.905096679918781,
+          "dj": 0.9050966799187807,
+          "z": 0.595,
+          "heading": 6,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 7,
+      "craftHeadingRoundTrip": 7,
+      "npcFacing": 3,
+      "error": "EncodingError: The source image cannot be decoded."
+    },
+    {
+      "heading": 8,
+      "craftHeadingRoundTrip": 8,
+      "npcFacing": 3,
+      "visible": [
+        2368,
+        2454,
+        2333,
+        2352,
+        2378
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": 1.567547902908612e-16,
+          "dj": -1.28,
+          "z": 0.595,
+          "heading": 8,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": 7.83773951454306e-17,
+          "dj": -0.64,
+          "z": 0.595,
+          "heading": 8,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 8,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": -7.83773951454306e-17,
+          "dj": 0.64,
+          "z": 0.595,
+          "heading": 8,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": -1.567547902908612e-16,
+          "dj": 1.28,
+          "z": 0.595,
+          "heading": 8,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 9,
+      "craftHeadingRoundTrip": 9,
+      "npcFacing": 3,
+      "visible": [
+        2474,
+        2570,
+        2426,
+        2475,
+        2540
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": -0.4898347934273148,
+          "dj": -1.1825658016144471,
+          "z": 0.595,
+          "heading": 9,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": -0.2449173967136574,
+          "dj": -0.5912829008072236,
+          "z": 0.595,
+          "heading": 9,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 9,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": 0.2449173967136574,
+          "dj": 0.5912829008072236,
+          "z": 0.595,
+          "heading": 9,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": 0.4898347934273148,
+          "dj": 1.1825658016144471,
+          "z": 0.595,
+          "heading": 9,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 10,
+      "craftHeadingRoundTrip": 10,
+      "npcFacing": 2,
+      "visible": [
+        2512,
+        2572,
+        2454,
+        2508,
+        2530
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": -0.9050966799187807,
+          "dj": -0.9050966799187811,
+          "z": 0.595,
+          "heading": 10,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": -0.45254833995939037,
+          "dj": -0.45254833995939053,
+          "z": 0.595,
+          "heading": 10,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 10,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": 0.45254833995939037,
+          "dj": 0.45254833995939053,
+          "z": 0.595,
+          "heading": 10,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": 0.9050966799187807,
+          "dj": 0.9050966799187811,
+          "z": 0.595,
+          "heading": 10,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 11,
+      "craftHeadingRoundTrip": 11,
+      "npcFacing": 2,
+      "visible": [
+        2474,
+        2570,
+        2426,
+        2475,
+        2540
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": -1.1825658016144467,
+          "dj": -0.4898347934273156,
+          "z": 0.595,
+          "heading": 11,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": -0.5912829008072233,
+          "dj": -0.2449173967136578,
+          "z": 0.595,
+          "heading": 11,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 11,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": 0.5912829008072233,
+          "dj": 0.2449173967136578,
+          "z": 0.595,
+          "heading": 11,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": 1.1825658016144467,
+          "dj": 0.4898347934273156,
+          "z": 0.595,
+          "heading": 11,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 12,
+      "craftHeadingRoundTrip": 12,
+      "npcFacing": 2,
+      "visible": [
+        2368,
+        2454,
+        2333,
+        2352,
+        2378
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": -1.28,
+          "dj": -2.351321854362918e-16,
+          "z": 0.595,
+          "heading": 12,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": -0.64,
+          "dj": -1.175660927181459e-16,
+          "z": 0.595,
+          "heading": 12,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 12,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": 0.64,
+          "dj": 1.175660927181459e-16,
+          "z": 0.595,
+          "heading": 12,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": 1.28,
+          "dj": 2.351321854362918e-16,
+          "z": 0.595,
+          "heading": 12,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 13,
+      "craftHeadingRoundTrip": 13,
+      "npcFacing": 2,
+      "visible": [
+        2358,
+        2395,
+        2292,
+        2349,
+        2369
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": -1.182565801614447,
+          "dj": 0.48983479342731523,
+          "z": 0.595,
+          "heading": 13,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": -0.5912829008072235,
+          "dj": 0.24491739671365761,
+          "z": 0.595,
+          "heading": 13,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 13,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": 0.5912829008072235,
+          "dj": -0.24491739671365761,
+          "z": 0.595,
+          "heading": 13,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": 1.182565801614447,
+          "dj": -0.48983479342731523,
+          "z": 0.595,
+          "heading": 13,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 14,
+      "craftHeadingRoundTrip": 14,
+      "npcFacing": 1,
+      "visible": [
+        2360,
+        2380,
+        2372,
+        2206,
+        2203
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": -0.9050966799187811,
+          "dj": 0.9050966799187806,
+          "z": 0.595,
+          "heading": 14,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": -0.45254833995939053,
+          "dj": 0.4525483399593903,
+          "z": 0.595,
+          "heading": 14,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 14,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": 0.45254833995939053,
+          "dj": -0.4525483399593903,
+          "z": 0.595,
+          "heading": 14,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": 0.9050966799187811,
+          "dj": -0.9050966799187806,
+          "z": 0.595,
+          "heading": 14,
+          "pose": "sit"
+        }
+      ]
+    },
+    {
+      "heading": 15,
+      "craftHeadingRoundTrip": 15,
+      "npcFacing": 1,
+      "visible": [
+        2378,
+        2421,
+        2372,
+        2232,
+        2235
+      ],
+      "density": 4,
+      "canvas": [
+        896,
+        896
+      ],
+      "riders": [
+        {
+          "uid": 2,
+          "di": -0.48983479342731573,
+          "dj": 1.1825658016144467,
+          "z": 0.595,
+          "heading": 15,
+          "pose": "sit"
+        },
+        {
+          "uid": 20,
+          "di": -0.24491739671365786,
+          "dj": 0.5912829008072233,
+          "z": 0.595,
+          "heading": 15,
+          "pose": "sit"
+        },
+        {
+          "uid": 27,
+          "di": 0,
+          "dj": 0,
+          "z": 0.595,
+          "heading": 15,
+          "pose": "sit"
+        },
+        {
+          "uid": 40,
+          "di": 0.24491739671365786,
+          "dj": -0.5912829008072233,
+          "z": 0.595,
+          "heading": 15,
+          "pose": "sit"
+        },
+        {
+          "uid": 53,
+          "di": 0.48983479342731573,
+          "dj": -1.1825658016144467,
+          "z": 0.595,
+          "heading": 15,
+          "pose": "sit"
+        }
+      ]
+    }
+  ],
+  "npc": {
+    "density": 4,
+    "textureCell": 160,
+    "logicalCell": 40,
+    "sourceCell": 64,
+    "states": 22,
+    "framesPerLook": 30,
+    "combinations": 324,
+    "defaultLooks": [
+      "guest-01",
+      "guest-02",
+      "guest-03",
+      "guest-04",
+      "guest-05",
+      "guest-06",
+      "guest-07",
+      "guest-08",
+      "guest-09",
+      "guest-10",
+      "guest-11",
+      "guest-12",
+      "guest-13",
+      "guest-14",
+      "guest-15",
+      "guest-16",
+      "guest-17",
+      "guest-18",
+      "guest-19",
+      "guest-20",
+      "guest-21",
+      "guest-22",
+      "guest-23",
+      "guest-24",
+      "guest-25",
+      "guest-26",
+      "guest-27",
+      "guest-28",
+      "guest-29",
+      "guest-30",
+      "guest-31",
+      "guest-32",
+      "guest-33",
+      "guest-34",
+      "guest-35",
+      "guest-36",
+      "guest-37",
+      "guest-38",
+      "guest-39",
+      "guest-40",
+      "guest-41",
+      "guest-42",
+      "guest-43",
+      "guest-44",
+      "guest-45",
+      "guest-46",
+      "guest-47",
+      "guest-48",
+      "guest-49",
+      "guest-50",
+      "guest-51",
+      "guest-52",
+      "guest-53",
+      "guest-54"
+    ],
+    "maxCachedFrames": 256
+  },
+  "representativeUIDs": [
+    2,
+    20,
+    27,
+    40,
+    53
+  ],
+  "loadCraftResult": "EncodingError: The source image cannot be decoded."
+}

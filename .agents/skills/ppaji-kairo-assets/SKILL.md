@@ -3,6 +3,11 @@ name: ppaji-kairo-assets
 description: Explore, build and QA Ppaji Tycoon static facilities using human-scale authored Blender models with shared painted materials, or concept/image-to-mesh tracks. Use for facility redesigns, footprint and roof proportions, four-facing pilots, candidate review and approved live-pack adoption; use ppaji-watercraft-pipeline for path-following vehicles.
 ---
 
+## Unified entrypoint
+
+For new Ppaji asset work, start with `$ppaji-assets` ([unified skill](../ppaji-assets/SKILL.md)). This specialized skill retains advanced resources and compatibility for prior runs. Its historical defaults and gates do not override the latest user-selected method, live contract or existing authorization. Read the selected track only.
+
+
 # Ppaji Kairo Assets
 
 Use this skill for the Ppaji Tycoon workspace whose root contains `src/data/kairo-facilities.json`,

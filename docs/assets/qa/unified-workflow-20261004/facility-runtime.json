@@ -1,0 +1,143 @@
+[
+  {
+    "mode": "baseline",
+    "frames": [
+      {
+        "d": 0,
+        "originalEqual": false,
+        "shownEqual": true,
+        "canvas": [
+          768,
+          768
+        ]
+      },
+      {
+        "d": 1,
+        "originalEqual": false,
+        "shownEqual": true,
+        "canvas": [
+          768,
+          768
+        ]
+      },
+      {
+        "d": 2,
+        "originalEqual": false,
+        "shownEqual": true,
+        "canvas": [
+          768,
+          768
+        ]
+      },
+      {
+        "d": 3,
+        "originalEqual": false,
+        "shownEqual": true,
+        "canvas": [
+          768,
+          768
+        ]
+      }
+    ],
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true
+  },
+  {
+    "mode": "candidate",
+    "frames": [
+      {
+        "d": 0,
+        "originalEqual": false,
+        "shownEqual": true,
+        "canvas": [
+          768,
+          768
+        ]
+      },
+      {
+        "d": 1,
+        "originalEqual": false,
+        "shownEqual": true,
+        "canvas": [
+          768,
+          768
+        ]
+      },
+      {
+        "d": 2,
+        "originalEqual": false,
+        "shownEqual": true,
+        "canvas": [
+          768,
+          768
+        ]
+      },
+      {
+        "d": 3,
+        "originalEqual": false,
+        "shownEqual": true,
+        "canvas": [
+          768,
+          768
+        ]
+      }
+    ],
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true
+  },
+  {
+    "storageUnchangedBeforeAfter": true,
+    "scope": "Actual isolated review app renderer, candidate only in browser memory; not production adoption or NPC contact certification",
+    "initialAttempt": "wholeReplacement route returned404 Unknown review pack; used existing dryRentalTemplate route"
+  }
+]

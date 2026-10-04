@@ -1,0 +1,30 @@
+[
+  {
+    "case": "malformed",
+    "command": [
+      "/Users/jangjunpyo/.codex/skills/sprite-gen/.venv/bin/python",
+      "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-skill-blackbox-369dfz48/negative-render/recipe/render.py",
+      "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-skill-blackbox-369dfz48/negative-render/malformed.json",
+      "--out",
+      "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-skill-blackbox-369dfz48/negative-render/malformed-output"
+    ],
+    "exit": 1,
+    "rejected": true,
+    "pngs_created": 0,
+    "reason": "ValueError: Nonplanar/degenerate quad wood-counter/top"
+  },
+  {
+    "case": "altered-source",
+    "command": [
+      "/Users/jangjunpyo/.codex/skills/sprite-gen/.venv/bin/python",
+      "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-skill-blackbox-369dfz48/negative-render/recipe/render.py",
+      "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-skill-blackbox-369dfz48/negative-render/altered-source.json",
+      "--out",
+      "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-skill-blackbox-369dfz48/negative-render/altered-source-output"
+    ],
+    "exit": 1,
+    "rejected": true,
+    "pngs_created": 0,
+    "reason": "ValueError: Texture changed: /private/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-skill-blackbox-369dfz48/negative-render/source.png"
+  }
+]

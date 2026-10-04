@@ -1,0 +1,54 @@
+{
+  "skill": "ppaji-assets",
+  "independent_workers": 3,
+  "facility": {
+    "replay_directions": 4,
+    "replay_rgba_exact": true,
+    "matches_current_live_webp_offline": true,
+    "candidate_directions": 4,
+    "geometry_registration_alpha_unchanged": true,
+    "actual_review_renderer_frames_verified": 8,
+    "measured_visible_edges": 0,
+    "user_art_approval": false
+  },
+  "craft_npc": {
+    "withheld_heading": "h07",
+    "independently_detected": true,
+    "candidate_adoption_ready": false,
+    "composition_hash_checks": 9720,
+    "default_anchor_checks": 3240,
+    "browser_seated_composites": 75,
+    "dedicated_grip_straddle_certified": false
+  },
+  "terrain": {
+    "mock_tests": 4,
+    "geometry_patterns": 511,
+    "actual_webgl_tile_and_dock_lifecycle": true,
+    "running_roi_changed_pixels": 78179,
+    "paused_roi_changed_pixels": 0,
+    "exact_grid_overlay_capture": false,
+    "actual_scene_shutdown_tested": false
+  },
+  "negative_renderer": {
+    "root_cases_rejected": 2,
+    "worker_cases_rejected": 3,
+    "descriptions": [
+      "nonplanar face",
+      "altered texture SHA",
+      "missing facing",
+      "malformed vertex shape"
+    ]
+  },
+  "production_assets_changed": false,
+  "limits": [
+    "One reproducible facility seed and material variant; not novel geometry evaluation across100 assets",
+    "Craft/NPC composition view is synthetic; not all equipment contact certification",
+    "Terrain exact overlay and actual shutdown unverified"
+  ],
+  "skill_fixes_from_evidence": [
+    "Empty visible_lines is unmeasured; cropped contact board is not placement proof",
+    "Verify HD craft provider as well as native PNG/depth and depth-origin metadata",
+    "Synchronize capture camera and assert actual deck preconditions",
+    "Separate browser cross-encoding alpha readback from offline RGBA equality"
+  ]
+}

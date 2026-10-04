@@ -1,0 +1,7 @@
+{
+  "kind": "pure geometry, no raster proof",
+  "masks": 511,
+  "centers": 2304,
+  "sharedEdges": 1536,
+  "failures": []
+}

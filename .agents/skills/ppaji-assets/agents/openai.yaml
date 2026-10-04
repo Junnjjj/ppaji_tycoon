@@ -1,0 +1,4 @@
+interface:
+  display_name: "빠지 에셋 제작"
+  short_description: "시설·견인기구·NPC·지형의 제작과 실제 게임 검수를 통합합니다"
+  default_prompt: "Use $ppaji-assets to create or improve this asset, preserving its approved style and runtime contracts."

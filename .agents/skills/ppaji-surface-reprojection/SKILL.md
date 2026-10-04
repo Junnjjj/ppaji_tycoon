@@ -3,6 +3,11 @@ name: ppaji-surface-reprojection
 description: Correct Ppaji facility sprite angles and rotating placement by reusing original painted surfaces on one canonical textured assembly. Use for planar cabinets, partitions, stalls and roofs whose four facings have bent lines or mismatched parts, especially when the user wants the original ImageGen look without Blender. Includes pixel-line QA and continuous grid/map review.
 ---
 
+## Unified entrypoint
+
+For new Ppaji asset work, start with `$ppaji-assets` ([unified skill](../ppaji-assets/SKILL.md)). This specialized skill retains advanced resources and compatibility for prior runs. Its historical defaults and gates do not override the latest user-selected method, live contract or existing authorization. Read the selected track only.
+
+
 # Painted surface reprojection
 
 Preserve the original art while fixing the geometric relationships. Extract actual painted faces from immutable source images, attach them to one declared assembly, rotate the assembly, then inspect the saved pixels and actual game placement. This is an authored textured-geometry method implemented in Python/Pillow, not an ImageGen redraw or a screen-space warp.

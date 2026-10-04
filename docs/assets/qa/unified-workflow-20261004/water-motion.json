@@ -1,0 +1,24 @@
+{
+  "running": {
+    "roi_css_px": [
+      30,
+      540,
+      600,
+      680
+    ],
+    "pixels": 79800,
+    "changed": 78179,
+    "fraction": 0.9796867167919799
+  },
+  "paused": {
+    "roi_css_px": [
+      30,
+      540,
+      600,
+      680
+    ],
+    "pixels": 79800,
+    "changed": 0,
+    "fraction": 0.0
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "origin": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_v3/assets/generated/kairo-v4-simple-pilot/dry-rental-line-20261002",
+  "purpose": "Portable accepted dry-room starting recipe; provenance is not approval for future edits.",
+  "files": {
+    "render.py": {
+      "source_sha256": "463ed7ccf030407d910f06ba592af96f5b51c0dacaf031becd7325c18b92446b",
+      "bundled_sha256": "463ed7ccf030407d910f06ba592af96f5b51c0dacaf031becd7325c18b92446b"
+    },
+    "materials.py": {
+      "source_sha256": "3c3d1c392dbfc0c85f75af97619e8494f26b534a8335b50dd83d3ce47b0de352",
+      "bundled_sha256": "3c3d1c392dbfc0c85f75af97619e8494f26b534a8335b50dd83d3ce47b0de352"
+    },
+    "line_finish.py": {
+      "source_sha256": "4a38ea28269cc79ea6cbc8856dd4ec0b148aa7bd95809c905bcb9ae8b82a81fe",
+      "bundled_sha256": "4a38ea28269cc79ea6cbc8856dd4ec0b148aa7bd95809c905bcb9ae8b82a81fe"
+    },
+    "surface-spec.json": {
+      "source_sha256": "4659e993325f09c386fe8a658e2b22c5cf076484f2c711d9df0a44292edb4e57",
+      "bundled_sha256": "b7ce83c6a2c0da60fd6e913cc682fb97e1b6d0691b10f9694b76a1cbb51bde67",
+      "change": "selected dry_room; removed survey-only frame fields; geometry and registration unchanged"
+    }
+  },
+  "baseline_rgba": {
+    "d0": {
+      "sha256": "9c4805346125a4d697082524ffc1236cbc0756396b322d380927d08cb698e01d",
+      "size": [
+        768,
+        768
+      ]
+    },
+    "d1": {
+      "sha256": "04f01b1e37d3253f47de2530546311b41e300103619ea89ddaba39f40ef616a6",
+      "size": [
+        768,
+        768
+      ]
+    },
+    "d2": {
+      "sha256": "ed04dea3a15f73e75d0be7e2a394bc297dfb79358b763db406ae3cc9bfaeb3a0",
+      "size": [
+        768,
+        768
+      ]
+    },
+    "d3": {
+      "sha256": "04e81002421c44194a5a4d1cfc19b574583e035aa6a62d8473c11b4c44a208b5",
+      "size": [
+        768,
+        768
+      ]
+    }
+  }
+}

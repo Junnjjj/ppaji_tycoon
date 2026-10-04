@@ -1,0 +1,38 @@
+{
+  "d0": {
+    "size": [
+      768,
+      768
+    ],
+    "rgba_sha256": "9c4805346125a4d697082524ffc1236cbc0756396b322d380927d08cb698e01d",
+    "expected": "9c4805346125a4d697082524ffc1236cbc0756396b322d380927d08cb698e01d",
+    "match": true
+  },
+  "d1": {
+    "size": [
+      768,
+      768
+    ],
+    "rgba_sha256": "04f01b1e37d3253f47de2530546311b41e300103619ea89ddaba39f40ef616a6",
+    "expected": "04f01b1e37d3253f47de2530546311b41e300103619ea89ddaba39f40ef616a6",
+    "match": true
+  },
+  "d2": {
+    "size": [
+      768,
+      768
+    ],
+    "rgba_sha256": "ed04dea3a15f73e75d0be7e2a394bc297dfb79358b763db406ae3cc9bfaeb3a0",
+    "expected": "ed04dea3a15f73e75d0be7e2a394bc297dfb79358b763db406ae3cc9bfaeb3a0",
+    "match": true
+  },
+  "d3": {
+    "size": [
+      768,
+      768
+    ],
+    "rgba_sha256": "04e81002421c44194a5a4d1cfc19b574583e035aa6a62d8473c11b4c44a208b5",
+    "expected": "04e81002421c44194a5a4d1cfc19b574583e035aa6a62d8473c11b4c44a208b5",
+    "match": true
+  }
+}

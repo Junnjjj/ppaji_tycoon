@@ -1,0 +1,54 @@
+{
+  "package_files": 13,
+  "global_copy_equal": true,
+  "reference_links_valid": true,
+  "isolated_recipe_path": "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-main-skill-2c_hzea1/recipe",
+  "no_original_run_dependency": true,
+  "render_command": [
+    "/Users/jangjunpyo/.codex/skills/sprite-gen/.venv/bin/python",
+    "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-main-skill-2c_hzea1/recipe/render.py",
+    "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-main-skill-2c_hzea1/recipe/surface-spec.json",
+    "--out",
+    "/var/folders/rf/tv_64fg90fj0d813q95pvct40000gn/T/ppaji-main-skill-2c_hzea1/out"
+  ],
+  "render_exit": 0,
+  "facings": [
+    {
+      "d": 0,
+      "size": [
+        768,
+        768
+      ],
+      "rgba_sha256": "9c4805346125a4d697082524ffc1236cbc0756396b322d380927d08cb698e01d",
+      "exact": true
+    },
+    {
+      "d": 1,
+      "size": [
+        768,
+        768
+      ],
+      "rgba_sha256": "04f01b1e37d3253f47de2530546311b41e300103619ea89ddaba39f40ef616a6",
+      "exact": true
+    },
+    {
+      "d": 2,
+      "size": [
+        768,
+        768
+      ],
+      "rgba_sha256": "ed04dea3a15f73e75d0be7e2a394bc297dfb79358b763db406ae3cc9bfaeb3a0",
+      "exact": true
+    },
+    {
+      "d": 3,
+      "size": [
+        768,
+        768
+      ],
+      "rgba_sha256": "04e81002421c44194a5a4d1cfc19b574583e035aa6a62d8473c11b4c44a208b5",
+      "exact": true
+    }
+  ],
+  "scope": "Main skill packaging/replay only; previous black-box evidence retained, no new runtime suite claimed"
+}

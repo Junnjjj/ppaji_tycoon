@@ -1,18 +1,21 @@
 # 빠지 타이쿤 에셋 문서 허브
 
-최종 정리 2026-09-30. 에셋 작업은 [현재 상태](CURRENT.md)부터 읽는다. `history/`와
+최종 정리 2026-10-04. 에셋 작업은 [현재 상태](CURRENT.md)부터 읽는다. `history/`와
 `maintenance/legacy-*`는 현행 생산 승인의 근거가 아니다.
+
+신규 에셋 작업은 [`$ppaji-assets`](../../.agents/skills/ppaji-assets/SKILL.md) 하나로 시작한다. 종류별 제작법과 검수 기준은 해당 스킬의 참조 문서에서 선택한다. [통합 검증 결과](handovers/2026-10-04-unified-asset-workflow.md).
 
 ## 작업별 시작 문서
 
 | 하려는 일 | 먼저 읽을 문서 | 적용 스킬 |
 |---|---|---|
-| 시설군 콘셉트 시트·색·풋프린트 탐색 | [콘셉트 포트폴리오](pipelines/concept-portfolio.md) | `$ppaji-kairo-assets` |
-| 고정 시설 d0–d3 제작·검수 | [카메라·방향 계약](contracts/camera-direction.md), [고정 시설 4방향 계약](contracts/four-direction.md) | `$ppaji-kairo-assets` |
-| 고정 시설 20종 같은 병렬 웨이브 | [시설 배치 운영](pipelines/facility-batch-orchestration.md) | `$ppaji-kairo-assets` |
-| 잔디·모래·물·절벽과 곡선 해안 제작 | [지형·물·곡선 해안 파이프라인](pipelines/terrain-ground-water.md), [terrain-v3 시각 방향 결정](adoption/terrain-v3-visual-direction.md) | `$ppaji-kairo-assets` |
-| 제트스키·보트·견인기구 4/16방향 | [이동형 수상기구 파이프라인](pipelines/watercraft.md) | `$ppaji-watercraft-pipeline` |
-| 승인 에셋을 메인·라이브 팩에 적용 | [런타임 크기·채택 결정](adoption/runtime-fit-decisions.md) | 해당 파이프라인 |
+| 시설군 콘셉트 시트·색·풋프린트 탐색 | [콘셉트 포트폴리오](pipelines/concept-portfolio.md) | `$ppaji-assets` |
+| 고정 시설 d0–d3 제작·검수 | [카메라·방향 계약](contracts/camera-direction.md), [고정 시설 4방향 계약](contracts/four-direction.md) | `$ppaji-assets` |
+| 고정 시설 20종 같은 병렬 웨이브 | [시설 배치 운영](pipelines/facility-batch-orchestration.md) | `$ppaji-assets` |
+| 잔디·모래·물·절벽과 곡선 해안 제작 | [지형·물·곡선 해안 파이프라인](pipelines/terrain-ground-water.md), [terrain-v3 시각 방향 결정](adoption/terrain-v3-visual-direction.md) | `$ppaji-assets` |
+| 제트스키·보트·견인기구 4/16방향 | [이동형 수상기구 파이프라인](pipelines/watercraft.md) | `$ppaji-assets` |
+| NPC 외형·옷 조합·포즈·동작 | [NPC 제작 기준](../../.agents/skills/ppaji-assets/references/npc.md) | `$ppaji-assets` |
+| 승인 에셋을 메인·라이브 팩에 적용 | [런타임 크기·채택 결정](adoption/runtime-fit-decisions.md) | `$ppaji-assets` |
 | 구형 V2 시설을 유지보수 | [구형 재생성 지시서](maintenance/legacy-v2-regeneration.md), [구형 시트 프롬프트](maintenance/legacy-sheet-prompts.md) | 신규 제작에는 사용 금지 |
 | 토큰 절감 방식을 별도 실험 | [토큰 절감 실험안](operations/token-efficiency-experiment.md) | 현재 파이프라인 미적용 |
 

@@ -1,0 +1,82 @@
+{
+  "syntax": {
+    "/Users/jangjunpyo/.codex/skills/ppaji-assets": {
+      "ok": true,
+      "message": "Skill is valid!"
+    },
+    "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/.agents/skills/ppaji-assets": {
+      "ok": true,
+      "message": "Skill is valid!"
+    },
+    "/Users/jangjunpyo/.codex/skills/ppaji-kairo-assets": {
+      "ok": true,
+      "message": "Skill is valid!"
+    },
+    "/Users/jangjunpyo/.codex/skills/ppaji-surface-reprojection": {
+      "ok": true,
+      "message": "Skill is valid!"
+    },
+    "/Users/jangjunpyo/.codex/skills/ppaji-watercraft-pipeline": {
+      "ok": true,
+      "message": "Skill is valid!"
+    },
+    "/Users/jangjunpyo/.codex/skills/ppaji-npc-assets": {
+      "ok": true,
+      "message": "Skill is valid!"
+    }
+  },
+  "links": [
+    {
+      "from": "SKILL.md",
+      "target": "references/project.md",
+      "exists": true
+    },
+    {
+      "from": "SKILL.md",
+      "target": "references/facilities.md",
+      "exists": true
+    },
+    {
+      "from": "SKILL.md",
+      "target": "references/watercraft.md",
+      "exists": true
+    },
+    {
+      "from": "SKILL.md",
+      "target": "references/npc.md",
+      "exists": true
+    },
+    {
+      "from": "SKILL.md",
+      "target": "references/terrain.md",
+      "exists": true
+    },
+    {
+      "from": "SKILL.md",
+      "target": "references/review.md",
+      "exists": true
+    },
+    {
+      "from": "SKILL.md",
+      "target": "references/facilities.md",
+      "exists": true
+    }
+  ],
+  "copies_equal": true,
+  "skill_files": 13,
+  "package_sha256": {
+    "SKILL.md": "8c71f5aa273770db4154345abf713bb8065a7db6f2f76ecc4ab8c1e11a25aeb1",
+    "references/facilities.md": "eeb09ffedd95cab42ec9a8c1e0c585e86456371bcafc1b38e7728c1ba702ae69",
+    "references/watercraft.md": "577d6b848f09c76a40c2d5578f538129e0d4034600bc0c9ae502bb083dd31215",
+    "references/project.md": "1982326417718209f845158198651d5f4ad5ae9298a90c8bdb47d68398bcf19f",
+    "references/npc.md": "c21b9314429fbb9289547c8c3a150cd3659f11b519ea41d07a436bb789dc0800",
+    "references/terrain.md": "008d07c05bc7f99d0b93c50ecab3e4e355661d9ff05f57c3df1f1922d24863c5",
+    "references/review.md": "08e31f03de26b9df3c4505754f50e291c09ec5443ddb0174e1e8a424e9154ef8",
+    "agents/openai.yaml": "01cb436bebfd24e4e913ad0a09b1e1386eb8a024153ceb038fd7125997c8837c",
+    "assets/facility-seed/line_finish.py": "4a38ea28269cc79ea6cbc8856dd4ec0b148aa7bd95809c905bcb9ae8b82a81fe",
+    "assets/facility-seed/surface-spec.json": "b7ce83c6a2c0da60fd6e913cc682fb97e1b6d0691b10f9694b76a1cbb51bde67",
+    "assets/facility-seed/provenance.json": "4d1c90dc001c1acc96808a729def67b8796b0755efba94af9fda4e52a247042d",
+    "assets/facility-seed/render.py": "463ed7ccf030407d910f06ba592af96f5b51c0dacaf031becd7325c18b92446b",
+    "assets/facility-seed/materials.py": "3c3d1c392dbfc0c85f75af97619e8494f26b534a8335b50dd83d3ce47b0de352"
+  }
+}
